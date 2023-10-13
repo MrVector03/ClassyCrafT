@@ -3,4 +3,4 @@
 ### Viktor Davidovic RN 38/22 ##
 ### Viktor Milojevic RN 52/22 ###
 ---
-Link za specifikaciju - [Notion](https://www.notion.so/ClassyCrafT-9c452007e33d4dbf81bcb90b02f6ec93?pvs=4)
+Link za specifikaciju - [Notion](https://www.notion.so/ClassyCrafT-5685238bab2241ba9718177e8331d350?pvs=4)
