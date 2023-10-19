@@ -15,13 +15,11 @@ public class MyMenuBar extends JMenuBar {
         ExitAction ea = new ExitAction();
         fileMenu.add(ea);
 
-
         JMenu editMenu = new JMenu("Edit");
         fileMenu.setMnemonic(KeyEvent.VK_E);
 
         AboutUsAction aua = new AboutUsAction();
         editMenu.add(aua);
-
 
         add(fileMenu);
         add(editMenu);
