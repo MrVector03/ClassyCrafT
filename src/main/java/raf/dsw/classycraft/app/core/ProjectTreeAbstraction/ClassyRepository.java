@@ -1,4 +1,4 @@
-package raf.dsw.classycraft.app.core;
+package raf.dsw.classycraft.app.core.ProjectTreeAbstraction;
 
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ProjectExplorer;
 

@@ -1,9 +1,9 @@
-package raf.dsw.classycraft.app.core;
+package raf.dsw.classycraft.app.core.ProjectTreeImplementation;
 
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyRepository;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ProjectExplorer;
 
-public class ClassyRepositoryImplementation implements  ClassyRepository {
+public class ClassyRepositoryImplementation implements ClassyRepository {
     private ProjectExplorer root;
 
     @Override

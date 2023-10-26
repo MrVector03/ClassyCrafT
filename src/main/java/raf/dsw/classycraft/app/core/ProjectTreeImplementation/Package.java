@@ -1,7 +1,12 @@
 package raf.dsw.classycraft.app.core.ProjectTreeImplementation;
 
+import raf.dsw.classycraft.app.core.ApplicationFramework;
+import raf.dsw.classycraft.app.core.MessageGenerator.Message;
+import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
+
+import java.time.LocalDateTime;
 
 public class Package extends ClassyNodeComposite {
     public Package(String name) {
@@ -13,6 +18,6 @@ public class Package extends ClassyNodeComposite {
         if(newChild instanceof Package || newChild instanceof Diagram)
             super.addChild(newChild);
         else
-            System.out.println("GRESKA NE MOZE DA SE DODA NISTA SEM PAKETA I DIJAGRAMA U PAKET"); //promeniti u messagegenerator kada ga napravimo
+            ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("NODE_CANNOT_BE_ADDED", MessageType.ERROR, LocalDateTime.now()));
     }
 }

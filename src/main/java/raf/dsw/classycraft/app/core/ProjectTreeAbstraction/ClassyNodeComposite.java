@@ -17,4 +17,9 @@ public class ClassyNodeComposite extends ClassyNode {
     {
         children.add(newChild);
     }
+
+    public void deleteChild(ClassyNode child)
+    {
+        children.remove(child);
+    }
 }
