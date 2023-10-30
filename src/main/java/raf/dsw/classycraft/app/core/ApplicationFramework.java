@@ -28,6 +28,8 @@ public class ApplicationFramework {
 
         messageGenerator.addSubscriber(consoleLogger);
         messageGenerator.addSubscriber(fileLogger);
+
+        messageGenerator.addSubscriber(MainFrame.getInstance());
     }
 
     public void initialize(){

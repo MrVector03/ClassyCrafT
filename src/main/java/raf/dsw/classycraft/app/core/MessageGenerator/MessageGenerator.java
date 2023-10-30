@@ -4,9 +4,10 @@ import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MessageGenerator implements IPublisher {
-    private ArrayList<ISubscriber> subscribers;
+    private final List<ISubscriber> subscribers = new ArrayList<>();
     @Override
     public void addSubscriber(ISubscriber subscriber) {
         subscribers.add(subscriber);
