@@ -1,6 +1,6 @@
 package raf.dsw.classycraft.app.core.ProjectTreeAbstraction;
 
-public class ClassyNode {
+public abstract class ClassyNode {
     private String name;
     private ClassyNode parent;
 
