@@ -1,4 +1,4 @@
-package raf.dsw.classycraft.app.gui.swing.view;
+package raf.dsw.classycraft.app.gui.swing.view.popframes;
 
 import javax.swing.*;
 import java.awt.*;
