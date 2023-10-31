@@ -1,5 +1,6 @@
 package raf.dsw.classycraft.app.core.ProjectTreeImplementation;
 
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
@@ -12,9 +13,10 @@ import javax.swing.tree.DefaultTreeModel;
 public class ClassyTreeImplementation implements ClassyTree {
     private ClassyTreeView classyTreeView;
     private DefaultTreeModel defaultTreeModel;
+
     @Override
     public ClassyTreeView generateTree(ProjectExplorer projectExplorer) {
-        ClassyTreeItem root = new ClassyTreeItem(projectExplorer);
+        ClassyTreeItem root = new ClassyTreeItem(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
         defaultTreeModel = new DefaultTreeModel(root);
         classyTreeView = new ClassyTreeView(defaultTreeModel);
 
@@ -28,7 +30,10 @@ public class ClassyTreeImplementation implements ClassyTree {
 
         ClassyNode child = makeChild((ClassyNodeComposite) parent.getClassyNode());
         parent.add(new ClassyTreeItem(child));
+
+        child.setParent(parent.getClassyNode());
         ((ClassyNodeComposite) parent.getClassyNode()).addChild(child);
+
         classyTreeView.expandPath(classyTreeView.getSelectionPath());
         SwingUtilities.updateComponentTreeUI(classyTreeView);
     }
@@ -40,8 +45,23 @@ public class ClassyTreeImplementation implements ClassyTree {
 
     private ClassyNode makeChild(ClassyNodeComposite parent)
     {
+        String newProjectName = "New Project";
+        String newPackageName = "New Package";
+        String newDiagramName = "New Diagram";
+
+
+        if(parent.getChildren().size() > 0) {
+            newProjectName += " (" + parent.getChildren().size() + ")";
+            newPackageName += " (" + parent.getChildren().size() + ")";
+            newDiagramName += " (" + parent.getChildren().size() + ")";
+        }
+
         if(parent instanceof ProjectExplorer)
-            return new Project("NewProject", "default", "/");
+            return new Project(newProjectName, "default", "/");
+        if(parent instanceof Project)
+            return new Package(newPackageName);
+        if(parent instanceof Package)
+            return new Diagram(newDiagramName);
 
         return null;
     }

@@ -3,7 +3,7 @@ package raf.dsw.classycraft.app.core.ProjectTreeAbstraction;
 import java.util.ArrayList;
 
 public abstract class ClassyNodeComposite extends ClassyNode {
-    private ArrayList<ClassyNode> children;
+    private ArrayList<ClassyNode> children = new ArrayList<ClassyNode>();
 
     public ClassyNodeComposite(String name) {
         super(name);
