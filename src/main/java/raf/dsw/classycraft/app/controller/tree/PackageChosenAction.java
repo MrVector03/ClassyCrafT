@@ -22,7 +22,6 @@ public class PackageChosenAction extends AbstractClassyAction {
         ClassyTreeItem selected = MainFrame.getInstance().getClassyTree().getSelectedNode();
 
         MainFrame.getInstance().getPordFrame().setVisible(false);
-
         ((ClassyTreeImplementation)MainFrame.getInstance().getClassyTree()).setChosenNodeIndex(0);
         MainFrame.getInstance().getClassyTree().addChild(selected);
     }

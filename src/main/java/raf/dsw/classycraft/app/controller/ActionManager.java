@@ -1,6 +1,8 @@
 package raf.dsw.classycraft.app.controller;
 
+import com.sun.tools.javac.Main;
 import raf.dsw.classycraft.app.controller.tree.*;
+import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 
 public class ActionManager {
     private AboutUsAction aboutUsAction;
@@ -21,6 +23,9 @@ public class ActionManager {
         changeAuthorConfirmAction = new ChangeAuthorConfirmAction();
         packageChosenAction = new PackageChosenAction();
         diagramChosenAction = new DiagramChosenAction();
+
+        changeAuthorConfirmAction.addSubscriber(MainFrame.getInstance());
+        deleteNodeAction.addSubscriber(MainFrame.getInstance());
     }
 
     public AboutUsAction getAboutUsAction() {

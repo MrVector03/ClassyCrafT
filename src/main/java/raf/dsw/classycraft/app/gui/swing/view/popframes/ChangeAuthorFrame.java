@@ -13,7 +13,7 @@ public class ChangeAuthorFrame extends JFrame {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenHeight = screenSize.height;
         int screenWidth = screenSize.width;
-        setSize(screenWidth/6, screenHeight/12);
+        setSize(screenWidth/6, screenHeight/8);
 
         setLayout(new BorderLayout(10, 10));
 

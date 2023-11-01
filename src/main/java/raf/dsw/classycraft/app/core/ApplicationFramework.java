@@ -29,7 +29,6 @@ public class ApplicationFramework {
         messageGenerator.addSubscriber(consoleLogger);
         messageGenerator.addSubscriber(fileLogger);
 
-        //messageGenerator.addSubscriber(MainFrame.getInstance());
     }
 
     public void initialize(){
@@ -39,6 +38,7 @@ public class ApplicationFramework {
     public static ApplicationFramework getInstance(){
         if(instance==null){
             instance = new ApplicationFramework();
+            instance.getMessageGenerator().addSubscriber(MainFrame.getInstance());
         }
         return instance;
     }

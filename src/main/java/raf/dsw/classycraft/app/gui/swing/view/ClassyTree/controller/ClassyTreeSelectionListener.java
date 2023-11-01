@@ -4,7 +4,7 @@ import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
 
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultTreeSelectionModel;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 public class ClassyTreeSelectionListener implements TreeSelectionListener {

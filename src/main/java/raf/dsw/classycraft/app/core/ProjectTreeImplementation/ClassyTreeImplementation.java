@@ -3,6 +3,8 @@ package raf.dsw.classycraft.app.core.ProjectTreeImplementation;
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.Message;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
+import raf.dsw.classycraft.app.core.Observer.IPublisher;
+import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
@@ -12,11 +14,15 @@ import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.view.ClassyTreeView;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ClassyTreeImplementation implements ClassyTree {
+public class ClassyTreeImplementation implements ClassyTree, IPublisher {
     private ClassyTreeView classyTreeView;
     private DefaultTreeModel defaultTreeModel;
     private int chosenNodeIndex; //0 is package, 1 is diagram
+
+    private final List<ISubscriber> subscribers = new ArrayList<>();
 
     @Override
     public ClassyTreeView generateTree(ProjectExplorer projectExplorer) {
@@ -37,6 +43,8 @@ public class ClassyTreeImplementation implements ClassyTree {
 
         child.setParent(parent.getClassyNode());
         ((ClassyNodeComposite) parent.getClassyNode()).addChild(child);
+
+        notifySubscribers("ADDED_D");
 
         classyTreeView.expandPath(classyTreeView.getSelectionPath());
         SwingUtilities.updateComponentTreeUI(classyTreeView);
@@ -80,13 +88,30 @@ public class ClassyTreeImplementation implements ClassyTree {
         if(parent instanceof Package)
             if(chosenNodeIndex == 0)
                 return new Package(newPackageName);
-            else
+            else {
                 return new Diagram(newDiagramName);
+            }
 
         return null;
     }
 
     public void setChosenNodeIndex(int chosenNodeIndex) {
         this.chosenNodeIndex = chosenNodeIndex;
+    }
+
+    @Override
+    public void addSubscriber(ISubscriber subscriber) {
+        subscribers.add(subscriber);
+    }
+
+    @Override
+    public void removeSubscriber(ISubscriber subscriber) {
+        subscribers.remove(subscriber);
+    }
+
+    @Override
+    public void notifySubscribers(Object notification) {
+        for (ISubscriber subscriber : subscribers)
+            subscriber.update(notification);
     }
 }

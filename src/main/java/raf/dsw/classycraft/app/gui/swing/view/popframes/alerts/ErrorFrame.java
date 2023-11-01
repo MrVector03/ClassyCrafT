@@ -1,4 +1,6 @@
-package raf.dsw.classycraft.app.gui.swing.view.popframes;
+package raf.dsw.classycraft.app.gui.swing.view.popframes.alerts;
+
+import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.AlertFrame;
 
 public class ErrorFrame extends AlertFrame {
     private final String message;
