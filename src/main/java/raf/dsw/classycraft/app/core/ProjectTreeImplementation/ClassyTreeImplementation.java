@@ -1,6 +1,8 @@
 package raf.dsw.classycraft.app.core.ProjectTreeImplementation;
 
 import raf.dsw.classycraft.app.core.ApplicationFramework;
+import raf.dsw.classycraft.app.core.MessageGenerator.Message;
+import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
@@ -9,6 +11,7 @@ import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.view.ClassyTreeView;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
+import java.time.LocalDateTime;
 
 public class ClassyTreeImplementation implements ClassyTree {
     private ClassyTreeView classyTreeView;
@@ -35,6 +38,19 @@ public class ClassyTreeImplementation implements ClassyTree {
         ((ClassyNodeComposite) parent.getClassyNode()).addChild(child);
 
         classyTreeView.expandPath(classyTreeView.getSelectionPath());
+        SwingUtilities.updateComponentTreeUI(classyTreeView);
+    }
+
+    public void removeNode(ClassyTreeItem node)
+    {
+        if(node.getClassyNode().getParent() == null) {
+            ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("NODE_CANNOT_BE_DELETED", MessageType.ERROR, LocalDateTime.now()));
+            return;
+        }
+
+        ((ClassyNodeComposite)node.getClassyNode().getParent()).deleteChild(node.getClassyNode());
+
+        node.removeFromParent();
         SwingUtilities.updateComponentTreeUI(classyTreeView);
     }
 

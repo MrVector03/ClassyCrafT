@@ -16,7 +16,7 @@ public class MainFrame extends JFrame implements ISubscriber {
     private static MainFrame instance;
 
     private ActionManager actionManager;
-    private ClassyTree classyTree;
+    private ClassyTreeImplementation classyTree;
 
     private AboutUsFrame auFrame;
 

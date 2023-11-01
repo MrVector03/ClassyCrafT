@@ -25,4 +25,5 @@ public class ClassyTreeItem extends DefaultMutableTreeNode {
     public ClassyNode getClassyNode() {
         return classyNode;
     }
+
 }
