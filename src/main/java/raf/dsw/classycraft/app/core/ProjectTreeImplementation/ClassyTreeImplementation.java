@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class ClassyTreeImplementation implements ClassyTree {
     private ClassyTreeView classyTreeView;
     private DefaultTreeModel defaultTreeModel;
+    private int chosenNodeIndex; //0 is package, 1 is diagram
 
     @Override
     public ClassyTreeView generateTree(ProjectExplorer projectExplorer) {
@@ -77,8 +78,15 @@ public class ClassyTreeImplementation implements ClassyTree {
         if(parent instanceof Project)
             return new Package(newPackageName);
         if(parent instanceof Package)
-            return new Diagram(newDiagramName);
+            if(chosenNodeIndex == 0)
+                return new Package(newPackageName);
+            else
+                return new Diagram(newDiagramName);
 
         return null;
+    }
+
+    public void setChosenNodeIndex(int chosenNodeIndex) {
+        this.chosenNodeIndex = chosenNodeIndex;
     }
 }

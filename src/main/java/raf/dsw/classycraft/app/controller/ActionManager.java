@@ -1,18 +1,26 @@
 package raf.dsw.classycraft.app.controller;
 
-import raf.dsw.classycraft.app.controller.tree.AddNodeAction;
-import raf.dsw.classycraft.app.controller.tree.DeleteNodeAction;
+import raf.dsw.classycraft.app.controller.tree.*;
 
 public class ActionManager {
     private AboutUsAction aboutUsAction;
     private ExitAction exitAction;
     private AddNodeAction addNodeAction;
     private DeleteNodeAction deleteNodeAction;
+    private ChangeAuthorAction changeAuthorAction;
+    private ChangeAuthorConfirmAction changeAuthorConfirmAction;
+    private PackageChosenAction packageChosenAction;
+    private DiagramChosenAction diagramChosenAction;
     public ActionManager() {
         aboutUsAction = new AboutUsAction();
         exitAction = new ExitAction();
+
         addNodeAction = new AddNodeAction();
         deleteNodeAction = new DeleteNodeAction();
+        changeAuthorAction = new ChangeAuthorAction();
+        changeAuthorConfirmAction = new ChangeAuthorConfirmAction();
+        packageChosenAction = new PackageChosenAction();
+        diagramChosenAction = new DiagramChosenAction();
     }
 
     public AboutUsAction getAboutUsAction() {
@@ -29,5 +37,21 @@ public class ActionManager {
 
     public DeleteNodeAction getDeleteNodeAction() {
         return deleteNodeAction;
+    }
+
+    public ChangeAuthorAction getChangeAuthorAction() {
+        return changeAuthorAction;
+    }
+
+    public ChangeAuthorConfirmAction getChangeAuthorConfirmAction() {
+        return changeAuthorConfirmAction;
+    }
+
+    public PackageChosenAction getPackageChosenAction() {
+        return packageChosenAction;
+    }
+
+    public DiagramChosenAction getDiagramChosenAction() {
+        return diagramChosenAction;
     }
 }

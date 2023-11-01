@@ -2,6 +2,7 @@ package raf.dsw.classycraft.app.controller.tree;
 
 import com.sun.tools.javac.Main;
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.controller.ClassyTreeSelectionListener;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.view.ClassyTreeView;
@@ -22,6 +23,10 @@ public class AddNodeAction extends AbstractClassyAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         ClassyTreeItem selected = MainFrame.getInstance().getClassyTree().getSelectedNode();
-        MainFrame.getInstance().getClassyTree().addChild(selected);
+
+        if(selected.getClassyNode() instanceof Package)
+            MainFrame.getInstance().getPordFrame().setVisible(true);
+        else
+            MainFrame.getInstance().getClassyTree().addChild(selected);
     }
 }

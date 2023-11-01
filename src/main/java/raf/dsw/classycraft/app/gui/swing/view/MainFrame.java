@@ -19,6 +19,8 @@ public class MainFrame extends JFrame implements ISubscriber {
     private ClassyTreeImplementation classyTree;
 
     private AboutUsFrame auFrame;
+    private ChangeAuthorFrame caFrame;
+    private ChoosePackageOrDiagramFrame pordFrame;
 
     //buduca polja za sve komponente view-a na glavnom prozoru
 
@@ -50,6 +52,8 @@ public class MainFrame extends JFrame implements ISubscriber {
         add(toolBar, BorderLayout.NORTH);
 
         auFrame = new AboutUsFrame();
+        caFrame = new ChangeAuthorFrame();
+        pordFrame = new ChoosePackageOrDiagramFrame();
 
         JTree projectTreeView = classyTree.generateTree(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
         JPanel workView = new JPanel();
@@ -78,6 +82,14 @@ public class MainFrame extends JFrame implements ISubscriber {
 
     public ActionManager getActionManager() {
         return actionManager;
+    }
+
+    public ChangeAuthorFrame getCaFrame() {
+        return caFrame;
+    }
+
+    public ChoosePackageOrDiagramFrame getPordFrame() {
+        return pordFrame;
     }
 
     @Override
