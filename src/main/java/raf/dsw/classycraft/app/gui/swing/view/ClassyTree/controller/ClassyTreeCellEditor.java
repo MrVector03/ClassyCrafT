@@ -72,6 +72,10 @@ public class ClassyTreeCellEditor extends DefaultTreeCellEditor implements Actio
             return;
 
         ClassyTreeItem clicked = (ClassyTreeItem) clickedOn;
+        if (clicked.getClassyNode() instanceof ProjectExplorer) {
+            ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("CANNOT_RENAME_NODE", MessageType.WARNING, LocalDateTime.now()));
+            return;
+        }
 
         System.out.println(clicked.getClassyNode().getParent());
         System.out.println(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
