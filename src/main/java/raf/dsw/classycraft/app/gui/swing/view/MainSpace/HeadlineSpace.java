@@ -8,7 +8,7 @@ public class HeadlineSpace extends JPanel {
     private JLabel authorLabel = new JLabel(" ");
 
     public HeadlineSpace() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         projectLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         authorLabel.setAlignmentX(LEFT_ALIGNMENT);
         add(projectLabel);
@@ -17,15 +17,15 @@ public class HeadlineSpace extends JPanel {
 
     public void setup(String projectName, String author) {
         this.projectLabel.setText(projectName);
-        this.authorLabel.setText("Author: " +  author);
-        Font biggerFont = new Font(projectLabel.getFont().getName(), Font.PLAIN, 20);
+        this.authorLabel.setText(" | Author: " +  author);
+        Font biggerFont = new Font(projectLabel.getFont().getName(), Font.PLAIN, 14);
         projectLabel.setFont(biggerFont);
         authorLabel.setFont(biggerFont);
         repaint();
     }
 
     public void setupAuthor(String author) {
-        this.authorLabel.setText("Author: " +  author);
+        this.authorLabel.setText(" | Author: " +  author);
         repaint();
     }
 

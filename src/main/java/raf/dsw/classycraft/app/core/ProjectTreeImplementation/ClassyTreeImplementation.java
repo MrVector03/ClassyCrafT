@@ -38,7 +38,7 @@ public class ClassyTreeImplementation implements ClassyTree, IPublisher {
         if (!(parent.getClassyNode() instanceof ClassyNodeComposite))
             return;
 
-        ClassyNode child = makeChild((ClassyNodeComposite) parent.getClassyNode());
+        ClassyNode child = ApplicationFramework.getInstance().getClassyRepositoryImplementation().getChildFactory().makeChild(((ClassyNodeComposite)parent.getClassyNode()), chosenNodeIndex);
         parent.add(new ClassyTreeItem(child));
 
         child.setParent(parent.getClassyNode());
@@ -66,33 +66,6 @@ public class ClassyTreeImplementation implements ClassyTree, IPublisher {
     @Override
     public ClassyTreeItem getSelectedNode() {
         return (ClassyTreeItem) classyTreeView.getLastSelectedPathComponent();
-    }
-
-    private ClassyNode makeChild(ClassyNodeComposite parent)
-    {
-        String newProjectName = "New Project";
-        String newPackageName = "New Package";
-        String newDiagramName = "New Diagram";
-
-
-        if(parent.getChildren().size() > 0) {
-            newProjectName += " (" + parent.getChildren().size() + ")";
-            newPackageName += " (" + parent.getChildren().size() + ")";
-            newDiagramName += " (" + parent.getChildren().size() + ")";
-        }
-
-        if(parent instanceof ProjectExplorer)
-            return new Project(newProjectName, "default", "/");
-        if(parent instanceof Project)
-            return new Package(newPackageName);
-        if(parent instanceof Package)
-            if(chosenNodeIndex == 0)
-                return new Package(newPackageName);
-            else {
-                return new Diagram(newDiagramName);
-            }
-
-        return null;
     }
 
     public void setChosenNodeIndex(int chosenNodeIndex) {
