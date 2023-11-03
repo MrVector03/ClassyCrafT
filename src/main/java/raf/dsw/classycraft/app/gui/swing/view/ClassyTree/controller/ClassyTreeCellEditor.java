@@ -5,6 +5,8 @@ import raf.dsw.classycraft.app.core.MessageGenerator.Message;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
+import raf.dsw.classycraft.app.core.Observer.notifications.PackageViewNotification;
+import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
@@ -13,6 +15,7 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ProjectExplorer;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
+import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.NotificationFrame;
 
 import javax.security.auth.Subject;
 import javax.swing.*;
@@ -21,6 +24,7 @@ import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
+import java.awt.desktop.AppForegroundListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -30,7 +34,7 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-public class ClassyTreeCellEditor extends DefaultTreeCellEditor implements ActionListener, IPublisher {
+public class ClassyTreeCellEditor extends DefaultTreeCellEditor implements ActionListener {
     private Object clickedOn = null;
     private JTextField edit = null;
 
@@ -56,7 +60,8 @@ public class ClassyTreeCellEditor extends DefaultTreeCellEditor implements Actio
                 DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getPathForRow(row).getLastPathComponent();
                 if (selectedNode != null) {
                     assert selectedNode instanceof ClassyTreeItem;
-                    notifySubscribers(((ClassyTreeItem) selectedNode).getClassyNode());
+                    ApplicationFramework.getInstance().getClassyRepositoryImplementation()
+                            .notifySubscribers(new PackageViewNotification(Type.OPEN, ((ClassyTreeItem) selectedNode).getClassyNode()));
                 }
             }
             if (((MouseEvent) event).getClickCount() == 3)
@@ -84,29 +89,9 @@ public class ClassyTreeCellEditor extends DefaultTreeCellEditor implements Actio
                 ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("CANNOT_RENAME_NODE", MessageType.WARNING, LocalDateTime.now()));
                 return;
             }
+        ApplicationFramework.getInstance().getClassyRepositoryImplementation()
+                .notifySubscribers(new PackageViewNotification(Type.RENAME, clicked.getClassyNode(), e.getActionCommand()));
         clicked.setName(e.getActionCommand());
-        if (clicked.getClassyNode() instanceof Package)
-            notifySubscribers(clicked.getClassyNode());
-        else if (clicked.getClassyNode() instanceof Diagram)
-            notifySubscribers(clicked.getClassyNode().getParent());
-        else if (clicked.getClassyNode() instanceof Project)
-            notifySubscribers("RENAME_P:" + e.getActionCommand());
-    }
 
-    @Override
-    public void addSubscriber(ISubscriber subscriber) {
-        this.subscribers.add(subscriber);
-    }
-
-    @Override
-    public void removeSubscriber(ISubscriber subscriber) {
-        this.subscribers.remove(subscriber);
-    }
-
-    @Override
-    public void notifySubscribers(Object notification) {
-            for (ISubscriber is : this.subscribers) {
-                is.update(notification);
-            }
     }
 }

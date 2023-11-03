@@ -1,5 +1,8 @@
 package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -22,6 +25,11 @@ public class HeadlineSpace extends JPanel {
         projectLabel.setFont(biggerFont);
         authorLabel.setFont(biggerFont);
         repaint();
+    }
+
+    public void refreshLabels(Package pkg) {
+        this.projectLabel.setText(pkg.findProject().getName());
+        this.authorLabel.setText(" | Author: " +  ((Project) pkg.findProject()).getAuthor());
     }
 
     public void setupAuthor(String author) {

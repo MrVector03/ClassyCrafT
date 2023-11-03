@@ -17,8 +17,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeleteNodeAction extends AbstractClassyAction implements IPublisher {
-    private final List<ISubscriber> subscribers = new ArrayList<>();
+public class DeleteNodeAction extends AbstractClassyAction {
 
     public DeleteNodeAction() {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.ALT_MASK));
@@ -31,25 +30,5 @@ public class DeleteNodeAction extends AbstractClassyAction implements IPublisher
     public void actionPerformed(ActionEvent e) {
         ClassyTreeItem selected = MainFrame.getInstance().getClassyTree().getSelectedNode();
         ((ClassyTreeImplementation)MainFrame.getInstance().getClassyTree()).removeNode(selected);
-        if (selected.getClassyNode() instanceof Package || selected.getClassyNode() instanceof Project)
-            notifySubscribers("TOTAL_CLEAR");
-        else if (selected.getClassyNode() instanceof Diagram)
-            notifySubscribers("DELETED_D");
-    }
-
-    @Override
-    public void addSubscriber(ISubscriber subscriber) {
-        subscribers.add(subscriber);
-    }
-
-    @Override
-    public void removeSubscriber(ISubscriber subscriber) {
-        subscribers.remove(subscriber);
-    }
-
-    @Override
-    public void notifySubscribers(Object notification) {
-        for (ISubscriber subscriber : subscribers)
-            subscriber.update(notification);
     }
 }

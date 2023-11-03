@@ -24,8 +24,6 @@ public class ActionManager {
         packageChosenAction = new PackageChosenAction();
         diagramChosenAction = new DiagramChosenAction();
 
-        changeAuthorConfirmAction.addSubscriber(MainFrame.getInstance());
-        deleteNodeAction.addSubscriber(MainFrame.getInstance());
     }
 
     public AboutUsAction getAboutUsAction() {

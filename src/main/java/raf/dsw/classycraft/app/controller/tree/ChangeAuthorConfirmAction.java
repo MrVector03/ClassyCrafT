@@ -6,6 +6,8 @@ import raf.dsw.classycraft.app.core.MessageGenerator.Message;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
+import raf.dsw.classycraft.app.core.Observer.notifications.PackageViewNotification;
+import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
@@ -17,8 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChangeAuthorConfirmAction extends AbstractClassyAction implements IPublisher {
-    private final List<ISubscriber> subscribers = new ArrayList<>();
+public class ChangeAuthorConfirmAction extends AbstractClassyAction {
 
     public ChangeAuthorConfirmAction() {
         putValue(NAME, "Confirm author name");
@@ -40,24 +41,9 @@ public class ChangeAuthorConfirmAction extends AbstractClassyAction implements I
         }
 
         ((Project)selected.getClassyNode()).setAuthor(newAuthor);
-        notifySubscribers("RENAME_A:" + newAuthor);
+        ApplicationFramework.getInstance().getClassyRepositoryImplementation()
+                .notifySubscribers(new PackageViewNotification(Type.CHANGE_AUTHOR, selected.getClassyNode(), newAuthor));
         System.out.println("new author:" + newAuthor);
         System.out.println(((Project) selected.getClassyNode()).getAuthor());
-    }
-
-    @Override
-    public void addSubscriber(ISubscriber subscriber) {
-        subscribers.add(subscriber);
-    }
-
-    @Override
-    public void removeSubscriber(ISubscriber subscriber) {
-        subscribers.remove(subscriber);
-    }
-
-    @Override
-    public void notifySubscribers(Object notification) {
-        for (ISubscriber subscriber : subscribers)
-            subscriber.update(notification);
     }
 }

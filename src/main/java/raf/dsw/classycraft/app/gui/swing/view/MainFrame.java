@@ -30,7 +30,7 @@ public class MainFrame extends JFrame implements ISubscriber {
 
     private TabbedPane tabbedPane;
     private HeadlineSpace headlineSpace;
-    private PackageView splitView;
+    private PackageView packageView;
 
     //buduca polja za sve komponente view-a na glavnom prozoru
 
@@ -41,16 +41,15 @@ public class MainFrame extends JFrame implements ISubscriber {
 
     }
 
-
-
     private void initialize(){
         actionManager = new ActionManager();
         classyTree = new ClassyTreeImplementation();
-        classyTree.addSubscriber(MainFrame.getInstance());
 
         tabbedPane = new TabbedPane();
         headlineSpace = new HeadlineSpace();
-        splitView = new PackageView(headlineSpace, tabbedPane);
+        packageView = new PackageView(headlineSpace, tabbedPane);
+
+        ApplicationFramework.getInstance().getClassyRepositoryImplementation().addSubscriber(packageView);
 
         //GUI elements
         Toolkit kit = Toolkit.getDefaultToolkit();
@@ -77,7 +76,7 @@ public class MainFrame extends JFrame implements ISubscriber {
 
         JScrollPane treeScrollPane = new JScrollPane(projectTreeView);
         treeScrollPane.setMinimumSize(new Dimension(200, 150));
-        JSplitPane mainSplitFrame = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, splitView);
+        JSplitPane mainSplitFrame = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, packageView);
         getContentPane().add(mainSplitFrame, BorderLayout.CENTER);
         mainSplitFrame.setDividerLocation(250);
         mainSplitFrame.setOneTouchExpandable(true);
@@ -115,23 +114,6 @@ public class MainFrame extends JFrame implements ISubscriber {
             AlertFactory alertFactory = new AlertFactory();
             alertFrame = alertFactory.getAlert((Message) notification);
             alertFrame.showMessage();
-        } else if (notification instanceof Package)
-            splitView.setupView((Package) notification);
-
-        else if (tabbedPane.getClassyPackage() != null &&
-                notification.equals("ADDED_D") || notification.equals("DELETED_D")) {
-            splitView.setupView(tabbedPane.getClassyPackage());
-        }
-
-        else if (notification.equals("TOTAL_CLEAR"))
-            splitView.totalClear();
-
-        else if (notification instanceof String) {
-            if (((String) notification).contains("RENAME_A"))
-                headlineSpace.setupAuthor(((String) notification).replace("RENAME_A:", ""));
-
-            else if (((String) notification).contains("RENAME_P"))
-                headlineSpace.setupProjectName(((String) notification).replace("RENAME_P:", ""));
         }
     }
 
