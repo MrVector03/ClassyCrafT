@@ -3,7 +3,7 @@ package raf.dsw.classycraft.app.core.ProjectTreeImplementation;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.PackageViewNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyRepository;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ProjectExplorer;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeChildFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +17,6 @@ public class ClassyRepositoryImplementation implements ClassyRepository {
     public ClassyRepositoryImplementation() {
         if(root == null)
             root = new ProjectExplorer();
-
-        if(childFactory == null)
-            childFactory = new ClassyNodeChildFactory();
-    }
-
-    @Override
-    public ClassyNodeChildFactory getChildFactory() {
-        return childFactory;
     }
 
     @Override

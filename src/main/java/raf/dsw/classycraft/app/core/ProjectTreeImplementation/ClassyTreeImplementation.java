@@ -10,6 +10,7 @@ import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Factories.FactoryUtils;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.view.ClassyTreeView;
 
@@ -38,7 +39,7 @@ public class ClassyTreeImplementation implements ClassyTree {
         if (!(parent.getClassyNode() instanceof ClassyNodeComposite))
             return;
 
-        ClassyNode child = ApplicationFramework.getInstance().getClassyRepositoryImplementation().getChildFactory().makeChild(((ClassyNodeComposite)parent.getClassyNode()), chosenNodeIndex);
+        ClassyNode child = FactoryUtils.getNodeFactory((ClassyNodeComposite) parent.getClassyNode(), chosenNodeIndex).createChild((ClassyNodeComposite) parent.getClassyNode());
         parent.add(new ClassyTreeItem(child));
 
         child.setParent(parent.getClassyNode());
