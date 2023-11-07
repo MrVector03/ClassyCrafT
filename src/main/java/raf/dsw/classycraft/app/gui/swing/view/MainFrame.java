@@ -1,9 +1,18 @@
 package raf.dsw.classycraft.app.gui.swing.view;
 
 import raf.dsw.classycraft.app.controller.ActionManager;
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.Message;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.HeadlineSpace;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.PackageView;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.TabbedPane;
 import raf.dsw.classycraft.app.gui.swing.view.popframes.*;
+import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.AlertFactory;
+import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.AlertFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +21,16 @@ public class MainFrame extends JFrame implements ISubscriber {
     private static MainFrame instance;
 
     private ActionManager actionManager;
+    private ClassyTreeImplementation classyTree;
+
 
     private AboutUsFrame auFrame;
+    private ChangeAuthorFrame caFrame;
+    private ChoosePackageOrDiagramFrame pordFrame;
+
+    private TabbedPane tabbedPane;
+    private HeadlineSpace headlineSpace;
+    private PackageView packageView;
 
     //buduca polja za sve komponente view-a na glavnom prozoru
 
@@ -26,7 +43,15 @@ public class MainFrame extends JFrame implements ISubscriber {
 
     private void initialize(){
         actionManager = new ActionManager();
+        classyTree = new ClassyTreeImplementation();
 
+        tabbedPane = new TabbedPane();
+        headlineSpace = new HeadlineSpace();
+        packageView = new PackageView(headlineSpace, tabbedPane);
+
+        ApplicationFramework.getInstance().getClassyRepositoryImplementation().addSubscriber(packageView);
+
+        //GUI elements
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
         int screenHeight = screenSize.height;
@@ -43,6 +68,18 @@ public class MainFrame extends JFrame implements ISubscriber {
         add(toolBar, BorderLayout.NORTH);
 
         auFrame = new AboutUsFrame();
+        caFrame = new ChangeAuthorFrame();
+        pordFrame = new ChoosePackageOrDiagramFrame();
+
+        JTree projectTreeView = classyTree.generateTree(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
+        // JPanel workView = new JPanel();
+
+        JScrollPane treeScrollPane = new JScrollPane(projectTreeView);
+        treeScrollPane.setMinimumSize(new Dimension(200, 150));
+        JSplitPane mainSplitFrame = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, packageView);
+        getContentPane().add(mainSplitFrame, BorderLayout.CENTER);
+        mainSplitFrame.setDividerLocation(250);
+        mainSplitFrame.setOneTouchExpandable(true);
     }
 
     public static MainFrame getInstance()
@@ -63,10 +100,24 @@ public class MainFrame extends JFrame implements ISubscriber {
         return actionManager;
     }
 
+    public ChangeAuthorFrame getCaFrame() {
+        return caFrame;
+    }
+
+    public ChoosePackageOrDiagramFrame getPordFrame() {
+        return pordFrame;
+    }
+
     @Override
     public void update(Object notification) {
-        AlertFactory alertFactory = new AlertFactory();
-        alertFrame = alertFactory.getAlert((Message) notification);
-        alertFrame.showMessage();
+        if (notification instanceof Message) {
+            AlertFactory alertFactory = new AlertFactory();
+            alertFrame = alertFactory.getAlert((Message) notification);
+            alertFrame.showMessage();
+        }
+    }
+
+    public ClassyTree getClassyTree() {
+        return classyTree;
     }
 }

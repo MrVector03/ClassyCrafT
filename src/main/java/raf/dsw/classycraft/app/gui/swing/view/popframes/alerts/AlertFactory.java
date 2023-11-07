@@ -1,4 +1,4 @@
-package raf.dsw.classycraft.app.gui.swing.view.popframes;
+package raf.dsw.classycraft.app.gui.swing.view.popframes.alerts;
 
 import raf.dsw.classycraft.app.core.MessageGenerator.Message;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;

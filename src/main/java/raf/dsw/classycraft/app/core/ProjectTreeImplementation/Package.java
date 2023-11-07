@@ -20,4 +20,12 @@ public class Package extends ClassyNodeComposite {
         else
             ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("NODE_CANNOT_BE_ADDED", MessageType.ERROR, LocalDateTime.now()));
     }
+
+    public ClassyNodeComposite findProject() {
+        ClassyNodeComposite project = (ClassyNodeComposite) this.getParent();
+        while (!(project instanceof Project)) {
+            project = (ClassyNodeComposite) project.getParent();
+        }
+        return project;
+    }
 }
