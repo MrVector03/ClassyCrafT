@@ -24,7 +24,7 @@ public class Project extends ClassyNodeComposite {
         if(newChild instanceof Package)
             super.addChild(newChild);
         else
-            ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("NODE_CANNOT_BE_ADDED", MessageType.ERROR, LocalDateTime.now()));
+            ApplicationFramework.getInstance().getMessageGenerator().generateMessage("NODE_CANNOT_BE_ADDED", MessageType.ERROR);
     }
 
     public String getAuthor() {

@@ -18,7 +18,7 @@ public class Package extends ClassyNodeComposite {
         if(newChild instanceof Package || newChild instanceof Diagram)
             super.addChild(newChild);
         else
-            ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("NODE_CANNOT_BE_ADDED", MessageType.ERROR, LocalDateTime.now()));
+            ApplicationFramework.getInstance().getMessageGenerator().generateMessage("NODE_CANNOT_BE_ADDED", MessageType.ERROR);
     }
 
     public ClassyNodeComposite findProject() {

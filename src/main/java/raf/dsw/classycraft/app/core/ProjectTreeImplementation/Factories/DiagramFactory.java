@@ -4,6 +4,7 @@ import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeChildFactory;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 
 public class DiagramFactory extends ClassyNodeChildFactory {
     public DiagramFactory() {
@@ -11,13 +12,23 @@ public class DiagramFactory extends ClassyNodeChildFactory {
 
     @Override
     public ClassyNode createChild(ClassyNodeComposite parent) {
-        String newDiagramName = "New Diagram";
-
-
         if (parent.getChildren().size() > 0) {
-              newDiagramName += " (" + parent.getChildren().size() + ")";
+            int i = 0;
+            while(true) {
+                i++;
+                boolean found = false;
+
+                for(ClassyNode cn : parent.getChildren())
+                    if (cn.getName().equals("New Diagram (" + i + ")")) {
+                        found = true;
+                        break;
+                    }
+
+                if(!found)
+                    return new Diagram("New Diagram (" + i + ")");
+            }
         }
 
-        return new Diagram(newDiagramName);
+        return new Diagram("New Diagram");
     }
 }

@@ -36,7 +36,7 @@ public class ChangeAuthorConfirmAction extends AbstractClassyAction {
         MainFrame.getInstance().getCaFrame().getCaTextField().setText("");
 
         if(newAuthor.equals("")) {
-            ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("AUTHOR_NAME_CANNOT_BE_EMPTY", MessageType.ERROR, LocalDateTime.now()));
+            ApplicationFramework.getInstance().getMessageGenerator().generateMessage("AUTHOR_NAME_CANNOT_BE_EMPTY", MessageType.ERROR);
             return;
         }
 

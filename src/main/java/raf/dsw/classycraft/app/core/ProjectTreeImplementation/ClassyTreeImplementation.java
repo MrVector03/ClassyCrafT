@@ -55,7 +55,7 @@ public class ClassyTreeImplementation implements ClassyTree {
     public void removeNode(ClassyTreeItem node)
     {
         if(node.getClassyNode().getParent() == null) {
-            ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("NODE_CANNOT_BE_DELETED", MessageType.ERROR, LocalDateTime.now()));
+            ApplicationFramework.getInstance().getMessageGenerator().generateMessage("NODE_CANNOT_BE_DELETED", MessageType.ERROR);
             return;
         }
 
