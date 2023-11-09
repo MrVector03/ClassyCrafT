@@ -34,16 +34,20 @@ public class TabbedPane extends JTabbedPane {
     public void loadDiagrams() {
         for (ClassyNode cn : this.classyPackage.getChildren()) {
             if (cn instanceof Diagram) {
-                DiagramView newDiagram = new DiagramView((Diagram) cn);
+                DiagramView newDiagram = new DiagramView((Diagram) cn, this);
                 this.loadedDiagrams.add(newDiagram);
-                //ApplicationFramework.getInstance().getClassyRepositoryImplementation().addSubscriber(newDiagram);
             }
         }
     }
 
+    public void addNewDiagram(Diagram diagram) {
+        DiagramView newDiagram = new DiagramView(diagram, this);
+        this.loadedDiagrams.add(newDiagram);
+        addTab(newDiagram.getName(), newDiagram);
+    }
+
     public void clear() {
         for (DiagramView tabElement : loadedDiagrams) {
-            //ApplicationFramework.getInstance().getClassyRepositoryImplementation().removeSubscriber(tabElement);
             remove(tabElement);
         }
         this.loadedDiagrams.clear();
@@ -56,8 +60,9 @@ public class TabbedPane extends JTabbedPane {
         if (classyPackage == checkParent) return true;
         ClassyNode tmp = classyPackage;
         while (!(tmp instanceof ProjectExplorer) && tmp.getParent() != null) {
-            if (tmp == checkParent)
+            if (tmp == checkParent) {
                 return true;
+            }
             tmp = tmp.getParent();
         }
         return false;
@@ -66,7 +71,7 @@ public class TabbedPane extends JTabbedPane {
     public void renameDiagram(ClassyNode diagram, String newName) {
         for (int i = 0; i < loadedDiagrams.size(); i++) {
             if (loadedDiagrams.get(i).getDiagram() == diagram) {
-                System.out.println("new name: " + newName);
+                // System.out.println("new name: " + newName);
                 setTitleAt(i, newName);
                 revalidate();
                 return;

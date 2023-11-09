@@ -7,4 +7,9 @@ public class ProjectExplorer extends ClassyNodeComposite {
     public ProjectExplorer() {
         super("Project Explorer");
     }
+
+    @Override
+    public void setName(String name) {
+
+    }
 }

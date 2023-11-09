@@ -1,11 +1,8 @@
 package raf.dsw.classycraft.app.gui.swing.view.ClassyTree.controller;
 
 import raf.dsw.classycraft.app.core.ApplicationFramework;
-import raf.dsw.classycraft.app.core.MessageGenerator.Message;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
-import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
-import raf.dsw.classycraft.app.core.Observer.notifications.PackageViewNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
@@ -14,22 +11,15 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ProjectExplorer;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
-import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
-import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.NotificationFrame;
 
-import javax.security.auth.Subject;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
-import java.awt.desktop.AppForegroundListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
@@ -59,9 +49,8 @@ public class ClassyTreeCellEditor extends DefaultTreeCellEditor implements Actio
                 int row = tree.getRowForLocation(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
                 DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getPathForRow(row).getLastPathComponent();
                 if (selectedNode != null) {
-                    assert selectedNode instanceof ClassyTreeItem;
-                    ApplicationFramework.getInstance().getClassyRepositoryImplementation()
-                            .notifySubscribers(new PackageViewNotification(Type.OPEN, ((ClassyTreeItem) selectedNode).getClassyNode()));
+                    if (((ClassyTreeItem) selectedNode).getClassyNode() instanceof Package)
+                        ((Package) ((ClassyTreeItem) selectedNode).getClassyNode()).displayOnScreen();
                 }
             }
             if (((MouseEvent) event).getClickCount() == 3)
@@ -87,9 +76,19 @@ public class ClassyTreeCellEditor extends DefaultTreeCellEditor implements Actio
                 ApplicationFramework.getInstance().getMessageGenerator().generateMessage("CANNOT_RENAME_NODE", MessageType.WARNING);
                 return;
             }
-        ApplicationFramework.getInstance().getClassyRepositoryImplementation()
-                .notifySubscribers(new PackageViewNotification(Type.RENAME, clicked.getClassyNode(), e.getActionCommand()));
-        clicked.setName(e.getActionCommand());
 
+        this.renameNode(clicked.getClassyNode(), e.getActionCommand());
+
+        // clicked.setName(e.getActionCommand());
+
+    }
+
+    private void renameNode(ClassyNode classyNode, String newName) {
+        if (classyNode instanceof Diagram)
+            ((Diagram) classyNode).setName(newName);
+        else if (classyNode instanceof Package)
+            ((Package) classyNode).setName(newName);
+        else if (classyNode instanceof Project)
+            ((Project) classyNode).setName(newName);
     }
 }

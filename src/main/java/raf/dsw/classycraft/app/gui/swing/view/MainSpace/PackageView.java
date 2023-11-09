@@ -1,12 +1,10 @@
 package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
-import raf.dsw.classycraft.app.core.Observer.notifications.PackageViewNotification;
+import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ProjectExplorer;
 
 import javax.swing.*;
 
@@ -27,11 +25,12 @@ public class PackageView extends JPanel implements ISubscriber {
     public void setupView(Package openedPackage) {
         this.tabbedPane.loadPackage(openedPackage);
         this.headlineSpace.setup(tabbedPane.getClassyProject().getName(), tabbedPane.getClassyProject().getAuthor());
+        if (!tabbedPane.getClassyPackage().checkSubscriber(this))
+            this.tabbedPane.getClassyPackage().addSubscriber(this);
         repaint();
     }
 
     public void totalClear() {
-
         this.headlineSpace.clear();
         this.tabbedPane.clear();
         this.tabbedPane.revalidate();
@@ -39,54 +38,37 @@ public class PackageView extends JPanel implements ISubscriber {
 
     @Override
     public void update(Object notification) {
-        PackageViewNotification pvn = (PackageViewNotification) notification;
+        SubscriberNotification n = (SubscriberNotification) notification;
 
-        if (((PackageViewNotification) notification).getType().equals(Type.OPEN) &&
-                pvn.getClassyNode() instanceof Package) {
-            focusedPackage = (Package) pvn.getClassyNode();
-            totalClear();
-            setupView(focusedPackage);
+            // NOTIFICATION FOR RENAME = [TYPE.RENAME, PROJECT, NEW NAME]
+        if (n.getType().equals(Type.RENAME)) {
+            if (n.getClassyNode() == this.tabbedPane.getClassyPackage().findProject())
+                this.headlineSpace.setupProjectName(n.getMsg());
 
-        } else if (pvn.getType().equals(Type.ADD) && pvn.getClassyNode() instanceof Diagram) {
-            if (focusedPackage != null) {
-                totalClear();
-                setupView(focusedPackage);
+            // NOTIFICATION FOR AUTHOR CHANGE = [TYPE.CHANGE_AUTHOR, PROJECT, NEW AUTHOR]
+        } else if (n.getType().equals(Type.CHANGE_AUTHOR)) {
+            if (n.getClassyNode() == this.tabbedPane.getClassyPackage().findProject())
+                this.headlineSpace.setupAuthor(n.getMsg());
+
+            // NOTIFICATION FOR OPENING PACKAGE IN VIEW = [TYPE.ADD, PACKAGE, NONE]
+        } else if (n.getType().equals(Type.OPEN)) {
+            this.totalClear();
+            this.setupView((Package) n.getClassyNode());
+
+            // NOTIFICATION FOR ADDING DIAGRAM = [TYPE.ADD, NEW DIAGRAM, NONE]
+        } else if (n.getType().equals(Type.ADD)) {
+            if (n.getClassyNode().getParent() == tabbedPane.getClassyPackage() &&
+                    tabbedPane.getClassyPackage().getChildren().contains(n.getClassyNode())) {
+                this.tabbedPane.addNewDiagram((Diagram) n.getClassyNode());
+                this.revalidate();
             }
-
-        } else if (pvn.getType().equals(Type.REMOVE)) {
-            if (pvn.getClassyNode() instanceof Diagram) {
-                System.out.println("removing diagram");
-                tabbedPane.removeDiagram(pvn.getClassyNode());
-
-            } else if (pvn.getClassyNode() instanceof Package) {
-                if (pvn.getClassyNode() == tabbedPane.getClassyPackage() || tabbedPane.checkParent(pvn.getClassyNode())) {
-                    System.out.println("package in package");
+            // NOTIFICATION FOR REMOVING NODES = [TYPE.ADD, NODE, NONE]
+        } else if (n.getType().equals(Type.REMOVE)) {
+            if (n.getClassyNode() instanceof Diagram) {
+                this.tabbedPane.removeDiagram(n.getClassyNode());
+            } else {
+                if (tabbedPane.checkParent(n.getClassyNode()))
                     totalClear();
-                    focusedPackage = null;
-                }
-
-            } else if (pvn.getClassyNode() instanceof Project) {
-                if (!((Project) pvn.getClassyNode()).getChildren().isEmpty() &&
-                        tabbedPane.getClassyProject().equals(pvn.getClassyNode())) {
-                    totalClear();
-                    focusedPackage = null;
-                }
-            }
-        } else if (pvn.getType().equals(Type.RENAME)) {
-                if (focusedPackage != null) {
-                    if (pvn.getClassyNode() instanceof Project) {
-                        headlineSpace.setupProjectName(pvn.getMsg());
-                    } else if (pvn.getClassyNode() instanceof Diagram) {
-                        if (focusedPackage != null) {
-                            tabbedPane.renameDiagram(pvn.getClassyNode(), pvn.getMsg());
-                            repaint();
-                        }
-                    }
-                }
-
-        } else if (pvn.getType().equals(Type.CHANGE_AUTHOR)) {
-            if (focusedPackage != null) {
-                headlineSpace.setupAuthor(pvn.getMsg());
             }
         }
     }

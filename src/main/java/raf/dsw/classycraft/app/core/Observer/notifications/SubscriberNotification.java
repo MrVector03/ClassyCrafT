@@ -2,17 +2,17 @@ package raf.dsw.classycraft.app.core.Observer.notifications;
 
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 
-public class PackageViewNotification {
+public class SubscriberNotification {
     private final Type type;
     private final ClassyNode classyNode;
     private String msg;
 
-    public PackageViewNotification(Type type, ClassyNode classyNode) {
+    public SubscriberNotification(Type type, ClassyNode classyNode) {
         this.type = type;
         this.classyNode = classyNode;
     }
 
-    public PackageViewNotification(Type type, ClassyNode classyNode, String message) {
+    public SubscriberNotification(Type type, ClassyNode classyNode, String message) {
         this.type = type;
         this.classyNode = classyNode;
         this.msg = message;
