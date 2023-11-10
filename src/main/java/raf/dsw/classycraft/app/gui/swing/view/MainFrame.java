@@ -49,8 +49,6 @@ public class MainFrame extends JFrame implements ISubscriber {
         headlineSpace = new HeadlineSpace();
         packageView = new PackageView(headlineSpace, tabbedPane);
 
-        ApplicationFramework.getInstance().getClassyRepositoryImplementation().addSubscriber(packageView);
-
         //GUI elements
         Toolkit kit = Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
@@ -106,6 +104,10 @@ public class MainFrame extends JFrame implements ISubscriber {
 
     public ChoosePackageOrDiagramFrame getPordFrame() {
         return pordFrame;
+    }
+
+    public PackageView getPackageView() {
+        return packageView;
     }
 
     @Override

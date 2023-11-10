@@ -1,11 +1,7 @@
 package raf.dsw.classycraft.app.core.ProjectTreeImplementation;
 
 import raf.dsw.classycraft.app.core.ApplicationFramework;
-import raf.dsw.classycraft.app.core.MessageGenerator.Message;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
-import raf.dsw.classycraft.app.core.Observer.IPublisher;
-import raf.dsw.classycraft.app.core.Observer.ISubscriber;
-import raf.dsw.classycraft.app.core.Observer.notifications.PackageViewNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
@@ -16,9 +12,6 @@ import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.view.ClassyTreeView;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ClassyTreeImplementation implements ClassyTree {
     private ClassyTreeView classyTreeView;
@@ -48,21 +41,29 @@ public class ClassyTreeImplementation implements ClassyTree {
         classyTreeView.expandPath(classyTreeView.getSelectionPath());
         SwingUtilities.updateComponentTreeUI(classyTreeView);
 
-        ApplicationFramework.getInstance().getClassyRepositoryImplementation()
-                .notifySubscribers(new PackageViewNotification(Type.ADD, child));
+        if (child instanceof Diagram)
+            ((Diagram) child).addToScreen();
+
     }
 
     public void removeNode(ClassyTreeItem node)
     {
         if(node.getClassyNode().getParent() == null) {
-            ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("NODE_CANNOT_BE_DELETED", MessageType.ERROR, LocalDateTime.now()));
+            ApplicationFramework.getInstance().getMessageGenerator().generateMessage("NODE_CANNOT_BE_DELETED", MessageType.ERROR);
             return;
+        }
+
+        if (node.getClassyNode() instanceof Diagram) {
+            ((Package) node.getClassyNode().getParent()).removeDiagramFromScreen((Diagram) node.getClassyNode());
+        } else if (node.getClassyNode() instanceof Package) {
+            ((Package) node.getClassyNode()).checkRemovalFromScreen();
+        } else if (node.getClassyNode() instanceof Project) {
+            ((Project) node.getClassyNode()).remove();
         }
 
         ((ClassyNodeComposite)node.getClassyNode().getParent()).deleteChild(node.getClassyNode());
 
-        ApplicationFramework.getInstance().getClassyRepositoryImplementation()
-                .notifySubscribers(new PackageViewNotification(Type.REMOVE, node.getClassyNode()));
+
 
         node.removeFromParent();
         SwingUtilities.updateComponentTreeUI(classyTreeView);

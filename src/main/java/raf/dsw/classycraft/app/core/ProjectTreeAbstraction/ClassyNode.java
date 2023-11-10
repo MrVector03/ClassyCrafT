@@ -12,6 +12,8 @@ public abstract class ClassyNode {
         return name;
     }
 
+    // public abstract void setName(String name) {};
+
     public void setName(String name) {
         this.name = name;
     }

@@ -12,13 +12,23 @@ public class ProjectFactory extends ClassyNodeChildFactory {
 
     @Override
     public ClassyNode createChild(ClassyNodeComposite parent) {
-        String newProjectName = "New Project";
-
-
         if (parent.getChildren().size() > 0) {
-            newProjectName += " (" + parent.getChildren().size() + ")";
+            int i = 0;
+            while(true) {
+                i++;
+                boolean found = false;
+
+                for(ClassyNode cn : parent.getChildren())
+                    if (cn.getName().equals("New Project (" + i + ")")) {
+                        found = true;
+                        break;
+                    }
+
+                if(!found)
+                    return new Project("New Project (" + i + ")", "default", "/");
+            }
         }
 
-        return new Project(newProjectName, "default", "/");
+        return new Project("New Project", "default", "/");
     }
 }

@@ -27,7 +27,7 @@ public class ChangeAuthorAction extends AbstractClassyAction {
 
         if(!(selected.getClassyNode() instanceof Project))
         {
-            ApplicationFramework.getInstance().getMessageGenerator().notifySubscribers(new Message("CANNOT_EDIT_AUTHOR_ON_NON_PROJECT", MessageType.ERROR, LocalDateTime.now()));
+            ApplicationFramework.getInstance().getMessageGenerator().generateMessage("CANNOT_EDIT_AUTHOR_ON_NON_PROJECT", MessageType.ERROR);
             return;
         }
 
