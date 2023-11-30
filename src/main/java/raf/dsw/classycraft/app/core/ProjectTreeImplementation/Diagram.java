@@ -5,11 +5,12 @@ import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Diagram extends ClassyNode implements IPublisher {
+public class Diagram extends ClassyNodeComposite implements IPublisher {
     private final List<ISubscriber> subscribers = new ArrayList<>();
 
     public Diagram(String name) {
