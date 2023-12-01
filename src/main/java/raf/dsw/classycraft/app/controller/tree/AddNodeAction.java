@@ -22,9 +22,11 @@ public class AddNodeAction extends AbstractClassyAction {
     public void actionPerformed(ActionEvent e) {
         ClassyTreeItem selected = MainFrame.getInstance().getClassyTree().getSelectedNode();
 
-        if(selected.getClassyNode() instanceof Package)
+        if(selected.getClassyNode() instanceof Package) {
             MainFrame.getInstance().getPordFrame().setVisible(true);
-        else
+            ((Package) selected.getClassyNode()).clearSubscribers();
+            ((Package) selected.getClassyNode()).addSubscriber(MainFrame.getInstance().getPackageView());
+        } else
             MainFrame.getInstance().getClassyTree().addChild(selected);
     }
 }

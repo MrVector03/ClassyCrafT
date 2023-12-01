@@ -70,7 +70,6 @@ public class DiagramView extends JPanel implements ISubscriber {
             this.tabbedPane.renameDiagram(n.getClassyNode(), n.getMsg());
 
         }
-
     }
 
     @Override

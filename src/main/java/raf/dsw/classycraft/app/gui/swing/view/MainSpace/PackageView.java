@@ -5,12 +5,14 @@ import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotificatio
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.state.StateManager;
 
 import javax.swing.*;
 
 public class PackageView extends JPanel implements ISubscriber {
     private final HeadlineSpace headlineSpace;
     private final TabbedPane tabbedPane;
+    private final StateManager stateManager = new StateManager();
 
     private Package focusedPackage;
 
@@ -34,6 +36,27 @@ public class PackageView extends JPanel implements ISubscriber {
         this.headlineSpace.clear();
         this.tabbedPane.clear();
         this.tabbedPane.revalidate();
+    }
+
+    // STATE MEDIATOR METHODS
+    public void startAddInterClassState() {
+        stateManager.setAddInterClassState();
+    }
+
+    public void startAddConnectionState() {
+        stateManager.setAddConnectionState();
+    }
+
+    public void startAddElementState() {
+        stateManager.setAddElementState();
+    }
+
+    public void startDeleteState() {
+        stateManager.setDeleteState();
+    }
+
+    public void startSelectionState() {
+
     }
 
     @Override

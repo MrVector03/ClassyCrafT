@@ -1,0 +1,24 @@
+package raf.dsw.classycraft.app.state.substates;
+
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
+import raf.dsw.classycraft.app.state.State;
+
+import java.awt.geom.Point2D;
+
+public class AddInterClassState implements State {
+
+    @Override
+    public void classyMousePressed(int x, int y, DiagramView diagramView) {
+
+    }
+
+    @Override
+    public void classyMouseDragged(Point2D startingPosition, DiagramView diagramView) {
+
+    }
+
+    @Override
+    public void classyMouseReleased(Point2D endingPosition, DiagramView diagramView) {
+
+    }
+}
