@@ -7,7 +7,7 @@ import java.awt.geom.Point2D;
 
 public class AddElementState implements State {
     @Override
-    public void classyMousePressed(int x, int y, DiagramView diagramView) {
+    public void classyMousePressed(Point2D position, DiagramView diagramView) {
 
     }
 

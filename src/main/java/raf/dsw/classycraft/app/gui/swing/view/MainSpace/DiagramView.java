@@ -11,6 +11,7 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementat
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.listeners.ClassyMouseListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,14 +32,26 @@ public class DiagramView extends JPanel implements ISubscriber {
         this.tabbedPane = tabbedPane;
         diagram.addSubscriber(this);
 
+        addMouseListener(new ClassyMouseListener(this));
+
+
         //TEST/////////////////////////
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                diagramElementPainters.add(new InterClassPainter(new Class("viktor", Access.DEFAULT, new Point2D.Double(e.getPoint().getX(),e.getPoint().getY()), new Dimension(100,100), new ArrayList<ClassContent>(), false)));
-                repaint();
-            }
-        });
+
+
+        //addMouseListener(new MouseAdapter() {
+        //    @Override
+        //    public void mousePressed(MouseEvent e) {
+        //        //diagramElementPainters.add(new InterClassPainter(new Class("viktor", Access.DEFAULT,
+        //        //        new Point2D.Double(e.getPoint().getX(),e.getPoint().getY()), new Dimension(100,100),
+        //        //        new ArrayList<ClassContent>(), false)));
+//
+        //        (tabbedPane.getClassyPackage()).getPackageView().getCurrentState()
+        //                .classyMousePressed(e.getPoint().getX(), e.getPoint().getY(), this);
+        //        repaint();
+        //    }
+        //});
+
+
         //TEST/////////////////////////
 
     }
@@ -55,6 +68,10 @@ public class DiagramView extends JPanel implements ISubscriber {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    public ArrayList<DiagramElementPainter> getDiagramElementPainters() {
+        return diagramElementPainters;
     }
 
     public TabbedPane getTabbedPane() {

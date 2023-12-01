@@ -1,16 +1,19 @@
 package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
-public class TabView extends JPanel {
+public class TabView extends JSplitPane {
     private final DiagramView diagramView;
-    private final WorkSpaceButtons buttons = new WorkSpaceButtons();
-
-    public TabView(DiagramView diagramView) {
+    private WorkSpaceButtons buttons;
+    public TabView(DiagramView diagramView, WorkSpaceButtons buttons) {
+        super(JSplitPane.HORIZONTAL_SPLIT, diagramView, buttons);
+        setDividerLocation(625);
         this.diagramView = diagramView;
+    }
 
-        add(diagramView, BorderLayout.CENTER);
-        add(this.buttons, BorderLayout.EAST);
+    public DiagramView getDiagramView() {
+        return diagramView;
     }
 }

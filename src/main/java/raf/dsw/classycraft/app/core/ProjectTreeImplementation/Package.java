@@ -81,6 +81,10 @@ public class Package extends ClassyNodeComposite implements IPublisher {
         return this.subscribers.contains(subscriber);
     }
 
+    public PackageView getPackageView() {
+        return (PackageView) subscribers.get(0);
+    }
+
     @Override
     public void addSubscriber(ISubscriber subscriber) {
         this.subscribers.add(subscriber);

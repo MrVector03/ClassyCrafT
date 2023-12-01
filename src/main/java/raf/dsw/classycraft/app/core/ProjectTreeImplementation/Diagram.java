@@ -27,6 +27,10 @@ public class Diagram extends ClassyNodeComposite implements IPublisher {
         ((Package) getParent()).addDiagramOnScreen(this);
     }
 
+    public List<ISubscriber> getSubscribers() {
+        return this.subscribers;
+    }
+
     @Override
     public void addSubscriber(ISubscriber subscriber) {
         this.subscribers.add(subscriber);

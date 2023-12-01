@@ -7,8 +7,9 @@ import java.awt.geom.Point2D;
 
 public class DeleteState implements State {
     @Override
-    public void classyMousePressed(int x, int y, DiagramView diagramView) {
-
+    public void classyMousePressed(Point2D position, DiagramView diagramView) {
+        diagramView.getDiagramElementPainters().removeIf(dep -> dep.elementAt(position));
+        //diagramView.getTabbedPane().getClassyPackage().getPackageView().startSelectionState();
     }
 
     @Override
