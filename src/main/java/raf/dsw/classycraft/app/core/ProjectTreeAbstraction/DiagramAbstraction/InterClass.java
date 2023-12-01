@@ -5,15 +5,25 @@ import java.awt.geom.Point2D;
 
 public abstract class InterClass extends DiagramElement{
     private Access access;
-    private String name;
     private Point2D position;
-    private Dimension scale;
+    private Dimension size;
 
-    public InterClass(String name, Access access, String name1, Point2D position, Dimension scale) {
+    public InterClass(String name, Access access, Point2D position, Dimension size) {
         super(name);
         this.access = access;
-        this.name = name1;
         this.position = position;
-        this.scale = scale;
+        this.size = size;
+    }
+
+    public Access getAccess() {
+        return access;
+    }
+
+    public Point2D getPosition() {
+        return position;
+    }
+
+    public Dimension getSize() {
+        return size;
     }
 }

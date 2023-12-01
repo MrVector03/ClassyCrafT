@@ -9,4 +9,12 @@ public abstract class Connection extends DiagramElement {
         this.from = from;
         this.to = to;
     }
+
+    public InterClass getFrom() {
+        return from;
+    }
+
+    public InterClass getTo() {
+        return to;
+    }
 }

@@ -11,8 +11,8 @@ public class Class extends InterClass {
     private ArrayList<ClassContent> classContents;
     private boolean isAbstract;
 
-    public Class(String name, Access access, String name1, Point2D position, Dimension scale, ArrayList<ClassContent> classContents, boolean isAbstract) {
-        super(name, access, name1, position, scale);
+    public Class(String name, Access access, Point2D position, Dimension scale, ArrayList<ClassContent> classContents, boolean isAbstract) {
+        super(name, access, position, scale);
         this.classContents = classContents;
         this.isAbstract = isAbstract;
     }

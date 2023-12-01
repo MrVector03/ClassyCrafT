@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class Enum extends InterClass {
     private ArrayList<String> values;
 
-    public Enum(String name, Access access, String name1, Point2D position, Dimension scale, ArrayList<String> values) {
-        super(name, access, name1, position, scale);
+    public Enum(String name, Access access, Point2D position, Dimension scale, ArrayList<String> values) {
+        super(name, access, position, scale);
         this.values = values;
     }
 }

@@ -10,8 +10,8 @@ import java.util.ArrayList;
 public class Interface extends InterClass {
     private ArrayList<Method> methods;
 
-    public Interface(String name, Access access, String name1, Point2D position, Dimension scale, ArrayList<Method> methods) {
-        super(name, access, name1, position, scale);
+    public Interface(String name, Access access, Point2D position, Dimension scale, ArrayList<Method> methods) {
+        super(name, access, position, scale);
         this.methods = methods;
     }
 }
