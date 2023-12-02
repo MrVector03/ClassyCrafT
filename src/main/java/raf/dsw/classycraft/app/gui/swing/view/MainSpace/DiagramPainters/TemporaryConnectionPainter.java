@@ -2,31 +2,23 @@ package raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters;
 
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.TemporaryConnection;
 
 import java.awt.*;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-public class ConnectionPainter extends DiagramElementPainter {
+public class TemporaryConnectionPainter extends DiagramElementPainter {
     private Point2D toPointMin = null;
     private Point2D fromPointMin = null;
 
-    // private Connection connection = (Connection)diagramElement;
+    public TemporaryConnectionPainter(TemporaryConnection connection) {
 
-    public ConnectionPainter(Connection connection) {
-
-        // InterClass to = ((Connection)diagramElement).getTo();
-        // InterClass from = ((Connection)diagramElement).getFrom();
-
-        InterClass to = connection.getTo();
+        Point2D to = connection.getTo();
         InterClass from = connection.getFrom();
 
         ArrayList<Point2D> toPoints = new ArrayList<Point2D>();
-        toPoints.add(new Point2D.Double(to.getPosition().getX() + to.getSize().getWidth()/2, to.getPosition().getY()));
-        toPoints.add(new Point2D.Double(to.getPosition().getX() + to.getSize().getWidth()/2, to.getPosition().getY() + to.getSize().getHeight()));
-        toPoints.add(new Point2D.Double(to.getPosition().getX(), to.getPosition().getY() + to.getSize().getHeight()/2));
-        toPoints.add(new Point2D.Double(to.getPosition().getX() + to.getSize().getWidth(), to.getPosition().getY() + to.getSize().getHeight()/2));
+        toPoints.add(new Point2D.Double(to.getX(), to.getY()));
 
         ArrayList<Point2D> fromPoints = new ArrayList<Point2D>();
         fromPoints.add(new Point2D.Double(from.getPosition().getX() + from.getSize().getWidth()/2, from.getPosition().getY()));

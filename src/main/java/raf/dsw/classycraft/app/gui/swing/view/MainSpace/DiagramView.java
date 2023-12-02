@@ -17,8 +17,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+
+import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseMotionListener;
 
 public class DiagramView extends JPanel implements ISubscriber {
     private final TabbedPane tabbedPane;
@@ -34,7 +37,19 @@ public class DiagramView extends JPanel implements ISubscriber {
 
         addMouseListener(new ClassyMouseListener(this));
 
+        addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                tabbedPane.getClassyPackage().getPackageView().getCurrentState()
+                        .classyMouseDragged(e.getPoint(), DiagramView.this);
+                repaint();
+            }
 
+            @Override
+            public void mouseMoved(MouseEvent e) {
+
+            }
+        });
         //TEST/////////////////////////
 
 
