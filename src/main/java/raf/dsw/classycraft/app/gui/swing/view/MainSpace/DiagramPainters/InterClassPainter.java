@@ -37,6 +37,8 @@ public class InterClassPainter extends DiagramElementPainter {
     @Override
     public void paint(Graphics2D g) {
         g.draw(shape);
+        g.drawString(interClass.getAccess().toString(), (int)interClass.getPosition().getX()+5, (int)interClass.getPosition().getY()+15);
+        g.drawString(interClass.getName(), (int)interClass.getPosition().getX()+70, (int)interClass.getPosition().getY()+15);
     }
 
     @Override

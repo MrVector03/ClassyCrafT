@@ -45,7 +45,7 @@ public class AddConnectionState implements State {
             }
         };
         TemporaryConnectionPainter connectionPainter = new TemporaryConnectionPainter(temporaryConnection);
-        diagramView.getDiagramElementPainters().add(connectionPainter);
+        diagramView.addDiagramElementPainter(connectionPainter);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class AddConnectionState implements State {
             }
         };
         ConnectionPainter connectionPainter = new ConnectionPainter(connection);
-        diagramView.getDiagramElementPainters().add(connectionPainter);
+        diagramView.addDiagramElementPainter(connectionPainter);
 
         from = null;
         to = null;

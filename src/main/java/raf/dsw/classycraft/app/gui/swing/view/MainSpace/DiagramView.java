@@ -89,6 +89,11 @@ public class DiagramView extends JPanel implements ISubscriber {
         return diagramElementPainters;
     }
 
+    public void addDiagramElementPainter(DiagramElementPainter diagramElementPainter) {
+        diagramElementPainters.add(diagramElementPainter);
+        repaint();
+    }
+
     public TabbedPane getTabbedPane() {
         return tabbedPane;
     }

@@ -5,6 +5,7 @@ import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Di
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
+import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
@@ -19,7 +20,6 @@ public class AddInterClassState implements State {
 
     @Override
     public void classyMousePressed(Point2D position, DiagramView diagramView) {
-        Dimension interClassDimension = new Dimension(100, 100);
         Point2D checked_position = position;
         for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
             // if (((InterClassPainter) dep).areaElementAt(position, interClassDimension)) {
@@ -31,10 +31,11 @@ public class AddInterClassState implements State {
         }
         if (checked_position.getX() == 10000) return;
         position = checked_position;
-        diagramView.getDiagramElementPainters().add(new InterClassPainter(new Class("viktor", Access.DEFAULT,
-                new Point2D.Double(position.getX(), position.getY()), interClassDimension,
-                new ArrayList<ClassContent>(), false)));
-        System.out.println("finished painting");
+
+        MainFrame.getInstance().setCurMousePos(position);
+        MainFrame.getInstance().setCurDiagramView(diagramView);
+
+        MainFrame.getInstance().getEditInterClassFrame().setVisible(true);
         //diagramView.getTabbedPane().getClassyPackage().getPackageView().startSelectionState();
     }
 

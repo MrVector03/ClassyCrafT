@@ -14,8 +14,6 @@ public class ClassyMouseListener extends MouseAdapter {
 
     public ClassyMouseListener(DiagramView diagramView) {
         this.diagramView = diagramView;
-
-
     }
 
     @Override

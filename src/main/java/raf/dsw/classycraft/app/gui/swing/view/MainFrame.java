@@ -7,6 +7,7 @@ import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.HeadlineSpace;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.PackageView;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.TabbedPane;
@@ -16,6 +17,7 @@ import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.AlertFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 public class MainFrame extends JFrame implements ISubscriber {
     private static MainFrame instance;
@@ -27,6 +29,7 @@ public class MainFrame extends JFrame implements ISubscriber {
     private AboutUsFrame auFrame;
     private ChangeAuthorFrame caFrame;
     private ChoosePackageOrDiagramFrame pordFrame;
+    private EditInterClassFrame editInterClassFrame;
 
     private TabbedPane tabbedPane;
     private HeadlineSpace headlineSpace;
@@ -35,6 +38,9 @@ public class MainFrame extends JFrame implements ISubscriber {
     //buduca polja za sve komponente view-a na glavnom prozoru
 
     private AlertFrame alertFrame;
+
+    private DiagramView curDiagramView;
+    private Point2D curMousePos;
 
 
     private MainFrame(){
@@ -68,6 +74,7 @@ public class MainFrame extends JFrame implements ISubscriber {
         auFrame = new AboutUsFrame();
         caFrame = new ChangeAuthorFrame();
         pordFrame = new ChoosePackageOrDiagramFrame();
+        editInterClassFrame = new EditInterClassFrame();
 
         JTree projectTreeView = classyTree.generateTree(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
         // JPanel workView = new JPanel();
@@ -110,6 +117,10 @@ public class MainFrame extends JFrame implements ISubscriber {
         return packageView;
     }
 
+    public EditInterClassFrame getEditInterClassFrame() {
+        return editInterClassFrame;
+    }
+
     @Override
     public void update(Object notification) {
         if (notification instanceof Message) {
@@ -121,5 +132,21 @@ public class MainFrame extends JFrame implements ISubscriber {
 
     public ClassyTree getClassyTree() {
         return classyTree;
+    }
+
+    public DiagramView getCurDiagramView() {
+        return curDiagramView;
+    }
+
+    public void setCurDiagramView(DiagramView curDiagramView) {
+        this.curDiagramView = curDiagramView;
+    }
+
+    public Point2D getCurMousePos() {
+        return curMousePos;
+    }
+
+    public void setCurMousePos(Point2D curMousePos) {
+        this.curMousePos = curMousePos;
     }
 }

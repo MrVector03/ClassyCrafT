@@ -1,7 +1,9 @@
 package raf.dsw.classycraft.app.controller.stateActions;
 
+import com.sun.tools.javac.Main;
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.TabbedPane;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

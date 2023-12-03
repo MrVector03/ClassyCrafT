@@ -111,4 +111,8 @@ public class PackageView extends JPanel implements ISubscriber {
             }
         }
     }
+
+    public TabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
 }
