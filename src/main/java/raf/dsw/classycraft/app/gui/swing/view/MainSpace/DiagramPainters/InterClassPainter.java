@@ -2,6 +2,7 @@ package raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters;
 
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
 
 import java.awt.*;
 import java.awt.geom.Dimension2D;
@@ -37,8 +38,13 @@ public class InterClassPainter extends DiagramElementPainter {
     @Override
     public void paint(Graphics2D g) {
         g.draw(shape);
-        g.drawString(interClass.getAccess().toString(), (int)interClass.getPosition().getX()+5, (int)interClass.getPosition().getY()+15);
-        g.drawString(interClass.getName(), (int)interClass.getPosition().getX()+70, (int)interClass.getPosition().getY()+15);
+        g.drawString(interClass.getAccess().toString() + " " + interClass.getName(), (int)interClass.getPosition().getX()+5, (int)interClass.getPosition().getY()+15);
+
+        int counter = 0;
+        for(ClassContent cc : interClass.getClassContents()) {
+            g.drawString(cc.toString(), (int)interClass.getPosition().getX()+5, (int)interClass.getPosition().getY()+40+counter*15);
+            counter++;
+        }
     }
 
     @Override
