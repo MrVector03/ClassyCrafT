@@ -10,6 +10,7 @@ public class StateManager {
     private final AddElementState addElementState = new AddElementState();
     private final DeleteState deleteState = new DeleteState();
     private final SelectionState selectionState = new SelectionState();
+    private final CopyInterClassState copyInterClassState = new CopyInterClassState();
 
     public void setAddInterClassState() {
         this.currentState = this.addInterClassState;
@@ -34,6 +35,11 @@ public class StateManager {
     public void setSelectionState() {
         this.currentState = this.selectionState;
         System.out.println("set to selectionState");
+    }
+
+    public void setCopyInterClassState() {
+        this.currentState = this.copyInterClassState;
+        System.out.println("set to copyInterClassState");
     }
 
     public State getCurrentState() {

@@ -16,4 +16,5 @@ public class TabView extends JSplitPane {
     public DiagramView getDiagramView() {
         return diagramView;
     }
+
 }

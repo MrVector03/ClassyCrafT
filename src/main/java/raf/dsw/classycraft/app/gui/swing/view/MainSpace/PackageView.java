@@ -52,14 +52,17 @@ public class PackageView extends JPanel implements ISubscriber {
 
     // STATE MEDIATOR METHODS
     public void startAddInterClassState() {
+        tabbedPane.removeAllSelectors();
         stateManager.setAddInterClassState();
     }
 
     public void startAddConnectionState() {
+        tabbedPane.removeAllSelectors();
         stateManager.setAddConnectionState();
     }
 
     public void startAddElementState() {
+        tabbedPane.removeAllSelectors();
         stateManager.setAddElementState();
     }
 
@@ -69,6 +72,10 @@ public class PackageView extends JPanel implements ISubscriber {
 
     public void startSelectionState() {
         stateManager.setSelectionState();
+    }
+
+    public void startCopyInterClassState() {
+        stateManager.setCopyInterClassState();
     }
 
     public State getCurrentState() {

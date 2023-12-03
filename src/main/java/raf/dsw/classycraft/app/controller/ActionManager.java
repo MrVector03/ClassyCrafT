@@ -1,10 +1,8 @@
 package raf.dsw.classycraft.app.controller;
 
-import com.sun.tools.javac.Main;
 import raf.dsw.classycraft.app.controller.DiagramButtonPanel.InterClassEditConfirmAction;
 import raf.dsw.classycraft.app.controller.stateActions.*;
 import raf.dsw.classycraft.app.controller.tree.*;
-import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 
 public class ActionManager {
     private AboutUsAction aboutUsAction;
@@ -22,6 +20,7 @@ public class ActionManager {
     private DeleteAction deleteAction;
     private SelectionAction selectionAction;
     private InterClassEditConfirmAction interClassEditConfirmAction;
+    private CopyInterClassAction copyInterClassAction;
 
     public ActionManager() {
         aboutUsAction = new AboutUsAction();
@@ -39,6 +38,7 @@ public class ActionManager {
         addElementAction = new AddElementAction();
         deleteAction = new DeleteAction();
         selectionAction = new SelectionAction();
+        copyInterClassAction = new CopyInterClassAction();
 
         interClassEditConfirmAction = new InterClassEditConfirmAction();
     }
@@ -97,5 +97,9 @@ public class ActionManager {
 
     public InterClassEditConfirmAction getInterClassEditConfirmAction() {
         return interClassEditConfirmAction;
+    }
+
+    public CopyInterClassAction getCopyInterClassAction() {
+        return copyInterClassAction;
     }
 }

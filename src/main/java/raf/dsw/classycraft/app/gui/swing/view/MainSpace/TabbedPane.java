@@ -153,6 +153,12 @@ public class TabbedPane extends JTabbedPane {
             addTab(tabElement.getDiagramView().getName(), tabElement);
     }
 
+    public void removeAllSelectors() {
+        for (TabView tv : loadedTabs) {
+            tv.getDiagramView().removeAllSelectionPainters();
+        }
+    }
+
     public Project getClassyProject() {
         return classyProject;
     }

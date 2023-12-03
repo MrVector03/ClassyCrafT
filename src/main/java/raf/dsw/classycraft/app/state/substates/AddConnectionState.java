@@ -19,7 +19,6 @@ public class AddConnectionState implements State {
 
     @Override
     public void classyMousePressed(Point2D position, DiagramView diagramView) {
-        System.out.println("starting connection");
         for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
             if (dep.elementAt(position)) {
                 from = ((InterClassPainter) dep).getInterClass();
@@ -30,9 +29,7 @@ public class AddConnectionState implements State {
 
     @Override
     public void classyMouseDragged(Point2D startingPosition, DiagramView diagramView) {
-        int index = diagramView.getDiagramElementPainters().size() - 1;
-        if (diagramView.getDiagramElementPainters().get(index) instanceof TemporaryConnectionPainter)
-            diagramView.getDiagramElementPainters().remove(index);
+        diagramView.popTemporaryConnectionPainter();
         TemporaryConnection temporaryConnection = new TemporaryConnection("Placeholder", from, startingPosition) {
             @Override
             public InterClass getFrom() {
@@ -50,7 +47,7 @@ public class AddConnectionState implements State {
 
     @Override
     public void classyMouseReleased(Point2D endingPosition, DiagramView diagramView) {
-        System.out.println("finished");
+        diagramView.popTemporaryConnectionPainter();
         for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
             if (dep.elementAt(endingPosition)) {
                 if (from != ((InterClassPainter) dep).getInterClass())

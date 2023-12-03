@@ -13,11 +13,12 @@ public class WorkSpaceButtons extends JToolBar {
 
         ActionManager actionManager = new ActionManager();
 
+        add(actionManager.getSelectionAction());
         add(actionManager.getAddInterClassAction());
         add(actionManager.getAddConnectionAction());
         add(actionManager.getAddElementAction());
         add(actionManager.getDeleteAction());
-        add(actionManager.getSelectionAction());
+        add(actionManager.getCopyInterClassAction());
 
         setAlignmentX(RIGHT_ALIGNMENT);
         setMaximumSize(new Dimension(32, 1000));

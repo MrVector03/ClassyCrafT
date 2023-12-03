@@ -11,6 +11,8 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementat
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.TemporaryConnectionPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.TemporarySelectionPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.listeners.ClassyMouseListener;
 
 import javax.swing.*;
@@ -20,6 +22,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseMotionListener;
 
@@ -91,6 +94,28 @@ public class DiagramView extends JPanel implements ISubscriber {
 
     public void addDiagramElementPainter(DiagramElementPainter diagramElementPainter) {
         diagramElementPainters.add(diagramElementPainter);
+        repaint();
+    }
+
+    public void popTemporaryConnectionPainter() {
+        if (diagramElementPainters.get(diagramElementPainters.size() - 1) instanceof TemporaryConnectionPainter)
+            diagramElementPainters.remove(diagramElementPainters.size() - 1);
+    }
+
+    // SELECTION STATE - DRAG MODE
+    public void popTemporaryInterClassPainters(List<DiagramElementPainter> toRemove) {
+        for (DiagramElementPainter dep : toRemove)
+            diagramElementPainters.remove(dep);
+    }
+
+    // SELECTION STATE - SELECTION MODE
+    public void popTemporarySelectionPainter() {
+        if (!diagramElementPainters.isEmpty() && diagramElementPainters.get(diagramElementPainters.size() - 1) instanceof TemporarySelectionPainter)
+            diagramElementPainters.remove(diagramElementPainters.size() - 1);
+    }
+
+    public void removeAllSelectionPainters() {
+        diagramElementPainters.removeIf(dep -> dep instanceof TemporarySelectionPainter);
         repaint();
     }
 
