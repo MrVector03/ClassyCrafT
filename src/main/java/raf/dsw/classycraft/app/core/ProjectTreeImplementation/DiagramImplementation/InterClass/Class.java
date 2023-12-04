@@ -6,6 +6,7 @@ import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.In
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Class extends InterClass {
     private ArrayList<ClassContent> classContents;
@@ -19,5 +20,9 @@ public class Class extends InterClass {
 
     public ArrayList<ClassContent> getClassContents() {
         return classContents;
+    }
+
+    public void rewriteContents(ArrayList<ClassContent> newContents) {
+        this.classContents = newContents;
     }
 }

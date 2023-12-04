@@ -156,6 +156,14 @@ public class TabbedPane extends JTabbedPane {
         }
     }
 
+    public boolean testSelectors() {
+        for (TabView tv : loadedTabs) {
+            if (tv.getDiagramView().deleteSelected())
+                return true;
+        }
+        return false;
+    }
+
     public Project getClassyProject() {
         return classyProject;
     }

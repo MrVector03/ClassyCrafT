@@ -31,6 +31,7 @@ public class DiagramView extends JPanel implements ISubscriber {
     private final Diagram diagram;
     private String name;
     private ArrayList<DiagramElementPainter> diagramElementPainters = new ArrayList<DiagramElementPainter>();
+    private final List<DiagramElementPainter> selectedElements = new ArrayList<>();
 
     public DiagramView(Diagram diagram, TabbedPane tabbedPane) {
         this.diagram = diagram;
@@ -104,8 +105,10 @@ public class DiagramView extends JPanel implements ISubscriber {
 
     // SELECTION STATE - DRAG MODE
     public void popTemporaryInterClassPainters(List<DiagramElementPainter> toRemove) {
-        for (DiagramElementPainter dep : toRemove)
+        for (DiagramElementPainter dep : toRemove) {
             diagramElementPainters.remove(dep);
+            selectedElements.remove(dep);
+        }
     }
 
     // SELECTION STATE - SELECTION MODE
@@ -117,6 +120,25 @@ public class DiagramView extends JPanel implements ISubscriber {
     public void removeAllSelectionPainters() {
         diagramElementPainters.removeIf(dep -> dep instanceof TemporarySelectionPainter);
         repaint();
+    }
+
+    public boolean deleteSelected() {
+        if (this.selectedElements.isEmpty())
+            return true;
+        else {
+            for (DiagramElementPainter elementPainter : selectedElements)
+                this.diagramElementPainters.remove(elementPainter);
+            repaint();
+            return false;
+        }
+    }
+
+    public List<DiagramElementPainter> getSelectedElements() {
+        return selectedElements;
+    }
+
+    public void selectElement(DiagramElementPainter elementPainter) {
+        this.selectedElements.add(elementPainter);
     }
 
     public TabbedPane getTabbedPane() {

@@ -2,6 +2,7 @@ package raf.dsw.classycraft.app.state.substates;
 
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.TemporarySelectionPainter;
@@ -14,19 +15,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SelectionState implements State {
+
     private boolean dragMode = false;
     private List<DiagramElementPainter> dragElements = new ArrayList<>();
 
     private Point2D startingPoint = null;
     private Point2D endingPoint = null;
 
+    private Point2D holdDiff = null;
+
     @Override
     public void classyMousePressed(Point2D position, DiagramView diagramView) {
+        diagramView.getSelectedElements().clear();
         for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
-            if (dep.elementAt(position) && !dragElements.contains(dep))
+            if (dep.elementAt(position) && !dragElements.contains(dep)) {
                 dragElements.add(dep);
+                // holdDiff = new Point2D.Double(((InterClassPainter) dep).getInterClass().getPosition().getX() - position.getX(),
+                //         ((InterClassPainter) dep).getInterClass().getPosition().getY() - position.getY());
+
+                // System.out.println("Class: " + ((InterClassPainter) dep).getInterClass().getPosition());
+                // System.out.println("Pointer: " + position);
+                // System.out.println("HOLD: " + holdDiff);
+
+                diagramView.selectElement(dep);
+            }
         }
-        System.out.println("Selected elements: " + dragElements.size());
         dragMode = !dragElements.isEmpty();
         if (dragMode) return;
 
@@ -40,10 +53,10 @@ public class SelectionState implements State {
             diagramView.popTemporaryInterClassPainters(dragElements);
             for (DiagramElementPainter dep : dragElements) {
                 InterClass tmp = ((InterClassPainter) dep).getInterClass();
+                // ((Class) tmp).rewriteContents(((Class) ((InterClassPainter) dep).getInterClass()).getClassContents());
 
-                // Point2D newPoint = new Point2D.Double(3 * tmp.getPosition().getX() - startingPosition.getX(),
-                //         3 * startingPosition.getY() - tmp.getPosition().getY());
-
+                // Point2D newPoint = new Point2D.Double(startingPosition.getX() + holdDiff.getX(),
+                //        startingPosition.getX() + holdDiff.getY());
                 InterClass newTmpInterClass = new InterClass(tmp.getName(), tmp.getAccess(),
                         startingPosition, tmp.getSize()) {
                     @Override
@@ -63,6 +76,7 @@ public class SelectionState implements State {
                 };
                 InterClassPainter newPainter = new InterClassPainter(newTmpInterClass);
                 newDragElements.add(newPainter);
+                diagramView.selectElement(newPainter);
                 diagramView.addDiagramElementPainter(newPainter);
             }
             dragElements = newDragElements;
@@ -81,8 +95,8 @@ public class SelectionState implements State {
             for (DiagramElementPainter dep : dragElements) {
                 InterClass tmp = ((InterClassPainter) dep).getInterClass();
 
-                // Point2D newPoint = new Point2D.Double(3 * tmp.getPosition().getX() - endingPosition.getX(),
-                //         3 * endingPosition.getY() - tmp.getPosition().getY());
+                // Point2D newPoint = new Point2D.Double(endingPosition.getX() + holdDiff.getX(),
+                //         endingPosition.getX() + holdDiff.getY());
 
                 InterClass newTmpInterClass = new InterClass(tmp.getName(), tmp.getAccess(),
                         endingPosition, tmp.getSize()) {
@@ -102,6 +116,7 @@ public class SelectionState implements State {
                     }
                 };
                 InterClassPainter newPainter = new InterClassPainter(newTmpInterClass);
+                diagramView.selectElement(newPainter);
                 diagramView.addDiagramElementPainter(newPainter);
             }
             dragElements.clear();
@@ -114,5 +129,9 @@ public class SelectionState implements State {
         }
         startingPoint = null;
         endingPoint = null;
+    }
+
+    private void boldSelectedElements(DiagramView diagramView) {
+
     }
 }

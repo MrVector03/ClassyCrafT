@@ -67,7 +67,12 @@ public class PackageView extends JPanel implements ISubscriber {
     }
 
     public void startDeleteState() {
-        stateManager.setDeleteState();
+        if (tabbedPane.testSelectors())
+            stateManager.setDeleteState();
+        else {
+            tabbedPane.removeAllSelectors();
+            stateManager.setSelectionState();
+        }
     }
 
     public void startSelectionState() {
