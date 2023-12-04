@@ -10,15 +10,6 @@ public abstract class InterClass extends DiagramElement{
     private Access access;
     private Point2D position;
     private Dimension size;
-    private ArrayList<ClassContent> classContents = new ArrayList<ClassContent>();
-
-    public InterClass(String name, Access access, Point2D position, Dimension size, ArrayList<ClassContent> classContents) {
-        super(name);
-        this.access = access;
-        this.position = position;
-        this.size = size;
-        this.classContents = classContents;
-    }
 
     public InterClass(String name, Access access, Point2D position, Dimension size) {
         super(name);
@@ -37,9 +28,5 @@ public abstract class InterClass extends DiagramElement{
 
     public Dimension getSize() {
         return size;
-    }
-
-    public ArrayList<ClassContent> getClassContents() {
-        return classContents;
     }
 }

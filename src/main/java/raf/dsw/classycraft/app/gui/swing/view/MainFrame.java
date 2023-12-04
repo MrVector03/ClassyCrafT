@@ -6,7 +6,6 @@ import raf.dsw.classycraft.app.core.MessageGenerator.Message;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.HeadlineSpace;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.PackageView;
@@ -29,7 +28,10 @@ public class MainFrame extends JFrame implements ISubscriber {
     private AboutUsFrame auFrame;
     private ChangeAuthorFrame caFrame;
     private ChoosePackageOrDiagramFrame pordFrame;
-    private EditInterClassFrame editInterClassFrame;
+    private EditClassFrame editClassFrame;
+    private EditInterfaceFrame editInterfaceFrame;
+    private EditEnumFrame editEnumFrame;
+    private ChooseInterClassFrame chooseInterClassFrame;
 
     private TabbedPane tabbedPane;
     private HeadlineSpace headlineSpace;
@@ -74,7 +76,10 @@ public class MainFrame extends JFrame implements ISubscriber {
         auFrame = new AboutUsFrame();
         caFrame = new ChangeAuthorFrame();
         pordFrame = new ChoosePackageOrDiagramFrame();
-        editInterClassFrame = new EditInterClassFrame();
+        editClassFrame = new EditClassFrame();
+        editInterfaceFrame = new EditInterfaceFrame();
+        editEnumFrame = new EditEnumFrame();
+        chooseInterClassFrame = new ChooseInterClassFrame();
 
         JTree projectTreeView = classyTree.generateTree(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
         // JPanel workView = new JPanel();
@@ -117,8 +122,16 @@ public class MainFrame extends JFrame implements ISubscriber {
         return packageView;
     }
 
-    public EditInterClassFrame getEditInterClassFrame() {
-        return editInterClassFrame;
+    public EditClassFrame getEditClassFrame() {
+        return editClassFrame;
+    }
+
+    public EditInterfaceFrame getEditInterfaceFrame() {
+        return editInterfaceFrame;
+    }
+
+    public EditEnumFrame getEditEnumFrame() {
+        return editEnumFrame;
     }
 
     @Override
@@ -148,5 +161,9 @@ public class MainFrame extends JFrame implements ISubscriber {
 
     public void setCurMousePos(Point2D curMousePos) {
         this.curMousePos = curMousePos;
+    }
+
+    public ChooseInterClassFrame getChooseInterClassFrame() {
+        return chooseInterClassFrame;
     }
 }

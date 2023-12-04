@@ -14,4 +14,8 @@ public class Interface extends InterClass {
         super(name, access, position, scale);
         this.methods = methods;
     }
+
+    public ArrayList<Method> getMethods() {
+        return methods;
+    }
 }

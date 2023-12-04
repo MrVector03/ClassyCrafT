@@ -2,7 +2,10 @@ package raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters;
 
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Enum;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Interface;
 
 import java.awt.*;
 import java.awt.geom.Dimension2D;
@@ -38,12 +41,37 @@ public class InterClassPainter extends DiagramElementPainter {
     @Override
     public void paint(Graphics2D g) {
         g.draw(shape);
-        g.drawString(interClass.getAccess().toString() + " " + interClass.getName(), (int)interClass.getPosition().getX()+5, (int)interClass.getPosition().getY()+15);
 
-        int counter = 0;
-        for(ClassContent cc : interClass.getClassContents()) {
-            g.drawString(cc.toString(), (int)interClass.getPosition().getX()+5, (int)interClass.getPosition().getY()+40+counter*15);
-            counter++;
+        if(interClass instanceof Class) {
+            g.drawString(interClass.getAccess().toString() + " " + interClass.getName(), (int) interClass.getPosition().getX() + 5, (int) interClass.getPosition().getY() + 15);
+
+            int counter = 0;
+            for (ClassContent cc : ((Class)interClass).getClassContents()) {
+                g.drawString(cc.toString(), (int) interClass.getPosition().getX() + 5, (int) interClass.getPosition().getY() + 40 + counter * 15);
+                counter++;
+            }
+        }
+
+        if(interClass instanceof Interface) {
+            g.drawString(interClass.getAccess().toString() + " interface " + interClass.getName(), (int) interClass.getPosition().getX() + 5, (int) interClass.getPosition().getY() + 15);
+
+            int counter = 0;
+
+            for (ClassContent cc : ((Interface)interClass).getMethods()) {
+                g.drawString(cc.toString(), (int) interClass.getPosition().getX() + 5, (int) interClass.getPosition().getY() + 40 + counter * 15);
+                counter++;
+            }
+        }
+
+        if(interClass instanceof Enum) {
+            g.drawString(interClass.getAccess().toString() + " enum " + interClass.getName(), (int) interClass.getPosition().getX() + 5, (int) interClass.getPosition().getY() + 15);
+
+            int counter = 0;
+
+            for (String cc : ((Enum)interClass).getValues()) {
+                g.drawString(cc , (int) interClass.getPosition().getX() + 5, (int) interClass.getPosition().getY() + 40 + counter * 15);
+                counter++;
+            }
         }
     }
 

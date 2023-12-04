@@ -14,4 +14,8 @@ public class Enum extends InterClass {
         super(name, access, position, scale);
         this.values = values;
     }
+
+    public ArrayList<String> getValues() {
+        return values;
+    }
 }

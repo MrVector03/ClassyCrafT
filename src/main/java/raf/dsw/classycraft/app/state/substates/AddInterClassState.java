@@ -35,7 +35,7 @@ public class AddInterClassState implements State {
         MainFrame.getInstance().setCurMousePos(position);
         MainFrame.getInstance().setCurDiagramView(diagramView);
 
-        MainFrame.getInstance().getEditInterClassFrame().setVisible(true);
+        MainFrame.getInstance().getChooseInterClassFrame().setVisible(true);
         //diagramView.getTabbedPane().getClassyPackage().getPackageView().startSelectionState();
     }
 

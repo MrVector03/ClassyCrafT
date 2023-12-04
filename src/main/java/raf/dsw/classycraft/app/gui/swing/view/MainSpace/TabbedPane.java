@@ -1,15 +1,12 @@
 package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 
-import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ProjectExplorer;
-import raf.dsw.classycraft.app.gui.swing.view.popframes.EditInterClassFrame;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 

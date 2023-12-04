@@ -1,6 +1,6 @@
 package raf.dsw.classycraft.app.controller;
 
-import raf.dsw.classycraft.app.controller.DiagramButtonPanel.InterClassEditConfirmAction;
+import raf.dsw.classycraft.app.controller.DiagramButtonPanel.*;
 import raf.dsw.classycraft.app.controller.stateActions.*;
 import raf.dsw.classycraft.app.controller.tree.*;
 
@@ -19,8 +19,13 @@ public class ActionManager {
     private AddElementAction addElementAction;
     private DeleteAction deleteAction;
     private SelectionAction selectionAction;
-    private InterClassEditConfirmAction interClassEditConfirmAction;
+    private ClassEditConfirmAction classEditConfirmAction;
+    private InterfaceEditConfirmAction interfaceEditConfirmAction;
+    private EnumEditConfirmAction enumEditConfirmAction;
     private CopyInterClassAction copyInterClassAction;
+    private ClassChosenAction classChosenAction;
+    private InterfaceChosenAction interfaceChosenAction;
+    private EnumChosenAction enumChosenAction;
 
     public ActionManager() {
         aboutUsAction = new AboutUsAction();
@@ -40,7 +45,13 @@ public class ActionManager {
         selectionAction = new SelectionAction();
         copyInterClassAction = new CopyInterClassAction();
 
-        interClassEditConfirmAction = new InterClassEditConfirmAction();
+        classEditConfirmAction = new ClassEditConfirmAction();
+        interfaceEditConfirmAction = new InterfaceEditConfirmAction();
+        enumEditConfirmAction = new EnumEditConfirmAction();
+
+        classChosenAction = new ClassChosenAction();
+        interfaceChosenAction = new InterfaceChosenAction();
+        enumChosenAction = new EnumChosenAction();
     }
 
     public AboutUsAction getAboutUsAction() {
@@ -95,11 +106,31 @@ public class ActionManager {
         return selectionAction;
     }
 
-    public InterClassEditConfirmAction getInterClassEditConfirmAction() {
-        return interClassEditConfirmAction;
+    public ClassEditConfirmAction getClassEditConfirmAction() {
+        return classEditConfirmAction;
     }
 
     public CopyInterClassAction getCopyInterClassAction() {
         return copyInterClassAction;
+    }
+
+    public ClassChosenAction getClassChosenAction() {
+        return classChosenAction;
+    }
+
+    public InterfaceChosenAction getInterfaceChosenAction() {
+        return interfaceChosenAction;
+    }
+
+    public InterfaceEditConfirmAction getInterfaceEditConfirmAction() {
+        return interfaceEditConfirmAction;
+    }
+
+    public EnumChosenAction getEnumChosenAction() {
+        return enumChosenAction;
+    }
+
+    public EnumEditConfirmAction getEnumEditConfirmAction() {
+        return enumEditConfirmAction;
     }
 }

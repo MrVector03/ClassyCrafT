@@ -6,19 +6,17 @@ import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.sql.Array;
-import java.util.ArrayList;
 
-public class EditInterClassFrame extends JFrame {
+public class EditEnumFrame extends JFrame {
     JTextField eicTextField;
     JComboBox eicComboBox;
     JTextArea eicTextArea;
-    public EditInterClassFrame() {
+    public EditEnumFrame() {
         JPanel jpanel = new JPanel();
         jpanel.setBorder(new EmptyBorder(10,20,10,20));
         setContentPane(jpanel);
 
-        setTitle("Set interclass values");
+        setTitle("Set enum values");
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenHeight = screenSize.height;
@@ -28,25 +26,25 @@ public class EditInterClassFrame extends JFrame {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
 
-        JLabel eicAccesLabel = new JLabel("New class access:");
+        JLabel eicAccesLabel = new JLabel("New enum access:");
         eicAccesLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         Access[] accessOptions = {Access.DEFAULT, Access.PUBLIC, Access.PROTECTED, Access.PRIVATE};
         eicComboBox = new JComboBox(accessOptions);
 
-        JLabel eicLabel = new JLabel("New class name:");
+        JLabel eicLabel = new JLabel("New enum name:");
         eicLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         eicTextField = new JTextField();
         eicTextField.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JLabel eicCContentLabel = new JLabel("New class content:");
+        JLabel eicCContentLabel = new JLabel("New enum values:");
         eicCContentLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         eicTextArea = new JTextArea();
 
         JButton caButton = new JButton();
-        caButton.setAction(MainFrame.getInstance().getActionManager().getInterClassEditConfirmAction());
+        caButton.setAction(MainFrame.getInstance().getActionManager().getEnumEditConfirmAction());
 
         add(eicAccesLabel);
         add(eicComboBox);

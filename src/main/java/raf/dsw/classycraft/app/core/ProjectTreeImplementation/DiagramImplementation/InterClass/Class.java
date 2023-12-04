@@ -8,10 +8,16 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class Class extends InterClass {
+    private ArrayList<ClassContent> classContents;
     private boolean isAbstract;
 
     public Class(String name, Access access, Point2D position, Dimension size, ArrayList<ClassContent> classContents, boolean isAbstract) {
-        super(name, access, position, size, classContents);
+        super(name, access, position, size);
+        this.classContents = classContents;
         this.isAbstract = isAbstract;
+    }
+
+    public ArrayList<ClassContent> getClassContents() {
+        return classContents;
     }
 }
