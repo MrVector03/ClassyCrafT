@@ -29,8 +29,8 @@ public class EnumEditConfirmAction extends AbstractClassyAction {
         Access newICAccess = (Access)MainFrame.getInstance().getEditEnumFrame().getEicComboBox().getSelectedItem();
         String newICContent = MainFrame.getInstance().getEditEnumFrame().getEicTextArea().getText();
 
-        MainFrame.getInstance().getEditInterfaceFrame().setVisible(false);
-        MainFrame.getInstance().getEditInterfaceFrame().getEicTextField().setText("");
+        MainFrame.getInstance().getEditEnumFrame().setVisible(false);
+        MainFrame.getInstance().getEditEnumFrame().getEicTextField().setText("");
 
         if(newICName.equals("")) {
             ApplicationFramework.getInstance().getMessageGenerator().generateMessage("ENUM_NAME_CANNOT_BE_EMPTY", MessageType.ERROR);
