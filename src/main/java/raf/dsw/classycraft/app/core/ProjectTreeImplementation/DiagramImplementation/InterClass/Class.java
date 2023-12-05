@@ -22,6 +22,10 @@ public class Class extends InterClass {
         return classContents;
     }
 
+    public boolean isAbstract() {
+        return isAbstract;
+    }
+
     public void rewriteContents(ArrayList<ClassContent> newContents) {
         this.classContents = newContents;
     }

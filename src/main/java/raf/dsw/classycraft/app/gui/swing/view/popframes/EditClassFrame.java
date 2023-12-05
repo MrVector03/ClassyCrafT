@@ -11,6 +11,7 @@ public class EditClassFrame extends JFrame {
     JTextField eicTextField;
     JComboBox eicComboBox;
     JTextArea eicTextArea;
+    JCheckBox abstractCheckBox;
     public EditClassFrame() {
         JPanel jpanel = new JPanel();
         jpanel.setBorder(new EmptyBorder(10,20,10,20));
@@ -25,6 +26,8 @@ public class EditClassFrame extends JFrame {
 
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
+        abstractCheckBox = new JCheckBox("Abstract");
+        abstractCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
 
         JLabel eicAccesLabel = new JLabel("New class access:");
         eicAccesLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -46,6 +49,7 @@ public class EditClassFrame extends JFrame {
         JButton caButton = new JButton();
         caButton.setAction(MainFrame.getInstance().getActionManager().getClassEditConfirmAction());
 
+        add(abstractCheckBox);
         add(eicAccesLabel);
         add(eicComboBox);
         add(eicLabel);
@@ -67,5 +71,9 @@ public class EditClassFrame extends JFrame {
 
     public JTextArea getEicTextArea() {
         return eicTextArea;
+    }
+
+    public JCheckBox getAbstractCheckBox() {
+        return abstractCheckBox;
     }
 }

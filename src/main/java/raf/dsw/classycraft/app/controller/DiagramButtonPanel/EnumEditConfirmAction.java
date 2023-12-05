@@ -56,7 +56,7 @@ public class EnumEditConfirmAction extends AbstractClassyAction {
         }
         scanner.close();
 
-        Dimension interClassDimension = new Dimension(100 + longestRow.length()*4, 100 + rowCount*7);
+        Dimension interClassDimension = new Dimension(100 + longestRow.length()*5, 100 + rowCount*15);
 
         MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new InterClassPainter(new Enum(newICName, newICAccess,
                 new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()), interClassDimension,

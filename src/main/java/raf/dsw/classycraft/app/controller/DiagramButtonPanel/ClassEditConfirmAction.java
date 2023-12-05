@@ -27,6 +27,7 @@ public class ClassEditConfirmAction extends AbstractClassyAction {
         String newICName = MainFrame.getInstance().getEditClassFrame().getEicTextField().getText();
         Access newICAccess = (Access)MainFrame.getInstance().getEditClassFrame().getEicComboBox().getSelectedItem();
         String newICContent = MainFrame.getInstance().getEditClassFrame().getEicTextArea().getText();
+        boolean isAbs = MainFrame.getInstance().getEditClassFrame().getAbstractCheckBox().isSelected();
 
         MainFrame.getInstance().getEditClassFrame().setVisible(false);
         MainFrame.getInstance().getEditClassFrame().getEicTextField().setText("");
@@ -36,7 +37,7 @@ public class ClassEditConfirmAction extends AbstractClassyAction {
             return;
         }
 
-        String longestRow = newICAccess + " " + newICName;
+        String longestRow = newICAccess + " class (A)" + newICName;
         int rowCount = 0;
         ArrayList<ClassContent> attributes = new ArrayList<ClassContent>();
         ArrayList<Method> methods = new ArrayList<Method>();
@@ -68,11 +69,11 @@ public class ClassEditConfirmAction extends AbstractClassyAction {
 
         attributes.addAll(methods);
 
-        Dimension interClassDimension = new Dimension(100 + longestRow.length()*4, 100 + rowCount*7);
+        Dimension interClassDimension = new Dimension(100 + longestRow.length()*5, 100 + rowCount*15);
 
         MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new InterClassPainter(new Class(newICName, newICAccess,
                 new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()), interClassDimension,
-                attributes, false)));
+                attributes, isAbs)));
 
         System.out.println("finished painting class");
     }

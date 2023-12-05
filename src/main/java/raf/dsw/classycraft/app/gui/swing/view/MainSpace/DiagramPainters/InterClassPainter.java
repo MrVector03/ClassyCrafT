@@ -15,7 +15,7 @@ import java.awt.geom.Point2D;
 public class InterClassPainter extends DiagramElementPainter {
     protected Shape shape;
 
-    private InterClass interClass;
+    private final InterClass interClass;
 
     public InterClassPainter(InterClass interClass) {
         diagramElement = interClass;
@@ -43,7 +43,12 @@ public class InterClassPainter extends DiagramElementPainter {
         g.draw(shape);
 
         if(interClass instanceof Class) {
-            g.drawString(interClass.getAccess().toString() + " " + interClass.getName(), (int) interClass.getPosition().getX() + 5, (int) interClass.getPosition().getY() + 15);
+            String headerString = interClass.getAccess().toString() + " class " + interClass.getName();
+
+            if(((Class)interClass).isAbstract())
+                headerString += " (A)";
+
+            g.drawString(headerString, (int) interClass.getPosition().getX() + 5, (int) interClass.getPosition().getY() + 15);
 
             int counter = 0;
             for (ClassContent cc : ((Class)interClass).getClassContents()) {
