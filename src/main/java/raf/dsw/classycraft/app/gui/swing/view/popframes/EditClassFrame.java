@@ -27,27 +27,30 @@ public class EditClassFrame extends JFrame {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         abstractCheckBox = new JCheckBox("Abstract");
-        abstractCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
+        abstractCheckBox.setAlignmentX((float)0.5);
 
         JLabel eicAccesLabel = new JLabel("New class access:");
-        eicAccesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        eicAccesLabel.setAlignmentX((float)0.5);
 
         Access[] accessOptions = {Access.DEFAULT, Access.PUBLIC, Access.PROTECTED, Access.PRIVATE};
         eicComboBox = new JComboBox(accessOptions);
+        eicComboBox.setAlignmentX((float)0.5);
 
         JLabel eicLabel = new JLabel("New class name:");
-        eicLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        eicLabel.setAlignmentX((float)0.5);
 
         eicTextField = new JTextField();
-        eicTextField.setHorizontalAlignment(SwingConstants.CENTER);
+        eicTextField.setAlignmentX((float)0.5);
 
         JLabel eicCContentLabel = new JLabel("New class content:");
-        eicCContentLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        eicCContentLabel.setAlignmentX((float)0.5);
 
         eicTextArea = new JTextArea();
+        eicTextArea.setAlignmentX((float)0.5);
 
         JButton caButton = new JButton();
         caButton.setAction(MainFrame.getInstance().getActionManager().getClassEditConfirmAction());
+        caButton.setAlignmentX((float)0.5);
 
         add(abstractCheckBox);
         add(eicAccesLabel);

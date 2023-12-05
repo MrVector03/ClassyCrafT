@@ -3,6 +3,7 @@ package raf.dsw.classycraft.app.state.substates;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.TemporaryConnection;
+import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
@@ -41,6 +42,7 @@ public class AddConnectionState implements State {
                 return super.getTo();
             }
         };
+
         TemporaryConnectionPainter connectionPainter = new TemporaryConnectionPainter(temporaryConnection);
         diagramView.addDiagramElementPainter(connectionPainter);
     }
@@ -55,7 +57,14 @@ public class AddConnectionState implements State {
                 break;
             }
         }
-        Connection connection = new Connection("Placeholder", from, to) {
+
+        MainFrame.getInstance().setCurDiagramView(diagramView);
+        MainFrame.getInstance().setCurFrom(from);
+        MainFrame.getInstance().setCurTo(to);
+
+        MainFrame.getInstance().getChooseConnectionFrame().setVisible(true);
+
+        /*Connection connection = new Connection("Placeholder", from, to) {
             @Override
             public InterClass getFrom() {
                 return super.getFrom();
@@ -66,8 +75,9 @@ public class AddConnectionState implements State {
                 return super.getTo();
             }
         };
+
         ConnectionPainter connectionPainter = new ConnectionPainter(connection);
-        diagramView.addDiagramElementPainter(connectionPainter);
+        diagramView.addDiagramElementPainter(connectionPainter);*/
 
         from = null;
         to = null;

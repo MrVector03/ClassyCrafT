@@ -5,12 +5,17 @@ import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.Message;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.HeadlineSpace;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.PackageView;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.TabbedPane;
 import raf.dsw.classycraft.app.gui.swing.view.popframes.*;
+import raf.dsw.classycraft.app.gui.swing.view.popframes.EditConnectionFrames.EditAggregationFrame;
+import raf.dsw.classycraft.app.gui.swing.view.popframes.EditConnectionFrames.EditCompositionFrame;
+import raf.dsw.classycraft.app.gui.swing.view.popframes.EditConnectionFrames.EditDependencyFrame;
+import raf.dsw.classycraft.app.gui.swing.view.popframes.EditConnectionFrames.EditGeneralizationFrame;
 import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.AlertFactory;
 import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.AlertFrame;
 
@@ -32,6 +37,11 @@ public class MainFrame extends JFrame implements ISubscriber {
     private EditInterfaceFrame editInterfaceFrame;
     private EditEnumFrame editEnumFrame;
     private ChooseInterClassFrame chooseInterClassFrame;
+    private ChooseConnectionFrame chooseConnectionFrame;
+    private EditGeneralizationFrame editGeneralizationFrame;
+    private EditAggregationFrame editAggregationFrame;
+    private EditCompositionFrame editCompositionFrame;
+    private EditDependencyFrame editDependencyFrame;
 
     private TabbedPane tabbedPane;
     private HeadlineSpace headlineSpace;
@@ -43,6 +53,8 @@ public class MainFrame extends JFrame implements ISubscriber {
 
     private DiagramView curDiagramView;
     private Point2D curMousePos;
+    private InterClass curFrom;
+    private InterClass curTo;
 
 
     private MainFrame(){
@@ -80,6 +92,12 @@ public class MainFrame extends JFrame implements ISubscriber {
         editInterfaceFrame = new EditInterfaceFrame();
         editEnumFrame = new EditEnumFrame();
         chooseInterClassFrame = new ChooseInterClassFrame();
+        chooseConnectionFrame = new ChooseConnectionFrame();
+        editGeneralizationFrame = new EditGeneralizationFrame();
+        editAggregationFrame = new EditAggregationFrame();
+        editCompositionFrame = new EditCompositionFrame();
+        editDependencyFrame = new EditDependencyFrame();
+
 
         JTree projectTreeView = classyTree.generateTree(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
         // JPanel workView = new JPanel();
@@ -163,7 +181,43 @@ public class MainFrame extends JFrame implements ISubscriber {
         this.curMousePos = curMousePos;
     }
 
+    public InterClass getCurFrom() {
+        return curFrom;
+    }
+
+    public void setCurFrom(InterClass curFrom) {
+        this.curFrom = curFrom;
+    }
+
+    public InterClass getCurTo() {
+        return curTo;
+    }
+
+    public void setCurTo(InterClass curTo) {
+        this.curTo = curTo;
+    }
+
     public ChooseInterClassFrame getChooseInterClassFrame() {
         return chooseInterClassFrame;
+    }
+
+    public ChooseConnectionFrame getChooseConnectionFrame() {
+        return chooseConnectionFrame;
+    }
+
+    public EditGeneralizationFrame getEditGeneralizationFrame() {
+        return editGeneralizationFrame;
+    }
+
+    public EditAggregationFrame getEditAggregationFrame() {
+        return editAggregationFrame;
+    }
+
+    public EditCompositionFrame getEditCompositionFrame() {
+        return editCompositionFrame;
+    }
+
+    public EditDependencyFrame getEditDependencyFrame() {
+        return editDependencyFrame;
     }
 }

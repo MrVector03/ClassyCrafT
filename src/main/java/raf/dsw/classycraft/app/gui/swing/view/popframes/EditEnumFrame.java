@@ -27,24 +27,26 @@ public class EditEnumFrame extends JFrame {
 
 
         JLabel eicAccesLabel = new JLabel("New enum access:");
-        eicAccesLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        eicAccesLabel.setAlignmentX((float)0.5);
 
         Access[] accessOptions = {Access.DEFAULT, Access.PUBLIC, Access.PROTECTED, Access.PRIVATE};
         eicComboBox = new JComboBox(accessOptions);
+        eicComboBox.setAlignmentX((float)0.5);
 
         JLabel eicLabel = new JLabel("New enum name:");
-        eicLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        eicLabel.setAlignmentX((float)0.5);
 
         eicTextField = new JTextField();
-        eicTextField.setHorizontalAlignment(SwingConstants.CENTER);
+        eicTextField.setAlignmentX((float)0.5);
 
         JLabel eicCContentLabel = new JLabel("New enum values:");
-        eicCContentLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        eicCContentLabel.setAlignmentX((float)0.5);
 
         eicTextArea = new JTextArea();
 
         JButton caButton = new JButton();
         caButton.setAction(MainFrame.getInstance().getActionManager().getEnumEditConfirmAction());
+        caButton.setAlignmentX((float)0.5);
 
         add(eicAccesLabel);
         add(eicComboBox);

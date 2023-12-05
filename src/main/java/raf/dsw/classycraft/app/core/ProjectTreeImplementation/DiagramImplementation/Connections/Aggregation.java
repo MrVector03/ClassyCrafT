@@ -4,7 +4,14 @@ import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Co
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 
 public class Aggregation extends Connection {
-    public Aggregation(String name, InterClass from, InterClass to) {
+    private String varName;
+    private char cardFrom;
+    private char cardTo;
+
+    public Aggregation(String name, InterClass from, InterClass to, String varName, char cardFrom, char cardTo) {
         super(name, from, to);
+        this.varName = varName;
+        this.cardFrom = cardFrom;
+        this.cardTo = cardTo;
     }
 }

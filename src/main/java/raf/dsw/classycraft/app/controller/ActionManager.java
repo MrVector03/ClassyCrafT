@@ -1,6 +1,7 @@
 package raf.dsw.classycraft.app.controller;
 
 import raf.dsw.classycraft.app.controller.DiagramButtonPanel.*;
+import raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections.*;
 import raf.dsw.classycraft.app.controller.stateActions.*;
 import raf.dsw.classycraft.app.controller.tree.*;
 
@@ -26,6 +27,14 @@ public class ActionManager {
     private ClassChosenAction classChosenAction;
     private InterfaceChosenAction interfaceChosenAction;
     private EnumChosenAction enumChosenAction;
+    private AggregrationChosenAction aggregrationChosenAction;
+    private CompositionChosenAction compositionChosenAction;
+    private DependencyChosenAction dependencyChosenAction;
+    private GeneralizationChosenAction generalizationChosenAction;
+    private AggregationConfirmAction aggregationConfirmAction;
+    private CompositionConfirmAction compositionConfirmAction;
+    private DependencyConfirmAction dependencyConfirmAction;
+    private GeneralizationConfirmAction generalizationConfirmAction;
 
     public ActionManager() {
         aboutUsAction = new AboutUsAction();
@@ -52,6 +61,16 @@ public class ActionManager {
         classChosenAction = new ClassChosenAction();
         interfaceChosenAction = new InterfaceChosenAction();
         enumChosenAction = new EnumChosenAction();
+
+        aggregrationChosenAction = new AggregrationChosenAction();
+        compositionChosenAction = new CompositionChosenAction();
+        dependencyChosenAction = new DependencyChosenAction();
+        generalizationChosenAction = new GeneralizationChosenAction();
+
+        aggregationConfirmAction = new AggregationConfirmAction();
+        compositionConfirmAction = new CompositionConfirmAction();
+        dependencyConfirmAction = new DependencyConfirmAction();
+        generalizationConfirmAction = new GeneralizationConfirmAction();
     }
 
     public AboutUsAction getAboutUsAction() {
@@ -132,5 +151,37 @@ public class ActionManager {
 
     public EnumEditConfirmAction getEnumEditConfirmAction() {
         return enumEditConfirmAction;
+    }
+
+    public AggregrationChosenAction getAggregrationChosenAction() {
+        return aggregrationChosenAction;
+    }
+
+    public CompositionChosenAction getCompositionChosenAction() {
+        return compositionChosenAction;
+    }
+
+    public DependencyChosenAction getDependencyChosenAction() {
+        return dependencyChosenAction;
+    }
+
+    public GeneralizationChosenAction getGeneralizationChosenAction() {
+        return generalizationChosenAction;
+    }
+
+    public AggregationConfirmAction getAggregationConfirmAction() {
+        return aggregationConfirmAction;
+    }
+
+    public CompositionConfirmAction getCompositionConfirmAction() {
+        return compositionConfirmAction;
+    }
+
+    public DependencyConfirmAction getDependencyConfirmAction() {
+        return dependencyConfirmAction;
+    }
+
+    public GeneralizationConfirmAction getGeneralizationConfirmAction() {
+        return generalizationConfirmAction;
     }
 }
