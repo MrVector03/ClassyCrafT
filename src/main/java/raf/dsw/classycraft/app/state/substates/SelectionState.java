@@ -26,12 +26,13 @@ public class SelectionState implements State {
 
     @Override
     public void classyMousePressed(Point2D position, DiagramView diagramView) {
+        diagramView.popTemporarySelectionPainter();
         diagramView.getSelectedElements().clear();
         for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
             if (dep.elementAt(position) && !dragElements.contains(dep)) {
                 dragElements.add(dep);
-                // holdDiff = new Point2D.Double(((InterClassPainter) dep).getInterClass().getPosition().getX() - position.getX(),
-                //         ((InterClassPainter) dep).getInterClass().getPosition().getY() - position.getY());
+                holdDiff = new Point2D.Double(((InterClassPainter) dep).getInterClass().getPosition().getX() - position.getX(),
+                        ((InterClassPainter) dep).getInterClass().getPosition().getY() - position.getY());
 
                 // System.out.println("Class: " + ((InterClassPainter) dep).getInterClass().getPosition());
                 // System.out.println("Pointer: " + position);
@@ -52,13 +53,13 @@ public class SelectionState implements State {
             List<DiagramElementPainter> newDragElements = new ArrayList<>();
             diagramView.popTemporaryInterClassPainters(dragElements);
             for (DiagramElementPainter dep : dragElements) {
-                InterClass tmp = ((InterClassPainter) dep).getInterClass();
-                // ((Class) tmp).rewriteContents(((Class) ((InterClassPainter) dep).getInterClass()).getClassContents());
-
-                // Point2D newPoint = new Point2D.Double(startingPosition.getX() + holdDiff.getX(),
-                //        startingPosition.getX() + holdDiff.getY());
-                InterClass newTmpInterClass = new InterClass(tmp.getName(), tmp.getAccess(),
-                        startingPosition, tmp.getSize()) {
+                InterClass tmpInter = ((InterClassPainter) dep).getInterClass();
+                //tmp.rewriteContents(((Class) ((InterClassPainter) dep).getInterClass()).getClassContents());
+                // Class tmp = new Class(((InterClassPainter) dep).getInterClass().getName(), ((InterClassPainter) dep).getInterClass().getAccess(),
+                //         ((InterClassPainter) dep).getInterClass().getPosition(),);
+                Point2D newPoint = new Point2D.Double(startingPosition.getX() + holdDiff.getX(),
+                       startingPosition.getY() + holdDiff.getY());
+                Class newTmpInterClass = new Class(tmpInter.getName(), tmpInter.getAccess(), newPoint, tmpInter.getSize(), ((Class) tmpInter).getClassContents(), false) {
                     @Override
                     public Access getAccess() {
                         return super.getAccess();
@@ -93,13 +94,15 @@ public class SelectionState implements State {
         if (dragMode) {
             diagramView.popTemporaryInterClassPainters(dragElements);
             for (DiagramElementPainter dep : dragElements) {
-                InterClass tmp = ((InterClassPainter) dep).getInterClass();
+                InterClass tmpInter = ((InterClassPainter) dep).getInterClass();
 
-                // Point2D newPoint = new Point2D.Double(endingPosition.getX() + holdDiff.getX(),
-                //         endingPosition.getX() + holdDiff.getY());
+                // tmp.rewriteContents(((Class) ((InterClassPainter) dep).getInterClass()).getClassContents());
 
-                InterClass newTmpInterClass = new InterClass(tmp.getName(), tmp.getAccess(),
-                        endingPosition, tmp.getSize()) {
+                Point2D newPoint = new Point2D.Double(endingPosition.getX() + holdDiff.getX(),
+                        endingPosition.getY() + holdDiff.getY());
+
+                Class newTmpInterClass = new Class(tmpInter.getName(), tmpInter.getAccess(), newPoint, tmpInter.getSize(), ((Class) tmpInter).getClassContents(), false) {
+
                     @Override
                     public Access getAccess() {
                         return super.getAccess();
