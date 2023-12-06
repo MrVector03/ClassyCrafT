@@ -2,6 +2,9 @@ package raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters;
 
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Aggregation;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Composition;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Dependency;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Generalization;
 
 import java.awt.*;
@@ -60,17 +63,49 @@ public class ConnectionPainter extends DiagramElementPainter {
         //g.drawLine((int)fromPointMin.getX(), (int)fromPointMin.getY(), (int)toPointMin.getX(), (int)toPointMin.getY());
         g.setColor(super.diagramElement.getColor());
         g.setStroke(super.diagramElement.getStroke());
+
         if(diagramElement instanceof Generalization) {
             double triangleA = 20;
 
-            g.draw(drawTriangle(new Point2D.Double((double)toPointMin.getX(), (double)toPointMin.getY()), triangleA));
+            g.drawLine((int)fromPointMin.getX(), (int)fromPointMin.getY(), (int)getC(triangleA, toPointMin).getX(), (int)getC(triangleA, toPointMin).getY());
 
-            g.drawLine((int)fromPointMin.getX(), (int)fromPointMin.getY(), (int)getC(triangleA).getX(), (int)getC(triangleA).getY());
+            g.draw(drawTriangle(new Point2D.Double((double)toPointMin.getX(), (double)toPointMin.getY()), triangleA));
+        }
+
+        if(diagramElement instanceof Dependency) {
+            double triangleA = 20;
+
+            Graphics2D g2d = (Graphics2D) g.create();
+            Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+            g2d.setStroke(dashed);
+
+            g2d.drawLine((int)fromPointMin.getX(), (int)fromPointMin.getY(), (int)toPointMin.getX(), (int)toPointMin.getY());
+
+            g2d.dispose();
+
+            g.draw(drawArrow(toPointMin, triangleA));
+        }
+
+        if(diagramElement instanceof Aggregation) {
+            double triangleA = 20;
+
+            g.drawLine((int)fromPointMin.getX(), (int)fromPointMin.getY(), (int)getC(triangleA, getC(triangleA, toPointMin)).getX(), (int)getC(triangleA, getC(triangleA, toPointMin)).getY());
+
+            g.draw(drawRhombus(toPointMin, triangleA));
+        }
+
+        if(diagramElement instanceof Composition) {
+            double triangleA = 20;
+
+            g.drawLine((int)fromPointMin.getX(), (int)fromPointMin.getY(), (int)getC(triangleA, getC(triangleA, toPointMin)).getX(), (int)getC(triangleA, getC(triangleA, toPointMin)).getY());
+
+            g.fill(drawRhombus(toPointMin, triangleA));
         }
     }
 
-    private Point2D getC(double a) {
-        double x1 = fromPointMin.getX(), y1 = fromPointMin.getY(), x2 = toPointMin.getX(), y2 = toPointMin.getY();
+    //get the point on the "from" - "to" line that is h distanced from "to"
+    private Point2D getC(double a, Point2D toPoint) {
+        double x1 = fromPointMin.getX(), y1 = fromPointMin.getY(), x2 = toPoint.getX(), y2 = toPoint.getY();
         double h = a * Math.sqrt(3) / 2;
         double AB = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
@@ -87,8 +122,8 @@ public class ConnectionPainter extends DiagramElementPainter {
 
         double x1 = fromPointMin.getX(), y1 = fromPointMin.getY(), x2 = toPointMin.getX(), y2 = toPointMin.getY();
 
-        double xC = getC(a).getX();
-        double yC = getC(a).getY();
+        double xC = getC(a, toPointMin).getX();
+        double yC = getC(a, toPointMin).getY();
 
         double k = (y2 - yC) / (x2 - xC);
         double kn = (xC - x2) / (y2 - yC);
@@ -114,6 +149,88 @@ public class ConnectionPainter extends DiagramElementPainter {
         ((GeneralPath)shape).lineTo(newX2, newY2);
 
         ((GeneralPath)shape).lineTo(begPoint.getX(), begPoint.getY());
+
+        ((GeneralPath) shape).closePath();
+
+        return shape;
+    }
+
+    private Shape drawArrow(Point2D begPoint, double a) {
+        Shape shape = new GeneralPath();
+
+        ((GeneralPath)shape).moveTo(begPoint.getX(), begPoint.getY());
+
+        double x1 = fromPointMin.getX(), y1 = fromPointMin.getY(), x2 = toPointMin.getX(), y2 = toPointMin.getY();
+
+        double xC = getC(a, toPointMin).getX();
+        double yC = getC(a, toPointMin).getY();
+
+        double k = (y2 - yC) / (x2 - xC);
+        double kn = (xC - x2) / (y2 - yC);
+        double kl = (3 * k - Math.sqrt(3)) / (Math.sqrt(3) * k + 3);
+
+        double n = yC - kn * xC;
+        double nl = y2 - kl * x2;
+        double t = kn / kl;
+
+        double newY1 = (n - t * nl) / (1 - t);
+        double newX1 = (newY1 - nl) / kl;
+
+        ((GeneralPath)shape).lineTo(newX1, newY1);
+
+        kl = (-3 * k - Math.sqrt(3)) / (Math.sqrt(3) * k - 3);
+
+        nl = y2 - kl * x2;
+        t = kn / kl;
+
+        double newY2 = (n - t * nl) / (1 - t);
+        double newX2 = (newY2 - nl) / kl;
+
+        ((GeneralPath) shape).moveTo(begPoint.getX(), begPoint.getY());
+
+        ((GeneralPath)shape).lineTo(newX2, newY2);
+
+        ((GeneralPath) shape).closePath();
+
+        return shape;
+    }
+
+    private Shape drawRhombus(Point2D begPoint, double a) {
+        Shape shape = new GeneralPath();
+
+        ((GeneralPath)shape).moveTo(begPoint.getX(), begPoint.getY());
+
+        double x1 = fromPointMin.getX(), y1 = fromPointMin.getY(), x2 = toPointMin.getX(), y2 = toPointMin.getY();
+
+        double xC = getC(a, toPointMin).getX();
+        double yC = getC(a, toPointMin).getY();
+
+        double k = (y2 - yC) / (x2 - xC);
+        double kn = (xC - x2) / (y2 - yC);
+        double kl = (3 * k - Math.sqrt(3)) / (Math.sqrt(3) * k + 3);
+
+        double n = yC - kn * xC;
+        double nl = y2 - kl * x2;
+        double t = kn / kl;
+
+        double newY1 = (n - t * nl) / (1 - t);
+        double newX1 = (newY1 - nl) / kl;
+
+        kl = (-3 * k - Math.sqrt(3)) / (Math.sqrt(3) * k - 3);
+
+        nl = y2 - kl * x2;
+        t = kn / kl;
+
+        double newY2 = (n - t * nl) / (1 - t);
+        double newX2 = (newY2 - nl) / kl;
+
+        ((GeneralPath)shape).lineTo(newX1, newY1);
+
+        ((GeneralPath) shape).lineTo(getC(a, getC(a, toPointMin)).getX(), getC(a, getC(a, toPointMin)).getY());
+
+        ((GeneralPath) shape).lineTo(newX2, newY2);
+
+        ((GeneralPath) shape).lineTo(begPoint.getX(), begPoint.getY());
 
         ((GeneralPath) shape).closePath();
 
