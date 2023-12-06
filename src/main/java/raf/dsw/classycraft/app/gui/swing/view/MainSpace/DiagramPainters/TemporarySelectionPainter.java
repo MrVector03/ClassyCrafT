@@ -13,22 +13,25 @@ public class TemporarySelectionPainter extends DiagramElementPainter {
     private Dimension2D dimension;
 
     public TemporarySelectionPainter(Point2D startPoint, Point2D endPoint) {
+
+        Point2D tmpEndpoint = new Point2D.Double();
         if (endPoint.getY() < startPoint.getY() && endPoint.getX() < startPoint.getX()) {
             this.startPoint = new Point2D.Double(endPoint.getX(), endPoint.getY());
-            endPoint.setLocation(startPoint.getX(), startPoint.getY());
+            tmpEndpoint.setLocation(startPoint.getX(), startPoint.getY());
         } else if (endPoint.getY() < startPoint.getY()) {
             this.startPoint = new Point2D.Double(startPoint.getX(), endPoint.getY());
-            endPoint.setLocation(endPoint.getX(), startPoint.getY());
+            tmpEndpoint.setLocation(endPoint.getX(), startPoint.getY());
         } else if (endPoint.getX() < startPoint.getX()) {
             this.startPoint = new Point2D.Double(endPoint.getX(), startPoint.getY());
-            endPoint.setLocation(startPoint.getX(), endPoint.getY());
+            tmpEndpoint.setLocation(startPoint.getX(), endPoint.getY());
         } else {
             this.startPoint = startPoint;
+            tmpEndpoint.setLocation(endPoint.getX(), endPoint.getY());
         }
         shape = new GeneralPath();
 
-        Dimension2D interClassSize = new Dimension((int) Math.abs(this.startPoint.getX() - endPoint.getX()),
-                (int) Math.abs(this.startPoint.getY() - endPoint.getY()));
+        Dimension2D interClassSize = new Dimension((int) Math.abs(this.startPoint.getX() - tmpEndpoint.getX()),
+                (int) Math.abs(this.startPoint.getY() - tmpEndpoint.getY()));
         dimension = interClassSize;
         ((GeneralPath)shape).moveTo(this.startPoint.getX(), this.startPoint.getY());
 

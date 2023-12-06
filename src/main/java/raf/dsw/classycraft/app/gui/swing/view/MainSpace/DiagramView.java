@@ -103,12 +103,28 @@ public class DiagramView extends JPanel implements ISubscriber {
         repaint();
     }
 
+    public void testConnections(InterClass interClass) {
+        List<ConnectionPainter> toRemove = new ArrayList<>();
+        for (DiagramElementPainter dep : diagramElementPainters) {
+            if (dep instanceof ConnectionPainter) {
+                Connection connection = ((ConnectionPainter) dep).getConnection();
+                if (connection.getTo() == interClass || connection.getFrom() == interClass)
+                    toRemove.add((ConnectionPainter) dep);
+            }
+        }
+        for (ConnectionPainter cp : toRemove)
+            diagramElementPainters.remove(cp);
+    }
+
     public boolean deleteSelected() {
         if (this.selectedElements.isEmpty())
             return true;
         else {
-            for (DiagramElementPainter elementPainter : selectedElements)
+            for (DiagramElementPainter elementPainter : selectedElements) {
                 this.diagramElementPainters.remove(elementPainter);
+                if (elementPainter instanceof InterClassPainter)
+                    testConnections(((InterClassPainter) elementPainter).getInterClass());
+            }
             repaint();
             return false;
         }
