@@ -13,6 +13,8 @@ public abstract class InterClass extends DiagramElement{
 
     public InterClass(String name, Access access, Point2D position, Dimension size) {
         super(name);
+        super.setColor(Color.BLACK);
+        super.setStroke(new BasicStroke());
         this.access = access;
         this.position = position;
         this.size = size;
@@ -28,5 +30,9 @@ public abstract class InterClass extends DiagramElement{
 
     public Dimension getSize() {
         return size;
+    }
+
+    public void changePosition(Point2D change) {
+        this.position.setLocation(position.getX() + change.getX(), position.getY() + change.getY());
     }
 }

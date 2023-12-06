@@ -40,7 +40,10 @@ public class InterClassPainter extends DiagramElementPainter {
 
     @Override
     public void paint(Graphics2D g) {
+        g.setColor(super.diagramElement.getColor());
+        g.setStroke(super.diagramElement.getStroke());
         g.draw(shape);
+
 
         if(interClass instanceof Class) {
             String headerString = interClass.getAccess().toString() + " class " + interClass.getName();
@@ -181,5 +184,9 @@ public class InterClassPainter extends DiagramElementPainter {
 
     public InterClass getInterClass() {
         return interClass;
+    }
+
+    public Shape getShape() {
+        return shape;
     }
 }

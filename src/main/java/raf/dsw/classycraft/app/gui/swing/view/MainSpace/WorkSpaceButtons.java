@@ -14,6 +14,7 @@ public class WorkSpaceButtons extends JToolBar {
         ActionManager actionManager = new ActionManager();
 
         add(actionManager.getSelectionAction());
+        add(actionManager.getMoveAction());
         add(actionManager.getAddInterClassAction());
         add(actionManager.getAddConnectionAction());
         add(actionManager.getAddElementAction());

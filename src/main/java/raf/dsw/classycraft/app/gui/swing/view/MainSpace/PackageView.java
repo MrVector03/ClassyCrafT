@@ -75,6 +75,10 @@ public class PackageView extends JPanel implements ISubscriber {
         }
     }
 
+    public void startMoveState() {
+        stateManager.setMoveState();
+    }
+
     public void startSelectionState() {
         stateManager.setSelectionState();
     }

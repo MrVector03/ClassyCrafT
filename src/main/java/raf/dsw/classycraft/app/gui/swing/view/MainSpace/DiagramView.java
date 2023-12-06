@@ -6,13 +6,12 @@ import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotificatio
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.TemporaryConnectionPainter;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.TemporarySelectionPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.*;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.listeners.ClassyMouseListener;
 
 import javax.swing.*;
@@ -23,15 +22,24 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.DeflaterOutputStream;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseMotionListener;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 
 public class DiagramView extends JPanel implements ISubscriber {
     private final TabbedPane tabbedPane;
     private final Diagram diagram;
     private String name;
     private ArrayList<DiagramElementPainter> diagramElementPainters = new ArrayList<DiagramElementPainter>();
-    private final List<DiagramElementPainter> selectedElements = new ArrayList<>();
+    private final ArrayList<DiagramElementPainter> selectedElements = new ArrayList<>() {
+
+        @Override
+        public void clear() {
+            revertAllSelectedElements();
+            super.clear();
+        }
+    };
 
     public DiagramView(Diagram diagram, TabbedPane tabbedPane) {
         this.diagram = diagram;
@@ -54,25 +62,6 @@ public class DiagramView extends JPanel implements ISubscriber {
 
             }
         });
-        //TEST/////////////////////////
-
-
-        //addMouseListener(new MouseAdapter() {
-        //    @Override
-        //    public void mousePressed(MouseEvent e) {
-        //        //diagramElementPainters.add(new InterClassPainter(new Class("viktor", Access.DEFAULT,
-        //        //        new Point2D.Double(e.getPoint().getX(),e.getPoint().getY()), new Dimension(100,100),
-        //        //        new ArrayList<ClassContent>(), false)));
-//
-        //        (tabbedPane.getClassyPackage()).getPackageView().getCurrentState()
-        //                .classyMousePressed(e.getPoint().getX(), e.getPoint().getY(), this);
-        //        repaint();
-        //    }
-        //});
-
-
-        //TEST/////////////////////////
-
     }
 
     public Diagram getDiagram() {
@@ -103,14 +92,6 @@ public class DiagramView extends JPanel implements ISubscriber {
             diagramElementPainters.remove(diagramElementPainters.size() - 1);
     }
 
-    // SELECTION STATE - DRAG MODE
-    public void popTemporaryInterClassPainters(List<DiagramElementPainter> toRemove) {
-        for (DiagramElementPainter dep : toRemove) {
-            diagramElementPainters.remove(dep);
-            selectedElements.remove(dep);
-        }
-    }
-
     // SELECTION STATE - SELECTION MODE
     public void popTemporarySelectionPainter() {
         if (!diagramElementPainters.isEmpty() && diagramElementPainters.get(diagramElementPainters.size() - 1) instanceof TemporarySelectionPainter)
@@ -133,12 +114,114 @@ public class DiagramView extends JPanel implements ISubscriber {
         }
     }
 
+    public void moveMode(Point2D locationChange) {
+        List<ConnectionPainter> connections = new ArrayList<>();
+        for (DiagramElementPainter dep : this.diagramElementPainters)
+            if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
+        List<InterClass> copyForFromTo = new ArrayList<>();
+        if (selectedElements.isEmpty()) {
+            for (DiagramElementPainter dep : this.diagramElementPainters) {
+                if (dep instanceof ConnectionPainter) {
+                    copyForFromTo.add(null);
+                    continue;
+                }
+                copyForFromTo.add(((InterClassPainter) dep).getInterClass());
+                if (dep instanceof InterClassPainter) {
+                    int id = diagramElementPainters.indexOf(dep);
+                    InterClassPainter test = (InterClassPainter) diagramElementPainters.get(id);
+                    InterClassPainter icp = new InterClassPainter(((InterClassPainter) dep).getInterClass());
+                    icp.getInterClass().changePosition(locationChange);
+                    testForConnections(connections, test, icp);
+                    diagramElementPainters.set(id, icp);
+                }
+            }
+        } else {
+            for (DiagramElementPainter dep : this.selectedElements) {
+                if (dep instanceof ConnectionPainter) {
+                    copyForFromTo.add(null);
+                    continue;
+                }
+                copyForFromTo.add(((InterClassPainter) dep).getInterClass());
+                if (dep instanceof InterClassPainter) {
+                    int id = diagramElementPainters.indexOf(dep);
+                    InterClassPainter test = (InterClassPainter) diagramElementPainters.get(id);
+                    InterClassPainter icp = new InterClassPainter(((InterClassPainter) dep).getInterClass());
+                    ((InterClassPainter) dep).getInterClass().changePosition(locationChange);
+                    testForConnections(connections, test, icp);
+                    diagramElementPainters.set(id, icp);
+                    selectedElements.set(selectedElements.indexOf(dep), icp);
+                }
+            }
+        }
+        moveConnections(connections, copyForFromTo);
+        repaint();
+    }
+
+    public void testForConnections(List<ConnectionPainter> connections,
+                                   InterClassPainter oldVal,InterClassPainter newVal) {
+        for (ConnectionPainter cp : connections) {
+            if (cp.getConnection().getFrom() == oldVal.getInterClass())
+                cp.getConnection().setFrom(newVal.getInterClass());
+            if (cp.getConnection().getTo() == oldVal.getInterClass())
+                cp.getConnection().setTo(newVal.getInterClass());
+        }
+
+    }
+
+    public void moveConnections(List<ConnectionPainter> connections, List<InterClass> interClasses) {
+        for (ConnectionPainter cp : connections) {
+            int idConnection = diagramElementPainters.indexOf(cp);
+
+            InterClass from = cp.getConnection().getFrom();
+            InterClass to = cp.getConnection().getTo();
+
+            System.out.println("OLD FROM: " + from.getPosition());
+            System.out.println("OLD TO: " + to.getPosition());
+
+            int id_from = interClasses.indexOf(from);
+            int id_to = interClasses.indexOf(to);
+
+            InterClass newFrom;
+            if (interClasses.contains(from)) {
+                assert (diagramElementPainters.get(id_from) instanceof InterClassPainter);
+                newFrom = ((InterClassPainter) diagramElementPainters.get(id_from)).getInterClass();
+            } else newFrom = from;
+
+            InterClass newTo;
+            if (interClasses.contains(to)) {
+                assert (diagramElementPainters.get(id_to) instanceof InterClassPainter);
+                newTo = ((InterClassPainter) diagramElementPainters.get(id_to)).getInterClass();
+            } else newTo = to;
+
+            if (newFrom == newTo) return;
+
+            cp.getConnection().setFrom(newFrom);
+            cp.getConnection().setTo(newTo);
+            System.out.println("NEW FROM: " + newFrom.getPosition());
+            System.out.println("NEW TO: " + newTo.getPosition());
+
+            // System.out.println(cp.getConnection().getFrom());
+            // System.out.println(cp.getConnection().getTo());
+
+            ConnectionPainter newConnectionPainter = new ConnectionPainter(cp.getConnection());
+            diagramElementPainters.set(idConnection, newConnectionPainter);
+            repaint();
+        }
+    }
+
     public List<DiagramElementPainter> getSelectedElements() {
         return selectedElements;
     }
 
     public void selectElement(DiagramElementPainter elementPainter) {
-        this.selectedElements.add(elementPainter);
+        if (!this.selectedElements.contains(elementPainter) && !(elementPainter instanceof TemporarySelectionPainter)) {
+            this.selectedElements.add(elementPainter);
+        }
+    }
+
+    public void unselectElement(DiagramElementPainter elementPainter) {
+        revertSelected(elementPainter);
+        this.selectedElements.remove(elementPainter);
     }
 
     public TabbedPane getTabbedPane() {
@@ -162,6 +245,100 @@ public class DiagramView extends JPanel implements ISubscriber {
 
         for(DiagramElementPainter diagramElementPainter : diagramElementPainters) {
             diagramElementPainter.paint((Graphics2D) g);
+        }
+    }
+
+    public void revertSelected(DiagramElementPainter dep) {
+        if (dep instanceof TemporarySelectionPainter) return;
+        if (dep instanceof InterClassPainter) {
+            ((InterClassPainter) dep).getInterClass().setColor(Color.BLACK);
+            ((InterClassPainter) dep).getInterClass().setStroke(new BasicStroke());
+        } else {
+            ((ConnectionPainter) dep).getConnection().setColor(Color.BLACK);
+            ((ConnectionPainter) dep).getConnection().setStroke(new BasicStroke());
+        }
+        repaint();
+    }
+
+
+    public void markSelectedElements() {
+        List<ConnectionPainter> connections = new ArrayList<>();
+        for (DiagramElementPainter dep : this.diagramElementPainters)
+            if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
+        List<InterClass> selected = new ArrayList<>();
+
+        for (DiagramElementPainter dep : selectedElements) {
+            if (dep instanceof TemporarySelectionPainter) continue;
+
+            if (dep instanceof InterClassPainter) {
+                selected.add(((InterClassPainter) dep).getInterClass());
+                ((InterClassPainter) dep).getInterClass().setStroke(new BasicStroke(3.0f));
+                ((InterClassPainter) dep).getInterClass().setColor(Color.BLUE);
+            } else {
+                selected.add(null);
+                ((ConnectionPainter) dep).getConnection().setColor(Color.BLUE);
+                ((ConnectionPainter) dep).getConnection().setStroke(new BasicStroke(3.0f));
+            }
+            selectInConnections(connections, selected);
+            repaint();
+        }
+    }
+
+    private void selectInConnections(List<ConnectionPainter> connections, List<InterClass> selected) {
+        for (ConnectionPainter cp : connections) {
+
+            int id = diagramElementPainters.indexOf(cp);
+
+            InterClass from = cp.getConnection().getFrom();
+            InterClass to = cp.getConnection().getTo();
+            if (from == to) System.out.println("OLD SAME");
+
+            if (selected.contains(from) && selected.contains(to)) {
+                if (selected.contains(from) && diagramElementPainters.get(selected.indexOf(from)) instanceof InterClassPainter) {
+                    from = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(from))).getInterClass());
+                }
+                if (selected.contains(to) && diagramElementPainters.get(selected.indexOf(to)) instanceof InterClassPainter) {
+                    to = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(to))).getInterClass());
+
+                    cp.getConnection().setFrom(from);
+                    cp.getConnection().setTo(to);
+                } else if (selected.contains(from)) {
+                    if (selected.contains(from) && diagramElementPainters.get(selected.indexOf(from)) instanceof InterClassPainter) {
+                        from = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(from))).getInterClass());
+                    }
+                    cp.getConnection().setFrom(from);
+                } else {
+                    if (selected.contains(to) && diagramElementPainters.get(selected.indexOf(to)) instanceof InterClassPainter)
+                        to = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(to))).getInterClass());
+                    cp.getConnection().setTo(to);
+                }
+
+                //if (selected.contains(from) && diagramElementPainters.get(selected.indexOf(from)) instanceof InterClassPainter) {
+                //    from = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(from))).getInterClass());
+                //}
+                //if (selected.contains(to) && diagramElementPainters.get(selected.indexOf(to)) instanceof InterClassPainter) {
+                //    to = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(to))).getInterClass());
+                //}
+//
+                //InterClass newFrom = selected.contains(from)
+                //        ? ((InterClassPainter) diagramElementPainters.get(selected.indexOf(from))).getInterClass() : from;
+                //InterClass newTo = selected.contains(to)
+                //        ? ((InterClassPainter) diagramElementPainters.get(selected.indexOf(to))).getInterClass() : to;
+            }
+        }
+    }
+
+
+    private void revertAllSelectedElements() {
+        for (DiagramElementPainter dep : selectedElements) {
+            if (dep instanceof InterClassPainter) {
+                ((InterClassPainter) dep).getInterClass().setColor(Color.BLACK);
+                ((InterClassPainter) dep).getInterClass().setStroke(new BasicStroke());
+            } else {
+                ((ConnectionPainter) dep).getConnection().setColor(Color.BLUE);
+                ((ConnectionPainter) dep).getConnection().setStroke(new BasicStroke());
+            }
+            repaint();
         }
     }
 }

@@ -2,6 +2,7 @@ package raf.dsw.classycraft.app.state;
 
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 
 public interface State {

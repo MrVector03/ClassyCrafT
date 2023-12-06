@@ -13,12 +13,13 @@ public class ConnectionPainter extends DiagramElementPainter {
     private Point2D toPointMin = null;
     private Point2D fromPointMin = null;
 
+    private Connection connection;
     // private Connection connection = (Connection)diagramElement;
 
     public ConnectionPainter(Connection connection) {
-
         // InterClass to = ((Connection)diagramElement).getTo();
         // InterClass from = ((Connection)diagramElement).getFrom();
+        this.connection = connection;
 
         InterClass to = connection.getTo();
         InterClass from = connection.getFrom();
@@ -57,7 +58,8 @@ public class ConnectionPainter extends DiagramElementPainter {
     @Override
     public void paint(Graphics2D g) {
         //g.drawLine((int)fromPointMin.getX(), (int)fromPointMin.getY(), (int)toPointMin.getX(), (int)toPointMin.getY());
-
+        g.setColor(super.diagramElement.getColor());
+        g.setStroke(super.diagramElement.getStroke());
         if(diagramElement instanceof Generalization) {
             double triangleA = 20;
 
@@ -137,5 +139,9 @@ public class ConnectionPainter extends DiagramElementPainter {
 
     public void setFromPointMin(Point2D fromPointMin) {
         this.fromPointMin = fromPointMin;
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 }

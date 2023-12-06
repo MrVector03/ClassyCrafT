@@ -20,6 +20,7 @@ public class ActionManager {
     private AddElementAction addElementAction;
     private DeleteAction deleteAction;
     private SelectionAction selectionAction;
+    private MoveAction moveAction;
     private ClassEditConfirmAction classEditConfirmAction;
     private InterfaceEditConfirmAction interfaceEditConfirmAction;
     private EnumEditConfirmAction enumEditConfirmAction;
@@ -53,6 +54,7 @@ public class ActionManager {
         deleteAction = new DeleteAction();
         selectionAction = new SelectionAction();
         copyInterClassAction = new CopyInterClassAction();
+        moveAction = new MoveAction();
 
         classEditConfirmAction = new ClassEditConfirmAction();
         interfaceEditConfirmAction = new InterfaceEditConfirmAction();
@@ -123,6 +125,10 @@ public class ActionManager {
 
     public SelectionAction getSelectionAction() {
         return selectionAction;
+    }
+
+    public MoveAction getMoveAction() {
+        return moveAction;
     }
 
     public ClassEditConfirmAction getClassEditConfirmAction() {

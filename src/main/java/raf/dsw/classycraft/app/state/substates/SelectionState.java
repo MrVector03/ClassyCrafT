@@ -1,14 +1,18 @@
 package raf.dsw.classycraft.app.state.substates;
 
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.TemporarySelectionPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 import raf.dsw.classycraft.app.state.State;
 
+import javax.swing.text.html.ListView;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -16,125 +20,80 @@ import java.util.List;
 
 public class SelectionState implements State {
 
-    private boolean dragMode = false;
-    private List<DiagramElementPainter> dragElements = new ArrayList<>();
-
     private Point2D startingPoint = null;
     private Point2D endingPoint = null;
 
-    private Point2D holdDiff = null;
-
     @Override
     public void classyMousePressed(Point2D position, DiagramView diagramView) {
-        diagramView.popTemporarySelectionPainter();
         diagramView.getSelectedElements().clear();
-        for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
-            if (dep.elementAt(position) && !dragElements.contains(dep)) {
-                dragElements.add(dep);
-                holdDiff = new Point2D.Double(((InterClassPainter) dep).getInterClass().getPosition().getX() - position.getX(),
-                        ((InterClassPainter) dep).getInterClass().getPosition().getY() - position.getY());
-
-                // System.out.println("Class: " + ((InterClassPainter) dep).getInterClass().getPosition());
-                // System.out.println("Pointer: " + position);
-                // System.out.println("HOLD: " + holdDiff);
-
-                diagramView.selectElement(dep);
-            }
-        }
-        dragMode = !dragElements.isEmpty();
-        if (dragMode) return;
-
         startingPoint = position;
+        for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
+            if (dep.elementAt(position))
+                diagramView.selectElement(dep);
+        }
+        diagramView.markSelectedElements();
     }
 
+    @SuppressWarnings("ALL")
     @Override
     public void classyMouseDragged(Point2D startingPosition, DiagramView diagramView) {
-        if (dragMode) {
-            List<DiagramElementPainter> newDragElements = new ArrayList<>();
-            diagramView.popTemporaryInterClassPainters(dragElements);
-            for (DiagramElementPainter dep : dragElements) {
-                InterClass tmpInter = ((InterClassPainter) dep).getInterClass();
-                //tmp.rewriteContents(((Class) ((InterClassPainter) dep).getInterClass()).getClassContents());
-                // Class tmp = new Class(((InterClassPainter) dep).getInterClass().getName(), ((InterClassPainter) dep).getInterClass().getAccess(),
-                //         ((InterClassPainter) dep).getInterClass().getPosition(),);
-                Point2D newPoint = new Point2D.Double(startingPosition.getX() + holdDiff.getX(),
-                       startingPosition.getY() + holdDiff.getY());
-                Class newTmpInterClass = new Class(tmpInter.getName(), tmpInter.getAccess(), newPoint, tmpInter.getSize(), ((Class) tmpInter).getClassContents(), false) {
-                    @Override
-                    public Access getAccess() {
-                        return super.getAccess();
-                    }
+        endingPoint = startingPosition;
+        diagramView.removeAllSelectionPainters();
 
-                    @Override
-                    public Point2D getPosition() {
-                        return super.getPosition();
+        TemporarySelectionPainter selectionPainter = new TemporarySelectionPainter(startingPoint, endingPoint);
+        for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
+            if (dep instanceof InterClassPainter) {
+                    Point2D point = ((InterClassPainter) dep).getInterClass().getPosition();
+                    Dimension size = ((InterClassPainter) dep).getInterClass().getSize();
+                    if (dep.elementAt(startingPosition) || selectionPainter.elementAt(point)
+                            || selectionPainter.elementAt(new Point2D.Double(point.getX() + size.width, point.getY()))
+                            || selectionPainter.elementAt(new Point2D.Double(point.getX(), point.getY() + size.height))
+                            || selectionPainter.elementAt(new Point2D.Double(point.getX() + size.width, point.getY() + size.height)))
+                        diagramView.selectElement(dep);
+                    else {
+                        diagramView.unselectElement(dep);
                     }
+            } else if (dep instanceof ConnectionPainter && ((selectionPainter.elementAt(((ConnectionPainter) dep).getFromPointMin()))
+                    || selectionPainter.elementAt(((ConnectionPainter) dep).getToPointMin())))
+                diagramView.selectElement(dep);
+            else
+                diagramView.unselectElement(dep);
 
-                    @Override
-                    public Dimension getSize() {
-                        return super.getSize();
-                    }
-                };
-                InterClassPainter newPainter = new InterClassPainter(newTmpInterClass);
-                newDragElements.add(newPainter);
-                diagramView.selectElement(newPainter);
-                diagramView.addDiagramElementPainter(newPainter);
-            }
-            dragElements = newDragElements;
-        } else {
-            endingPoint = startingPosition;
-            diagramView.popTemporarySelectionPainter();
-            TemporarySelectionPainter selectionPainter = new TemporarySelectionPainter(startingPoint, endingPoint);
-            diagramView.addDiagramElementPainter(selectionPainter);
         }
+        diagramView.markSelectedElements();
+        diagramView.addDiagramElementPainter(selectionPainter);
     }
 
+    @SuppressWarnings("ALL")
     @Override
     public void classyMouseReleased(Point2D endingPosition, DiagramView diagramView) {
-        if (dragMode) {
-            diagramView.popTemporaryInterClassPainters(dragElements);
-            for (DiagramElementPainter dep : dragElements) {
-                InterClass tmpInter = ((InterClassPainter) dep).getInterClass();
+        endingPoint = endingPosition;
+        diagramView.removeAllSelectionPainters();
+        TemporarySelectionPainter selectionPainter = new TemporarySelectionPainter(startingPoint, endingPoint);
+        for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
+            if (dep instanceof InterClassPainter) {
+                Point2D point = ((InterClassPainter) dep).getInterClass().getPosition();
+                Dimension size = ((InterClassPainter) dep).getInterClass().getSize();
+                if (dep.elementAt(endingPosition) || selectionPainter.elementAt(point)
+                        || selectionPainter.elementAt(new Point2D.Double(point.getX() + size.width, point.getY()))
+                        || selectionPainter.elementAt(new Point2D.Double(point.getX(), point.getY() + size.height))
+                        || selectionPainter.elementAt(new Point2D.Double(point.getX() + size.width, point.getY() + size.height)))
+                    diagramView.selectElement(dep);
+                else {
+                    diagramView.unselectElement(dep);
+                }
+            } else if (dep instanceof ConnectionPainter && ((selectionPainter.elementAt(((ConnectionPainter) dep).getFromPointMin()))
+                    || selectionPainter.elementAt(((ConnectionPainter) dep).getToPointMin())))
+                diagramView.selectElement(dep);
+            else
+                diagramView.unselectElement(dep);
 
-                // tmp.rewriteContents(((Class) ((InterClassPainter) dep).getInterClass()).getClassContents());
-
-                Point2D newPoint = new Point2D.Double(endingPosition.getX() + holdDiff.getX(),
-                        endingPosition.getY() + holdDiff.getY());
-
-                Class newTmpInterClass = new Class(tmpInter.getName(), tmpInter.getAccess(), newPoint, tmpInter.getSize(), ((Class) tmpInter).getClassContents(), false) {
-
-                    @Override
-                    public Access getAccess() {
-                        return super.getAccess();
-                    }
-
-                    @Override
-                    public Point2D getPosition() {
-                        return super.getPosition();
-                    }
-
-                    @Override
-                    public Dimension getSize() {
-                        return super.getSize();
-                    }
-                };
-                InterClassPainter newPainter = new InterClassPainter(newTmpInterClass);
-                diagramView.selectElement(newPainter);
-                diagramView.addDiagramElementPainter(newPainter);
-            }
-            dragElements.clear();
-            dragMode = false;
-        } else {
-            endingPoint = endingPosition;
-            diagramView.popTemporarySelectionPainter();
-            TemporarySelectionPainter selectionPainter = new TemporarySelectionPainter(startingPoint, endingPoint);
-            diagramView.addDiagramElementPainter(selectionPainter);
         }
+        diagramView.markSelectedElements();
+        diagramView.addDiagramElementPainter(selectionPainter);
+
         startingPoint = null;
         endingPoint = null;
-    }
-
-    private void boldSelectedElements(DiagramView diagramView) {
-
+        diagramView.removeAllSelectionPainters();
     }
 }
