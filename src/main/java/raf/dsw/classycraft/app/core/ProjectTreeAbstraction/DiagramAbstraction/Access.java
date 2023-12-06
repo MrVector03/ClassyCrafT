@@ -15,4 +15,9 @@ public enum Access {
             return "~";
         return super.toString();
     }
+
+    public String toStringNames()
+    {
+        return super.toString();
+    }
 }

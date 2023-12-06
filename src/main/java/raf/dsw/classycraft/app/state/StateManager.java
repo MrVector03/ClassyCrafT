@@ -12,6 +12,7 @@ public class StateManager {
     private final SelectionState selectionState = new SelectionState();
     private final CopyInterClassState copyInterClassState = new CopyInterClassState();
     private final MoveState moveState = new MoveState();
+    private final EditState editState = new EditState();
 
     public void setAddInterClassState() {
         this.currentState = this.addInterClassState;
@@ -40,6 +41,8 @@ public class StateManager {
     public void setMoveState() {
         this.currentState = this.moveState;
     }
+
+    public void setEditState() { this.currentState = this.editState; }
 
     public State getCurrentState() {
         return currentState;

@@ -14,4 +14,8 @@ public abstract class DiagramElementPainter {
     public abstract void paint(Graphics2D g);
 
     public abstract boolean elementAt(Point2D point);
+
+    public DiagramElement getDiagramElement() {
+        return diagramElement;
+    }
 }

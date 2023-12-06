@@ -17,4 +17,8 @@ public class ClassContent {
     public String toString() {
         return access.toString() + " " + returnType + " " + name;
     }
+
+    public String toStringNames() {
+        return access.toStringNames() + " " + returnType + " " + name;
+    }
 }

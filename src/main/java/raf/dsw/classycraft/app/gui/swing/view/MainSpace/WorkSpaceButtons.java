@@ -1,6 +1,8 @@
 package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 
+import javafx.stage.Screen;
 import raf.dsw.classycraft.app.controller.ActionManager;
+import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,15 +13,14 @@ public class WorkSpaceButtons extends JToolBar {
         super(VERTICAL);
         setFloatable(false);
 
-        ActionManager actionManager = new ActionManager();
-
-        add(actionManager.getSelectionAction());
-        add(actionManager.getMoveAction());
-        add(actionManager.getAddInterClassAction());
-        add(actionManager.getAddConnectionAction());
-        add(actionManager.getAddElementAction());
-        add(actionManager.getDeleteAction());
-        add(actionManager.getCopyInterClassAction());
+        add(MainFrame.getInstance().getActionManager().getSelectionAction());
+        add(MainFrame.getInstance().getActionManager().getMoveAction());
+        add(MainFrame.getInstance().getActionManager().getAddInterClassAction());
+        add(MainFrame.getInstance().getActionManager().getAddConnectionAction());
+        add(MainFrame.getInstance().getActionManager().getAddElementAction());
+        add(MainFrame.getInstance().getActionManager().getDeleteAction());
+        add(MainFrame.getInstance().getActionManager().getCopyInterClassAction());
+        add(MainFrame.getInstance().getActionManager().getEditAction());
 
         setAlignmentX(RIGHT_ALIGNMENT);
         setMaximumSize(new Dimension(32, 1000));

@@ -35,4 +35,12 @@ public abstract class InterClass extends DiagramElement{
     public void changePosition(Point2D change) {
         this.position.setLocation(position.getX() + change.getX(), position.getY() + change.getY());
     }
+
+    public void setAccess(Access access) {
+        this.access = access;
+    }
+
+    public void setSize(Dimension size) {
+        this.size = size;
+    }
 }

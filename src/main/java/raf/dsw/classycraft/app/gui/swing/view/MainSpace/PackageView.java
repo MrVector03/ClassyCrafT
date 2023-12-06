@@ -3,8 +3,10 @@ package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
 import raf.dsw.classycraft.app.state.State;
 import raf.dsw.classycraft.app.state.StateManager;
 
@@ -18,6 +20,7 @@ public class PackageView extends JPanel implements ISubscriber {
     private final StateManager stateManager = new StateManager();
 
     private Package focusedPackage;
+    private DiagramElement curEditElement;
 
     public PackageView(HeadlineSpace headlineSpace, TabbedPane tabbedPane) {
         this.startSelectionState();
@@ -86,9 +89,20 @@ public class PackageView extends JPanel implements ISubscriber {
     public void startCopyInterClassState() {
         stateManager.setCopyInterClassState();
     }
+    public void startEditState() {
+        stateManager.setEditState();
+    }
 
     public State getCurrentState() {
         return stateManager.getCurrentState();
+    }
+
+    public DiagramElement getCurEditElement() {
+        return curEditElement;
+    }
+
+    public void setCurEditElement(DiagramElement curEditElement) {
+        this.curEditElement = curEditElement;
     }
 
     @Override

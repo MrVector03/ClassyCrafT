@@ -20,8 +20,11 @@ public class InterClassPainter extends DiagramElementPainter {
     public InterClassPainter(InterClass interClass) {
         diagramElement = interClass;
         this.interClass = interClass;
-        shape = new GeneralPath();
+    }
 
+    @Override
+    public void paint(Graphics2D g) {
+        shape = new GeneralPath();
         Point2D interClassPos = ((InterClass)diagramElement).getPosition();
         Dimension2D interClassSize = ((InterClass)diagramElement).getSize();
 
@@ -36,10 +39,7 @@ public class InterClassPainter extends DiagramElementPainter {
         ((GeneralPath)shape).lineTo(interClassPos.getX(), interClassPos.getY());
 
         ((GeneralPath)shape).closePath();
-    }
 
-    @Override
-    public void paint(Graphics2D g) {
         g.setColor(super.diagramElement.getColor());
         g.setStroke(super.diagramElement.getStroke());
         g.draw(shape);

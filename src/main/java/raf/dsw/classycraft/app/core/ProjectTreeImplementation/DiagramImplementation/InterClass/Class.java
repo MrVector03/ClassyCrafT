@@ -29,4 +29,12 @@ public class Class extends InterClass {
     public void rewriteContents(ArrayList<ClassContent> newContents) {
         this.classContents = newContents;
     }
+
+    public void setClassContents(ArrayList<ClassContent> classContents) {
+        this.classContents = classContents;
+    }
+
+    public void setAbstract(boolean anAbstract) {
+        isAbstract = anAbstract;
+    }
 }
