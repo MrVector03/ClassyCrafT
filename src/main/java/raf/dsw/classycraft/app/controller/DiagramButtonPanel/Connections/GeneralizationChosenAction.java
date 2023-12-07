@@ -16,6 +16,8 @@ public class GeneralizationChosenAction extends AbstractClassyAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        MainFrame.getInstance().getEditGeneralizationFrame().getNameTextField().setText("");
+
         MainFrame.getInstance().getChooseConnectionFrame().setVisible(false);
         MainFrame.getInstance().getEditGeneralizationFrame().setVisible(true);
     }

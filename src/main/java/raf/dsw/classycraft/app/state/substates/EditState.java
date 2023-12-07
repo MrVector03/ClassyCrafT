@@ -6,10 +6,9 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementat
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Composition;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Dependency;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Generalization;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.*;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Enum;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Interface;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
@@ -44,6 +43,9 @@ public class EditState implements State {
             else if (dep instanceof ConnectionPainter && ((ConnectionPainter) dep).elementAtShape(rectangle))
                 toEdit.add(dep);
         }
+
+        if(toEdit.size() == 0)
+            return;
 
         if(toEdit.size() > 1) {
             ApplicationFramework.getInstance().getMessageGenerator().generateMessage("CAN_EDIT_ONLY_ONE_ELEMENT", MessageType.ERROR);
@@ -95,7 +97,7 @@ public class EditState implements State {
             eif.getEicTextField().setText(interfaceToEdit.getName());
 
             String ccText = "";
-            for(ClassContent cc : interfaceToEdit.getMethods())
+            for(Method cc : interfaceToEdit.getMethods())
                 ccText += cc.toStringNames() + "\n";
 
             eif.getEicTextArea().setText(ccText);

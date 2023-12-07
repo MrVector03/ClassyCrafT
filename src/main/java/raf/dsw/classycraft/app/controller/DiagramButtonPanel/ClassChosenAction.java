@@ -13,6 +13,11 @@ public class ClassChosenAction extends AbstractClassyAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        MainFrame.getInstance().getEditClassFrame().getEicComboBox().setSelectedIndex(0);
+        MainFrame.getInstance().getEditClassFrame().getEicTextArea().setText("");
+        MainFrame.getInstance().getEditClassFrame().getEicTextField().setText("");
+        MainFrame.getInstance().getEditClassFrame().getAbstractCheckBox().setSelected(false);
+
         MainFrame.getInstance().getChooseInterClassFrame().setVisible(false);
         MainFrame.getInstance().getEditClassFrame().setVisible(true);
     }

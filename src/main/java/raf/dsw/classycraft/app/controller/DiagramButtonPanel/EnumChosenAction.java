@@ -13,6 +13,10 @@ public class EnumChosenAction extends AbstractClassyAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        MainFrame.getInstance().getEditEnumFrame().getEicComboBox().setSelectedIndex(0);
+        MainFrame.getInstance().getEditEnumFrame().getEicTextArea().setText("");
+        MainFrame.getInstance().getEditEnumFrame().getEicTextField().setText("");
+
         MainFrame.getInstance().getChooseInterClassFrame().setVisible(false);
         MainFrame.getInstance().getEditEnumFrame().setVisible(true);
     }

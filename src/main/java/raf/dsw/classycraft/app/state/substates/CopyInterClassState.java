@@ -1,7 +1,12 @@
 package raf.dsw.classycraft.app.state.substates;
 
+import raf.dsw.classycraft.app.core.ApplicationFramework;
+import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Enum;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Interface;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
@@ -20,8 +25,17 @@ public class CopyInterClassState implements State {
             if (dep.elementAt(position))
                 toCopy.add(dep);
         }
-        for (DiagramElementPainter dep : toCopy)
-            copyPaint(dep, diagramView);
+
+        if(toCopy.size() == 0)
+            return;
+
+        if(toCopy.size() > 1) {
+            ApplicationFramework.getInstance().getMessageGenerator().generateMessage("CAN_COPY_ONLY_ONE_INTERCLASS", MessageType.WARNING);
+            return;
+        }
+
+        if(toCopy.get(0).getDiagramElement() instanceof InterClass)
+            copyPaint(toCopy.get(0), diagramView);
     }
 
     @Override
@@ -38,30 +52,19 @@ public class CopyInterClassState implements State {
         InterClass tmpInterClass = ((InterClassPainter) elementPainter).getInterClass();
         Point newPosition = new Point();
 
-        newPosition.setLocation(tmpInterClass.getPosition().getX() + tmpInterClass.getSize().getWidth() / 2,
-                tmpInterClass.getPosition().getY() + tmpInterClass.getSize().getHeight() / 2);
+        newPosition.setLocation(tmpInterClass.getPosition().getX() + tmpInterClass.getSize().getWidth(),
+                tmpInterClass.getPosition().getY() + tmpInterClass.getSize().getHeight());
 
-        InterClassPainter copyElement = new InterClassPainter(new InterClass(
-                tmpInterClass.getName(),
-                tmpInterClass.getAccess(),
-                newPosition,
-                tmpInterClass.getSize()
-        ) {
-            @Override
-            public Access getAccess() {
-                return super.getAccess();
-            }
+        InterClassPainter copyElement;
 
-            @Override
-            public Point2D getPosition() {
-                return super.getPosition();
-            }
-
-            @Override
-            public Dimension getSize() {
-                return super.getSize();
-            }
-        });
+        if(tmpInterClass instanceof Class) {
+            copyElement = new InterClassPainter(new Class(tmpInterClass.getName(), tmpInterClass.getAccess(), newPosition, tmpInterClass.getSize(), ((Class) tmpInterClass).getClassContents(), ((Class) tmpInterClass).isAbstract())); }
+        else {
+            if (tmpInterClass instanceof Enum)
+                copyElement = new InterClassPainter(new Enum(tmpInterClass.getName(), tmpInterClass.getAccess(), tmpInterClass.getPosition(), tmpInterClass.getSize(), ((Enum) tmpInterClass).getValues()));
+            else
+                copyElement = new InterClassPainter(new Interface(tmpInterClass.getName(), tmpInterClass.getAccess(), newPosition, tmpInterClass.getSize(), ((Interface) tmpInterClass).getMethods()));
+        }
         diagramView.addDiagramElementPainter(copyElement);
     }
 }

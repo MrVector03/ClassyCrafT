@@ -13,6 +13,9 @@ public class DependencyChosenAction extends AbstractClassyAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        MainFrame.getInstance().getEditDependencyFrame().getNameTextField().setText("");
+        MainFrame.getInstance().getEditDependencyFrame().getTypeTextfield().setText("");
+
         MainFrame.getInstance().getChooseConnectionFrame().setVisible(false);
         MainFrame.getInstance().getEditDependencyFrame().setVisible(true);
     }

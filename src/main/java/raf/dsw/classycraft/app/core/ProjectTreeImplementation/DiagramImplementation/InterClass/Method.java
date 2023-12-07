@@ -20,4 +20,8 @@ public class Method extends ClassContent {
     public String toString() {
         return super.toString() + "()";
     }
+
+    public String toStringNames() {
+        return super.toStringNames() + "()";
+    }
 }

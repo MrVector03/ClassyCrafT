@@ -13,6 +13,11 @@ public class AggregrationChosenAction extends AbstractClassyAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        MainFrame.getInstance().getEditAggregationFrame().getNameTextField().setText("");
+        MainFrame.getInstance().getEditAggregationFrame().getVarNameTextField().setText("");
+        MainFrame.getInstance().getEditAggregationFrame().getCardFromTextField().setText("");
+        MainFrame.getInstance().getEditAggregationFrame().getCardToTextField().setText("");
+
         MainFrame.getInstance().getChooseConnectionFrame().setVisible(false);
         MainFrame.getInstance().getEditAggregationFrame().setVisible(true);
     }
