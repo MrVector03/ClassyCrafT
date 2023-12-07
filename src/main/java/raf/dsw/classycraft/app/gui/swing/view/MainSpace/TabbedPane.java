@@ -43,6 +43,7 @@ public class TabbedPane extends JTabbedPane {
     // }
 
     public void loadDiagrams() {
+        this.loadedTabs.clear();
         for (ClassyNode cn : this.classyPackage.getChildren()) {
             if (cn instanceof Diagram) {
                 if (((Diagram) cn).getSubscribers().isEmpty()) {
@@ -65,7 +66,7 @@ public class TabbedPane extends JTabbedPane {
 
     public void addNewDiagram(Diagram diagram) {
         DiagramView newDiagram = new DiagramView(diagram, this);
-        TabView newTab = new TabView(newDiagram, buttons);
+        TabView newTab = new TabView(newDiagram, new WorkSpaceButtons());
         this.loadedTabs.add(newTab);
         addTab(newTab.getDiagramView().getName(), newTab);
     }
@@ -133,6 +134,7 @@ public class TabbedPane extends JTabbedPane {
     public void removeDiagram(ClassyNode diagram) {
         for (TabView tv : this.loadedTabs) {
             if (tv.getDiagramView().getDiagram() == diagram) {
+                this.getClassyPackage().getPackageView().removeMoveStateSubscriber(tv.getDiagramView());
                 remove(tv);
                 revalidate();
                 return;

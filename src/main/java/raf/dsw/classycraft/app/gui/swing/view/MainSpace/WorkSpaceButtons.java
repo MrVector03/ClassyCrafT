@@ -1,6 +1,5 @@
 package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 
-import javafx.stage.Screen;
 import raf.dsw.classycraft.app.controller.ActionManager;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 

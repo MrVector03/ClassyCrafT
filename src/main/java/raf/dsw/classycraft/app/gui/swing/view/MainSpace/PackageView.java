@@ -41,6 +41,7 @@ public class PackageView extends JPanel implements ISubscriber {
 
     public void setupView(Package openedPackage) {
         this.tabbedPane.loadPackage(openedPackage);
+        this.focusedPackage = openedPackage;
         this.headlineSpace.setup(tabbedPane.getClassyProject().getName(), tabbedPane.getClassyProject().getAuthor());
         if (!tabbedPane.getClassyPackage().checkSubscriber(this))
             this.tabbedPane.getClassyPackage().addSubscriber(this);
@@ -48,9 +49,18 @@ public class PackageView extends JPanel implements ISubscriber {
     }
 
     public void totalClear() {
+        this.focusedPackage = null;
         this.headlineSpace.clear();
         this.tabbedPane.clear();
         this.tabbedPane.revalidate();
+    }
+
+    public void addMoveStateSubscriber(DiagramView diagramView) {
+        this.stateManager.getMoveState().addSubscriber(diagramView);
+    }
+
+    public void removeMoveStateSubscriber(DiagramView diagramView) {
+        this.stateManager.getMoveState().removeSubscriber(diagramView);
     }
 
     // STATE MEDIATOR METHODS
@@ -151,5 +161,9 @@ public class PackageView extends JPanel implements ISubscriber {
 
     public TabbedPane getTabbedPane() {
         return tabbedPane;
+    }
+
+    public Package getFocusedPackage() {
+        return focusedPackage;
     }
 }

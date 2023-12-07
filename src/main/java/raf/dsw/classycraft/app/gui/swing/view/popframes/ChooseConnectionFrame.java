@@ -12,7 +12,7 @@ public class ChooseConnectionFrame extends JFrame {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenHeight = screenSize.height;
         int screenWidth = screenSize.width;
-        setSize(screenWidth/4, screenHeight/12);
+        setSize(screenWidth/4, 120);
 
         setLayout(new FlowLayout(FlowLayout.CENTER, 10,10));
 

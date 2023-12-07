@@ -2,6 +2,7 @@ package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
+import raf.dsw.classycraft.app.core.Observer.notifications.MoveNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
@@ -16,9 +17,7 @@ import raf.dsw.classycraft.app.gui.swing.view.MainSpace.listeners.ClassyMouseLis
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -43,6 +42,7 @@ public class DiagramView extends JPanel implements ISubscriber {
     };
 
     private double zoom;
+    private Point2D zoomPoint = new Point2D.Double(0, 0);
 
     public DiagramView(Diagram diagram, TabbedPane tabbedPane) {
         this.diagram = diagram;
@@ -51,7 +51,18 @@ public class DiagramView extends JPanel implements ISubscriber {
         this.zoom = 1;
         diagram.addSubscriber(this);
 
+        tabbedPane.getClassyPackage().getPackageView().addMoveStateSubscriber(this);
+
         addMouseListener(new ClassyMouseListener(this));
+
+        addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                tabbedPane.getClassyPackage().getPackageView().getCurrentState()
+                        .classyMouseWheelMoved(e.getPoint(), DiagramView.this, e);
+                repaint();
+            }
+        });
 
         addMouseMotionListener(new MouseMotionListener() {
             @Override
@@ -136,102 +147,7 @@ public class DiagramView extends JPanel implements ISubscriber {
         }
     }
 
-    public void moveMode(Point2D locationChange) {
-        List<ConnectionPainter> connections = new ArrayList<>();
-        for (DiagramElementPainter dep : this.diagramElementPainters)
-            if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
-        List<InterClass> copyForFromTo = new ArrayList<>();
-        if (selectedElements.isEmpty()) {
-            for (DiagramElementPainter dep : this.diagramElementPainters) {
-                if (dep instanceof ConnectionPainter) {
-                    copyForFromTo.add(null);
-                    continue;
-                }
-                copyForFromTo.add(((InterClassPainter) dep).getInterClass());
-                if (dep instanceof InterClassPainter) {
-                    int id = diagramElementPainters.indexOf(dep);
-                    InterClassPainter test = (InterClassPainter) diagramElementPainters.get(id);
-                    InterClassPainter icp = new InterClassPainter(((InterClassPainter) dep).getInterClass());
-                    icp.getInterClass().changePosition(locationChange);
-                    testForConnections(connections, test, icp);
-                    diagramElementPainters.set(id, icp);
-                }
-            }
-        } else {
-            for (DiagramElementPainter dep : this.selectedElements) {
-                if (dep instanceof ConnectionPainter) {
-                    copyForFromTo.add(null);
-                    continue;
-                }
-                copyForFromTo.add(((InterClassPainter) dep).getInterClass());
-                if (dep instanceof InterClassPainter) {
-                    int id = diagramElementPainters.indexOf(dep);
-                    InterClassPainter test = (InterClassPainter) diagramElementPainters.get(id);
-                    InterClassPainter icp = new InterClassPainter(((InterClassPainter) dep).getInterClass());
-                    ((InterClassPainter) dep).getInterClass().changePosition(locationChange);
-                    testForConnections(connections, test, icp);
-                    diagramElementPainters.set(id, icp);
-                    selectedElements.set(selectedElements.indexOf(dep), icp);
-                }
-            }
-        }
-        moveConnections(connections, copyForFromTo);
-        repaint();
-    }
-
-    public void testForConnections(List<ConnectionPainter> connections,
-                                   InterClassPainter oldVal,InterClassPainter newVal) {
-        for (ConnectionPainter cp : connections) {
-            if (cp.getConnection().getFrom() == oldVal.getInterClass())
-                cp.getConnection().setFrom(newVal.getInterClass());
-            if (cp.getConnection().getTo() == oldVal.getInterClass())
-                cp.getConnection().setTo(newVal.getInterClass());
-        }
-
-    }
-
-    public void moveConnections(List<ConnectionPainter> connections, List<InterClass> interClasses) {
-        for (ConnectionPainter cp : connections) {
-            int idConnection = diagramElementPainters.indexOf(cp);
-
-            InterClass from = cp.getConnection().getFrom();
-            InterClass to = cp.getConnection().getTo();
-
-            System.out.println("OLD FROM: " + from.getPosition());
-            System.out.println("OLD TO: " + to.getPosition());
-
-            int id_from = interClasses.indexOf(from);
-            int id_to = interClasses.indexOf(to);
-
-            InterClass newFrom;
-            if (interClasses.contains(from)) {
-                assert (diagramElementPainters.get(id_from) instanceof InterClassPainter);
-                newFrom = ((InterClassPainter) diagramElementPainters.get(id_from)).getInterClass();
-            } else newFrom = from;
-
-            InterClass newTo;
-            if (interClasses.contains(to)) {
-                assert (diagramElementPainters.get(id_to) instanceof InterClassPainter);
-                newTo = ((InterClassPainter) diagramElementPainters.get(id_to)).getInterClass();
-            } else newTo = to;
-
-            if (newFrom == newTo) return;
-
-            cp.getConnection().setFrom(newFrom);
-            cp.getConnection().setTo(newTo);
-            System.out.println("NEW FROM: " + newFrom.getPosition());
-            System.out.println("NEW TO: " + newTo.getPosition());
-
-            // System.out.println(cp.getConnection().getFrom());
-            // System.out.println(cp.getConnection().getTo());
-
-            ConnectionPainter newConnectionPainter = new ConnectionPainter(cp.getConnection());
-            diagramElementPainters.set(idConnection, newConnectionPainter);
-            repaint();
-        }
-    }
-
-    public List<DiagramElementPainter> getSelectedElements() {
+    public ArrayList<DiagramElementPainter> getSelectedElements() {
         return selectedElements;
     }
 
@@ -252,15 +168,23 @@ public class DiagramView extends JPanel implements ISubscriber {
 
     @Override
     public void update(Object notification) {
-        SubscriberNotification n = (SubscriberNotification) notification;
-        // NOTIFICATION FOR RENAME = [TYPE.RENAME, DIAGRAM, NEW NAME]
-        if (n.getType().equals(Type.RENAME)) {
-            this.setName(n.getMsg());
-            this.tabbedPane.renameDiagram(n.getClassyNode(), n.getMsg());
+        if (notification instanceof SubscriberNotification) {
+            SubscriberNotification n = (SubscriberNotification) notification;
+            // NOTIFICATION FOR RENAME = [TYPE.RENAME, DIAGRAM, NEW NAME]
+            if (n.getType().equals(Type.RENAME)) {
+                this.setName(n.getMsg());
+                this.tabbedPane.renameDiagram(n.getClassyNode(), n.getMsg());
+            }
+
+            if(n.getType().equals(Type.EDIT_DIAGRAM_ELEMENT))
+                repaint();
+        } else if (notification instanceof MoveNotification) {
+            MoveNotification n = (MoveNotification) notification;
+            if (n.getDiagramView() == this)
+                this.diagramElementPainters = n.getChangedPainters();
+            repaint();
         }
 
-        if(n.getType().equals(Type.EDIT_DIAGRAM_ELEMENT))
-            repaint();
     }
 
     @Override
@@ -297,17 +221,20 @@ public class DiagramView extends JPanel implements ISubscriber {
             if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
         List<InterClass> selected = new ArrayList<>();
 
-        for (DiagramElementPainter dep : selectedElements) {
+        for (DiagramElementPainter dep : diagramElementPainters) {
             if (dep instanceof TemporarySelectionPainter) continue;
-
-            if (dep instanceof InterClassPainter) {
-                selected.add(((InterClassPainter) dep).getInterClass());
-                ((InterClassPainter) dep).getInterClass().setStroke(new BasicStroke(3.0f));
-                ((InterClassPainter) dep).getInterClass().setColor(Color.BLUE);
+            if (selectedElements.contains(dep)) {
+                if (dep instanceof InterClassPainter) {
+                    selected.add(((InterClassPainter) dep).getInterClass());
+                    ((InterClassPainter) dep).getInterClass().setStroke(new BasicStroke(3.0f));
+                    ((InterClassPainter) dep).getInterClass().setColor(Color.BLUE);
+                } else {
+                    selected.add(null);
+                    ((ConnectionPainter) dep).getConnection().setColor(Color.BLUE);
+                    ((ConnectionPainter) dep).getConnection().setStroke(new BasicStroke(3.0f));
+                }
             } else {
                 selected.add(null);
-                ((ConnectionPainter) dep).getConnection().setColor(Color.BLUE);
-                ((ConnectionPainter) dep).getConnection().setStroke(new BasicStroke(3.0f));
             }
             selectInConnections(connections, selected);
             repaint();
@@ -315,6 +242,7 @@ public class DiagramView extends JPanel implements ISubscriber {
     }
 
     private void selectInConnections(List<ConnectionPainter> connections, List<InterClass> selected) {
+
         for (ConnectionPainter cp : connections) {
 
             int id = diagramElementPainters.indexOf(cp);
@@ -323,13 +251,13 @@ public class DiagramView extends JPanel implements ISubscriber {
             InterClass to = cp.getConnection().getTo();
             if (from == to) System.out.println("OLD SAME");
 
+
             if (selected.contains(from) && selected.contains(to)) {
                 if (selected.contains(from) && diagramElementPainters.get(selected.indexOf(from)) instanceof InterClassPainter) {
                     from = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(from))).getInterClass());
                 }
                 if (selected.contains(to) && diagramElementPainters.get(selected.indexOf(to)) instanceof InterClassPainter) {
                     to = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(to))).getInterClass());
-
                     cp.getConnection().setFrom(from);
                     cp.getConnection().setTo(to);
                 } else if (selected.contains(from)) {
@@ -342,18 +270,6 @@ public class DiagramView extends JPanel implements ISubscriber {
                         to = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(to))).getInterClass());
                     cp.getConnection().setTo(to);
                 }
-
-                //if (selected.contains(from) && diagramElementPainters.get(selected.indexOf(from)) instanceof InterClassPainter) {
-                //    from = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(from))).getInterClass());
-                //}
-                //if (selected.contains(to) && diagramElementPainters.get(selected.indexOf(to)) instanceof InterClassPainter) {
-                //    to = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(to))).getInterClass());
-                //}
-//
-                //InterClass newFrom = selected.contains(from)
-                //        ? ((InterClassPainter) diagramElementPainters.get(selected.indexOf(from))).getInterClass() : from;
-                //InterClass newTo = selected.contains(to)
-                //        ? ((InterClassPainter) diagramElementPainters.get(selected.indexOf(to))).getInterClass() : to;
             }
         }
     }
@@ -390,4 +306,19 @@ public class DiagramView extends JPanel implements ISubscriber {
     }
 
 
+    public double getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(double zoom) {
+        this.zoom = zoom;
+    }
+
+    public Point2D getZoomPoint() {
+        return zoomPoint;
+    }
+
+    public void setZoomPoint(Point2D zoomPoint) {
+        this.zoomPoint = zoomPoint;
+    }
 }

@@ -19,7 +19,7 @@ public class ClassyMouseListener extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         diagramView.getTabbedPane().getClassyPackage().getPackageView().getCurrentState()
-                .classyMousePressed(e.getPoint(), diagramView);
+                .classyMouseClicked(e.getPoint(), diagramView);
         diagramView.repaint();
     }
 
@@ -46,4 +46,5 @@ public class ClassyMouseListener extends MouseAdapter {
     public void mouseExited(MouseEvent e) {
 
     }
+
 }

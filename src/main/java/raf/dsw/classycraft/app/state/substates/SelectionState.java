@@ -14,6 +14,7 @@ import raf.dsw.classycraft.app.state.State;
 
 import javax.swing.text.html.ListView;
 import java.awt.*;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,38 +25,26 @@ public class SelectionState implements State {
     private Point2D endingPoint = null;
 
     @Override
-    public void classyMousePressed(Point2D position, DiagramView diagramView) {
+    public void classyMouseClicked(Point2D position, DiagramView diagramView) {
         diagramView.getSelectedElements().clear();
-        startingPoint = position;
         for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
             if (dep.elementAt(position))
                 diagramView.selectElement(dep);
         }
         diagramView.markSelectedElements();
+        startingPoint = position;
+    }
+
+    @Override
+    public void classyMousePressed(Point2D position, DiagramView diagramView) {
+        diagramView.getSelectedElements().clear();
+        startingPoint = position;
     }
 
     @SuppressWarnings("ALL")
     @Override
     public void classyMouseDragged(Point2D startingPosition, DiagramView diagramView) {
-
-
         endingPoint = startingPosition;
-
-        //if (startingPoint.getX() > endingPoint.getX() && startingPoint.getY() > endingPoint.getY()) {
-        //    Point2D tmp = startingPoint;
-        //    startingPoint = endingPoint;
-        //    endingPoint = tmp;
-        //} else if (startingPoint.getX() > endingPoint.getX()) {
-        //    Point2D newStart = new Point2D.Double(endingPoint.getX(), startingPoint.getY());
-        //    Point2D newEnd = new Point2D.Double(startingPoint.getX(), endingPoint.getY());
-        //    startingPoint = newStart;
-        //    endingPoint = newEnd;
-        //} else if (startingPoint.getY() > endingPoint.getY()) {
-        //    Point2D newStart = new Point2D.Double(startingPoint.getX(), endingPoint.getY());
-        //    Point2D newEnd = new Point2D.Double(endingPoint.getX(), startingPoint.getY());
-        //    startingPoint = newStart;
-        //    endingPoint = newEnd;
-        //}
 
         diagramView.removeAllSelectionPainters();
 
@@ -122,27 +111,27 @@ public class SelectionState implements State {
         diagramView.removeAllSelectionPainters();
     }
 
+    @Override
+    public void classyMouseWheelMoved(Point2D position, DiagramView diagramView, MouseWheelEvent e) {
+
+    }
+
     public boolean testIntersectionLines(Point2D selStart, Point2D selEnd, Point2D elStart, Point2D elEnd, InterClassPainter icp) {
 
         if (selStart.getX() > selEnd.getX() && selStart.getY() > selEnd.getY()) {
             Point2D tmp = selStart;
             selStart = selEnd;
             selEnd = tmp;
-            System.out.println("top left");
         } else if (selStart.getX() > selEnd.getX()) {
-            System.out.println("bottom left");
             Point2D newStart = new Point2D.Double(selEnd.getX(), selStart.getY());
             Point2D newEnd = new Point2D.Double(selStart.getX(), selEnd.getY());
             selStart = newStart;
             selEnd = newEnd;
         } else if (selStart.getY() > selEnd.getY()) {
-            System.out.println("top right");
             Point2D newStart = new Point2D.Double(selStart.getX(), selEnd.getY());
             Point2D newEnd = new Point2D.Double(selEnd.getX(), selStart.getY());
             selStart = newStart;
             selEnd = newEnd;
-        } else {
-            System.out.println("default");
         }
 
         if ((selStart.getX() >= elStart.getX() && selStart.getX() <= elEnd.getX()) &&
