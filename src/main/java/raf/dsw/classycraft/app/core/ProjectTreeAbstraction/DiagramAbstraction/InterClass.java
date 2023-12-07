@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction;
 
+import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
+import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
 
 import java.awt.*;
@@ -34,13 +36,16 @@ public abstract class InterClass extends DiagramElement{
 
     public void changePosition(Point2D change) {
         this.position.setLocation(position.getX() + change.getX(), position.getY() + change.getY());
+        notifySubscribers(new SubscriberNotification(Type.EDIT_DIAGRAM_ELEMENT, this));
     }
 
     public void setAccess(Access access) {
         this.access = access;
+        notifySubscribers(new SubscriberNotification(Type.EDIT_DIAGRAM_ELEMENT, this));
     }
 
     public void setSize(Dimension size) {
         this.size = size;
+        notifySubscribers(new SubscriberNotification(Type.EDIT_DIAGRAM_ELEMENT, this));
     }
 }

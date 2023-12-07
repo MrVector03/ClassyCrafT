@@ -4,8 +4,10 @@ import raf.dsw.classycraft.app.controller.AbstractClassyAction;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Generalization;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Interface;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
+import raf.dsw.classycraft.app.state.substates.EditState;
 
 import java.awt.event.ActionEvent;
 
@@ -23,6 +25,12 @@ public class GeneralizationConfirmAction extends AbstractClassyAction {
 
         MainFrame.getInstance().getEditGeneralizationFrame().setVisible(false);
 
-        MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new ConnectionPainter(new Generalization(newConName, newFrom, newTo)));
+        if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
+            Generalization curEditGeneralization = ((Generalization)MainFrame.getInstance().getPackageView().getCurEditElement());
+
+            curEditGeneralization.setName(newConName);
+        }
+        else
+            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new ConnectionPainter(new Generalization(newConName, newFrom, newTo)));
     }
 }

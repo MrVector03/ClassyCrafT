@@ -4,12 +4,14 @@ import raf.dsw.classycraft.app.controller.AbstractClassyAction;
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Enum;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Interface;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Method;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
+import raf.dsw.classycraft.app.state.substates.EditState;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -58,10 +60,19 @@ public class EnumEditConfirmAction extends AbstractClassyAction {
 
         Dimension interClassDimension = new Dimension(100 + longestRow.length()*5, 100 + rowCount*15);
 
-        MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new InterClassPainter(new Enum(newICName, newICAccess,
-                new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()), interClassDimension,
-                values)));
+        if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
+            Enum curEditEnum = ((Enum)MainFrame.getInstance().getPackageView().getCurEditElement());
 
+            curEditEnum.setAccess(newICAccess);
+            curEditEnum.setName(newICName);
+            curEditEnum.setValues(values);
+            curEditEnum.setSize(interClassDimension);
+        }
+        else {
+            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new InterClassPainter(new Enum(newICName, newICAccess,
+                    new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()), interClassDimension,
+                    values)));
+        }
         System.out.println("finished painting interface");
     }
 }

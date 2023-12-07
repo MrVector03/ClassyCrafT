@@ -6,6 +6,7 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementat
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Generalization;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
+import raf.dsw.classycraft.app.state.substates.EditState;
 
 import java.awt.event.ActionEvent;
 
@@ -25,6 +26,13 @@ public class DependencyConfirmAction extends AbstractClassyAction {
 
         MainFrame.getInstance().getEditDependencyFrame().setVisible(false);
 
-        MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new ConnectionPainter(new Dependency(newConName, newFrom, newTo, newConType)));
+        if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
+            Dependency curEditDependency = ((Dependency)MainFrame.getInstance().getPackageView().getCurEditElement());
+
+            curEditDependency.setName(newConName);
+            curEditDependency.setType(newConType);
+        }
+        else
+            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new ConnectionPainter(new Dependency(newConName, newFrom, newTo, newConType)));
     }
 }

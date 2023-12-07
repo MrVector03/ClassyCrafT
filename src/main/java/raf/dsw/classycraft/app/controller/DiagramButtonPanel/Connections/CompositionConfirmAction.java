@@ -6,6 +6,7 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementat
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Composition;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
+import raf.dsw.classycraft.app.state.substates.EditState;
 
 import java.awt.event.ActionEvent;
 
@@ -28,6 +29,14 @@ public class CompositionConfirmAction extends AbstractClassyAction {
 
         MainFrame.getInstance().getEditCompositionFrame().setVisible(false);
 
-        MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new ConnectionPainter(new Composition(newConName, newFrom, newTo, newVarName, newCardFrom, newCardTo)));
+        if (MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
+            Composition curEditComposition = ((Composition) MainFrame.getInstance().getPackageView().getCurEditElement());
+
+            curEditComposition.setName(newConName);
+            curEditComposition.setVarName(newVarName);
+            curEditComposition.setCardFrom(newCardFrom);
+            curEditComposition.setCardTo(newCardTo);
+        } else
+            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new ConnectionPainter(new Composition(newConName, newFrom, newTo, newVarName, newCardFrom, newCardTo)));
     }
 }

@@ -9,7 +9,9 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementat
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class ConnectionPainter extends DiagramElementPainter {
@@ -266,7 +268,15 @@ public class ConnectionPainter extends DiagramElementPainter {
 
     @Override
     public boolean elementAt(Point2D point) {
-        return false;
+        Line2D line = new Line2D.Double(fromPointMin, toPointMin);
+
+        return line.contains(point);
+    }
+
+    public boolean elementAtShape(Rectangle2D rectangle) {
+        Line2D line = new Line2D.Double(fromPointMin, toPointMin);
+
+        return line.intersects(rectangle);
     }
 
     public Point2D getToPointMin() {

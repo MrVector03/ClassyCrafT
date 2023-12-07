@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass;
 
+import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
+import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 
@@ -17,5 +19,10 @@ public class Enum extends InterClass {
 
     public ArrayList<String> getValues() {
         return values;
+    }
+
+    public void setValues(ArrayList<String> values) {
+        this.values = values;
+        notifySubscribers(new SubscriberNotification(Type.EDIT_DIAGRAM_ELEMENT, this));
     }
 }

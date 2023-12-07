@@ -80,7 +80,6 @@ public class ClassEditConfirmAction extends AbstractClassyAction {
             curEditClass.setName(newICName);
             curEditClass.setClassContents(attributes);
             curEditClass.setSize(interClassDimension);
-            MainFrame.getInstance().getCurDiagramView().repaint();
         }
         else {
             MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new InterClassPainter(new Class(newICName, newICAccess,

@@ -10,6 +10,7 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementat
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Method;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
+import raf.dsw.classycraft.app.state.substates.EditState;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -68,10 +69,19 @@ public class InterfaceEditConfirmAction extends AbstractClassyAction {
 
         Dimension interClassDimension = new Dimension(100 + longestRow.length()*5, 100 + rowCount*15);
 
-        MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new InterClassPainter(new Interface(newICName, newICAccess,
-                new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()), interClassDimension,
-                methods)));
+        if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
+            Interface curEditInterface = ((Interface)MainFrame.getInstance().getPackageView().getCurEditElement());
 
+            curEditInterface.setAccess(newICAccess);
+            curEditInterface.setName(newICName);
+            curEditInterface.setMethods(methods);
+            curEditInterface.setSize(interClassDimension);
+        }
+        else {
+            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new InterClassPainter(new Interface(newICName, newICAccess,
+                    new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()), interClassDimension,
+                    methods)));
+        }
         System.out.println("finished painting interface");
     }
 }

@@ -1,5 +1,8 @@
 package raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction;
 
+import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
+import raf.dsw.classycraft.app.core.Observer.notifications.Type;
+
 import java.awt.*;
 
 public abstract class Connection extends DiagramElement {
@@ -25,9 +28,11 @@ public abstract class Connection extends DiagramElement {
 
     public void setFrom(InterClass from) {
         this.from = from;
+        notifySubscribers(new SubscriberNotification(Type.EDIT_DIAGRAM_ELEMENT, this));
     }
 
     public void setTo(InterClass to) {
         this.to = to;
+        notifySubscribers(new SubscriberNotification(Type.EDIT_DIAGRAM_ELEMENT, this));
     }
 }

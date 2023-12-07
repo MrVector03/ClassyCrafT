@@ -84,6 +84,8 @@ public class DiagramView extends JPanel implements ISubscriber {
 
     public void addDiagramElementPainter(DiagramElementPainter diagramElementPainter) {
         diagramElementPainters.add(diagramElementPainter);
+        if(diagramElementPainter.getDiagramElement() != null)
+            diagramElementPainter.getDiagramElement().addSubscriber(this);
         repaint();
     }
 
@@ -251,8 +253,10 @@ public class DiagramView extends JPanel implements ISubscriber {
         if (n.getType().equals(Type.RENAME)) {
             this.setName(n.getMsg());
             this.tabbedPane.renameDiagram(n.getClassyNode(), n.getMsg());
-
         }
+
+        if(n.getType().equals(Type.EDIT_DIAGRAM_ELEMENT))
+            repaint();
     }
 
     @Override
