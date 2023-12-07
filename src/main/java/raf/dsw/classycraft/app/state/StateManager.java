@@ -1,5 +1,6 @@
 package raf.dsw.classycraft.app.state;
 
+import raf.dsw.classycraft.app.controller.stateActions.ZoomOutAction;
 import raf.dsw.classycraft.app.state.substates.*;
 
 public class StateManager {
@@ -13,6 +14,8 @@ public class StateManager {
     private final CopyInterClassState copyInterClassState = new CopyInterClassState();
     private final MoveState moveState = new MoveState();
     private final EditState editState = new EditState();
+    private final ZoomInState zoomInState = new ZoomInState();
+    private final ZoomOutState zoomOutState = new ZoomOutState();
 
     public void setAddInterClassState() {
         this.currentState = this.addInterClassState;
@@ -43,8 +46,16 @@ public class StateManager {
     }
 
     public void setEditState() { this.currentState = this.editState; }
+    public void setZoomInState() {
+        this.currentState = this.zoomInState;
+    }
+
+    public void setZoomOutState() {
+        this.currentState = this.zoomOutState;
+    }
 
     public State getCurrentState() {
         return currentState;
     }
+
 }

@@ -19,6 +19,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +42,13 @@ public class DiagramView extends JPanel implements ISubscriber {
         }
     };
 
+    private double zoom;
+
     public DiagramView(Diagram diagram, TabbedPane tabbedPane) {
         this.diagram = diagram;
         this.name = diagram.getName();
         this.tabbedPane = tabbedPane;
+        this.zoom = 1;
         diagram.addSubscriber(this);
 
         addMouseListener(new ClassyMouseListener(this));
@@ -263,8 +267,14 @@ public class DiagramView extends JPanel implements ISubscriber {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        Graphics2D g2d = (Graphics2D)g;
+        AffineTransform transform = new AffineTransform();
+        transform.scale(zoom,zoom);
+        g2d.setTransform(transform);
+        System.out.println(zoom);
+
         for(DiagramElementPainter diagramElementPainter : diagramElementPainters) {
-            diagramElementPainter.paint((Graphics2D) g);
+            diagramElementPainter.paint(g2d);
         }
     }
 
@@ -361,4 +371,23 @@ public class DiagramView extends JPanel implements ISubscriber {
             repaint();
         }
     }
+
+    public void zoomIn() {
+        if(zoom < 3) {
+            zoom += 0.25;
+            if(zoom > 3)
+                zoom = 3;
+        }
+    }
+
+    public void zoomOut() {
+        if(zoom > 0.3) {
+            zoom -= 0.1;
+
+            if(zoom < 0.3)
+                zoom = 0.3;
+        }
+    }
+
+
 }

@@ -92,6 +92,13 @@ public class PackageView extends JPanel implements ISubscriber {
     public void startEditState() {
         stateManager.setEditState();
     }
+    public void startZoomInState() {
+        stateManager.setZoomInState();
+    }
+
+    public void startZoomOutState() {
+        stateManager.setZoomOutState();
+    }
 
     public State getCurrentState() {
         return stateManager.getCurrentState();

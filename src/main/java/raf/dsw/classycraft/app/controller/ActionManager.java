@@ -22,6 +22,8 @@ public class ActionManager {
     private SelectionAction selectionAction;
     private MoveAction moveAction;
     private EditAction editAction;
+    private ZoomInAction zoomInAction;
+    private ZoomOutAction zoomOutAction;
 
     private ClassEditConfirmAction classEditConfirmAction;
     private InterfaceEditConfirmAction interfaceEditConfirmAction;
@@ -58,6 +60,8 @@ public class ActionManager {
         copyInterClassAction = new CopyInterClassAction();
         moveAction = new MoveAction();
         editAction = new EditAction();
+        zoomInAction = new ZoomInAction();
+        zoomOutAction = new ZoomOutAction();
 
         classEditConfirmAction = new ClassEditConfirmAction();
         interfaceEditConfirmAction = new InterfaceEditConfirmAction();
@@ -196,5 +200,13 @@ public class ActionManager {
 
     public EditAction getEditAction() {
         return editAction;
+    }
+
+    public ZoomInAction getZoomInAction() {
+        return zoomInAction;
+    }
+
+    public ZoomOutAction getZoomOutAction() {
+        return zoomOutAction;
     }
 }
