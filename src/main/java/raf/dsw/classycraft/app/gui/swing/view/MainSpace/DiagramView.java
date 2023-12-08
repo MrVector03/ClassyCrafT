@@ -58,8 +58,12 @@ public class DiagramView extends JPanel implements ISubscriber {
         addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
+                double myXLocationWithoutZoom = e.getPoint().getX()*(1/ getZoom());
+                double myYLocationWithoutZoom = e.getPoint().getY()*(1/ getZoom());
+                Point2D newPosition = new Point2D.Double(myXLocationWithoutZoom, myYLocationWithoutZoom);
+
                 tabbedPane.getClassyPackage().getPackageView().getCurrentState()
-                        .classyMouseWheelMoved(e.getPoint(), DiagramView.this, e);
+                        .classyMouseWheelMoved(newPosition, DiagramView.this, e);
                 repaint();
             }
         });
@@ -67,8 +71,12 @@ public class DiagramView extends JPanel implements ISubscriber {
         addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                double myXLocationWithoutZoom = e.getPoint().getX()*(1/ getZoom());
+                double myYLocationWithoutZoom = e.getPoint().getY()*(1/ getZoom());
+                Point2D newPosition = new Point2D.Double(myXLocationWithoutZoom, myYLocationWithoutZoom);
+
                 tabbedPane.getClassyPackage().getPackageView().getCurrentState()
-                        .classyMouseDragged(e.getPoint(), DiagramView.this);
+                        .classyMouseDragged(newPosition, DiagramView.this);
                 repaint();
             }
 
@@ -192,10 +200,16 @@ public class DiagramView extends JPanel implements ISubscriber {
         super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D)g;
+
+        g2d.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+
         AffineTransform transform = new AffineTransform();
-        transform.scale(zoom,zoom);
+
+        transform.scale(zoom, zoom);
+
         g2d.setTransform(transform);
-        System.out.println(zoom);
 
         for(DiagramElementPainter diagramElementPainter : diagramElementPainters) {
             diagramElementPainter.paint(g2d);
@@ -290,7 +304,7 @@ public class DiagramView extends JPanel implements ISubscriber {
 
     public void zoomIn() {
         if(zoom < 3) {
-            zoom += 0.25;
+            zoom *= 1.1;
             if(zoom > 3)
                 zoom = 3;
         }
@@ -298,7 +312,7 @@ public class DiagramView extends JPanel implements ISubscriber {
 
     public void zoomOut() {
         if(zoom > 0.3) {
-            zoom -= 0.1;
+            zoom /= 1.1;
 
             if(zoom < 0.3)
                 zoom = 0.3;

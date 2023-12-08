@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseMotionListener;
 
@@ -19,21 +20,21 @@ public class ClassyMouseListener extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         diagramView.getTabbedPane().getClassyPackage().getPackageView().getCurrentState()
-                .classyMouseClicked(e.getPoint(), diagramView);
+                .classyMouseClicked(fixPositionForZoom(e.getPoint()), diagramView);
         diagramView.repaint();
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         diagramView.getTabbedPane().getClassyPackage().getPackageView().getCurrentState()
-                .classyMousePressed(e.getPoint(), diagramView);
+                .classyMousePressed(fixPositionForZoom(e.getPoint()), diagramView);
         diagramView.repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         diagramView.getTabbedPane().getClassyPackage().getPackageView().getCurrentState()
-                .classyMouseReleased(e.getPoint(), diagramView);
+                .classyMouseReleased(fixPositionForZoom(e.getPoint()), diagramView);
         diagramView.repaint();
     }
 
@@ -47,4 +48,11 @@ public class ClassyMouseListener extends MouseAdapter {
 
     }
 
+    private Point2D fixPositionForZoom(Point2D pos) {
+        double myXLocationWithoutZoom = pos.getX()*(1/ diagramView.getZoom());
+        double myYLocationWithoutZoom = pos.getY()*(1/ diagramView.getZoom());
+        Point2D newPosition = new Point2D.Double(myXLocationWithoutZoom, myYLocationWithoutZoom);
+
+        return newPosition;
+    }
 }
