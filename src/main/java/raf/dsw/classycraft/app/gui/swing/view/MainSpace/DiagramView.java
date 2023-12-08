@@ -146,8 +146,10 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
                     toRemove.add((ConnectionPainter) dep);
             }
         }
-        for (ConnectionPainter cp : toRemove)
+        for (ConnectionPainter cp : toRemove) {
             diagramElementPainters.remove(cp);
+            ((ClassyTreeImplementation) MainFrame.getInstance().getClassyTree()).removeNode(cp.getDiagramElement());
+        }
     }
 
     public boolean deleteSelected() {
@@ -223,6 +225,7 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
 
         transform.scale(zoom, zoom);
 
+        g2d.setTransform(((Graphics2D) g).getTransform());
         g2d.setTransform(transform);
 
         for(DiagramElementPainter diagramElementPainter : diagramElementPainters) {
@@ -338,7 +341,14 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
     }
 
     public void setZoom(double zoom) {
-        this.zoom = zoom;
+        if(zoom > 3)
+            this.zoom = 3;
+        else if (zoom < 0.3)
+            this.zoom = 0.3;
+        else
+            this.zoom = zoom;
+
+        setPreferredSize(new Dimension((int)((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()*3*zoom), (int)((int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()*3*zoom)));
     }
 
     public Point2D getZoomPoint() {

@@ -4,6 +4,7 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplemen
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 import raf.dsw.classycraft.app.state.State;
 
@@ -25,6 +26,10 @@ public class DeleteState implements State {
             if(diagramElementPainter instanceof ConnectionPainter && ((ConnectionPainter) diagramElementPainter).elementAtShape(rectangle))
                 toDelete.add(diagramElementPainter);
         }
+
+        for(DiagramElementPainter dep : toDelete)
+            if(dep instanceof InterClassPainter)
+                diagramView.testConnections(((InterClassPainter) dep).getInterClass());
 
         diagramView.getDiagramElementPainters().removeAll(toDelete);
 

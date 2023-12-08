@@ -67,6 +67,7 @@ public class ClassyTreeImplementation implements ClassyTree {
 
         newChild.setParent(curDiagTreeItem.getClassyNode());
 
+        classyTreeView.expandPath(classyTreeView.getSelectionPath().pathByAddingChild(curDiagTreeItem));
         SwingUtilities.updateComponentTreeUI(classyTreeView);
     }
 

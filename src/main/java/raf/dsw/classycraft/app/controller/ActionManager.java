@@ -24,6 +24,7 @@ public class ActionManager {
     private EditAction editAction;
     private ZoomInAction zoomInAction;
     private ZoomOutAction zoomOutAction;
+    private ZoomToFitAction zoomToFitAction;
 
     private ClassEditConfirmAction classEditConfirmAction;
     private InterfaceEditConfirmAction interfaceEditConfirmAction;
@@ -62,6 +63,7 @@ public class ActionManager {
         editAction = new EditAction();
         zoomInAction = new ZoomInAction();
         zoomOutAction = new ZoomOutAction();
+        zoomToFitAction = new ZoomToFitAction();
 
         classEditConfirmAction = new ClassEditConfirmAction();
         interfaceEditConfirmAction = new InterfaceEditConfirmAction();
@@ -208,5 +210,9 @@ public class ActionManager {
 
     public ZoomOutAction getZoomOutAction() {
         return zoomOutAction;
+    }
+
+    public ZoomToFitAction getZoomToFitAction() {
+        return zoomToFitAction;
     }
 }
