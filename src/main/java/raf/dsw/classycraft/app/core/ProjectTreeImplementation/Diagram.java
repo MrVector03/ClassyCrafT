@@ -6,6 +6,7 @@ import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotificatio
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
+import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,5 +46,16 @@ public class Diagram extends ClassyNodeComposite implements IPublisher {
     public void notifySubscribers(Object notification) {
         for (ISubscriber subscriber : this.subscribers)
             subscriber.update(notification);
+    }
+
+    @Override
+    public void addChild(ClassyNode newChild) {
+        MainFrame.getInstance().getClassyTree().addDiagramChild(this, newChild);
+        super.addChild(newChild);
+    }
+
+    @Override
+    public void deleteChild(ClassyNode child) {
+        super.deleteChild(child);
     }
 }

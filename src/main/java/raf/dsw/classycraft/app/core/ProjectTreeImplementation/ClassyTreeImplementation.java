@@ -6,17 +6,21 @@ import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Factories.FactoryUtils;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.view.ClassyTreeView;
+import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
+import java.util.ArrayList;
 
 public class ClassyTreeImplementation implements ClassyTree {
     private ClassyTreeView classyTreeView;
     private DefaultTreeModel defaultTreeModel;
     private int chosenNodeIndex; //0 is package, 1 is diagram
+    private ArrayList<ClassyTreeItem> diagrams = new ArrayList<ClassyTreeItem>();
 
     @Override
     public ClassyTreeView generateTree(ProjectExplorer projectExplorer) {
@@ -33,7 +37,10 @@ public class ClassyTreeImplementation implements ClassyTree {
             return;
 
         ClassyNode child = FactoryUtils.getNodeFactory((ClassyNodeComposite) parent.getClassyNode(), chosenNodeIndex).createChild((ClassyNodeComposite) parent.getClassyNode());
-        parent.add(new ClassyTreeItem(child));
+
+        ClassyTreeItem newClassyTreeItem = new ClassyTreeItem(child);
+
+        parent.add(newClassyTreeItem);
 
         child.setParent(parent.getClassyNode());
         ((ClassyNodeComposite) parent.getClassyNode()).addChild(child);
@@ -41,9 +48,26 @@ public class ClassyTreeImplementation implements ClassyTree {
         classyTreeView.expandPath(classyTreeView.getSelectionPath());
         SwingUtilities.updateComponentTreeUI(classyTreeView);
 
-        if (child instanceof Diagram)
+        if (child instanceof Diagram) {
             ((Diagram) child).addToScreen();
+            diagrams.add(newClassyTreeItem);
+        }
 
+    }
+
+    @Override
+    public void addDiagramChild(Diagram diagram, ClassyNode newChild) {
+        ClassyTreeItem curDiagTreeItem = null;
+
+        for (ClassyTreeItem cti : diagrams)
+            if(cti.getClassyNode().equals(diagram))
+                curDiagTreeItem = cti;
+
+        curDiagTreeItem.add(new ClassyTreeItem(newChild));
+
+        newChild.setParent(curDiagTreeItem.getClassyNode());
+
+        SwingUtilities.updateComponentTreeUI(classyTreeView);
     }
 
     public void removeNode(ClassyTreeItem node)
@@ -59,14 +83,34 @@ public class ClassyTreeImplementation implements ClassyTree {
             ((Package) node.getClassyNode()).checkRemovalFromScreen();
         } else if (node.getClassyNode() instanceof Project) {
             ((Project) node.getClassyNode()).remove();
+        } else if(node.getClassyNode() instanceof DiagramElement) {
+            ApplicationFramework.getInstance().getMessageGenerator().generateMessage("USE_DIAGRAM_TOOLS_TO_DELETE_ELEMENTS", MessageType.WARNING);
+            return;
         }
+
 
         ((ClassyNodeComposite)node.getClassyNode().getParent()).deleteChild(node.getClassyNode());
 
-
-
         node.removeFromParent();
         SwingUtilities.updateComponentTreeUI(classyTreeView);
+    }
+
+    public void removeNode(ClassyNode toDelete) {
+        ClassyNode diagram = toDelete.getParent();
+
+        for(ClassyTreeItem d : diagrams)
+        {
+            if(d.getClassyNode().equals(diagram)) {
+                for(int i = 0; i < d.getChildCount(); i++)
+                    if(((ClassyTreeItem)d.getChildAt(i)).getClassyNode().equals(toDelete)) {
+                        d.remove(i);
+                        break;
+                    }
+            }
+        }
+
+        SwingUtilities.updateComponentTreeUI(classyTreeView);
+
     }
 
     @Override

@@ -9,9 +9,11 @@ import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
+import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.*;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.listeners.ClassyMouseListener;
 
@@ -111,8 +113,10 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
 
     public void addDiagramElementPainter(DiagramElementPainter diagramElementPainter) {
         diagramElementPainters.add(diagramElementPainter);
-        if(diagramElementPainter.getDiagramElement() != null)
+        if(diagramElementPainter.getDiagramElement() != null) {
             diagramElementPainter.getDiagramElement().addSubscriber(this);
+            diagram.addChild(diagramElementPainter.getDiagramElement());
+        }
         repaint();
     }
 
@@ -151,6 +155,9 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
         else {
             for (DiagramElementPainter elementPainter : selectedElements) {
                 this.diagramElementPainters.remove(elementPainter);
+                diagram.deleteChild(elementPainter.getDiagramElement());
+                ((ClassyTreeImplementation) MainFrame.getInstance().getClassyTree()).removeNode(elementPainter.getDiagramElement());
+
                 if (elementPainter instanceof InterClassPainter)
                     testConnections(((InterClassPainter) elementPainter).getInterClass());
             }
