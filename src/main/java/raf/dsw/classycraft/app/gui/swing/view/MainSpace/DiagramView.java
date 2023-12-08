@@ -27,13 +27,12 @@ import java.util.zip.DeflaterOutputStream;
 import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseMotionListener;
 import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 
-public class DiagramView extends JPanel implements ISubscriber {
+public class DiagramView extends JPanel implements ISubscriber, Scrollable {
     private final TabbedPane tabbedPane;
     private final Diagram diagram;
     private String name;
     private ArrayList<DiagramElementPainter> diagramElementPainters = new ArrayList<DiagramElementPainter>();
     private final ArrayList<DiagramElementPainter> selectedElements = new ArrayList<>() {
-
         @Override
         public void clear() {
             revertAllSelectedElements();
@@ -49,6 +48,9 @@ public class DiagramView extends JPanel implements ISubscriber {
         this.name = diagram.getName();
         this.tabbedPane = tabbedPane;
         this.zoom = 1;
+
+        this.setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()*3, (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()*3));
+
         diagram.addSubscriber(this);
 
         tabbedPane.getClassyPackage().getPackageView().addMoveStateSubscriber(this);
@@ -214,6 +216,8 @@ public class DiagramView extends JPanel implements ISubscriber {
         for(DiagramElementPainter diagramElementPainter : diagramElementPainters) {
             diagramElementPainter.paint(g2d);
         }
+
+        this.revalidate();
     }
 
     public void revertSelected(DiagramElementPainter dep) {
@@ -308,6 +312,8 @@ public class DiagramView extends JPanel implements ISubscriber {
             if(zoom > 3)
                 zoom = 3;
         }
+
+        setPreferredSize(new Dimension((int)((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()*3*zoom), (int)((int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()*3*zoom)));
     }
 
     public void zoomOut() {
@@ -317,6 +323,8 @@ public class DiagramView extends JPanel implements ISubscriber {
             if(zoom < 0.3)
                 zoom = 0.3;
         }
+
+        setPreferredSize(new Dimension((int)((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()*3*zoom), (int)((int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()*3*zoom)));
     }
 
 
@@ -334,5 +342,30 @@ public class DiagramView extends JPanel implements ISubscriber {
 
     public void setZoomPoint(Point2D zoomPoint) {
         this.zoomPoint = zoomPoint;
+    }
+
+    @Override
+    public Dimension getPreferredScrollableViewportSize() {
+        return null;
+    }
+
+    @Override
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 0;
+    }
+
+    @Override
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 0;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+        return false;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportHeight() {
+        return false;
     }
 }
