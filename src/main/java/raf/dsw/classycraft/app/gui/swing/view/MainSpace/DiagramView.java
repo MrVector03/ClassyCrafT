@@ -43,6 +43,8 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
     private double zoom;
     private Point2D zoomPoint = new Point2D.Double(0, 0);
 
+    private ArrayList<DiagramElementPainter> lastValidPoints = new ArrayList<>();
+
     public DiagramView(Diagram diagram, TabbedPane tabbedPane) {
         this.diagram = diagram;
         this.name = diagram.getName();
@@ -190,8 +192,10 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
                 repaint();
         } else if (notification instanceof MoveNotification) {
             MoveNotification n = (MoveNotification) notification;
-            if (n.getDiagramView() == this)
+            if (n.getDiagramView() == this) {
                 this.diagramElementPainters = n.getChangedPainters();
+            }
+
             repaint();
         }
 

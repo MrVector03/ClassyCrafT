@@ -3,6 +3,7 @@ package raf.dsw.classycraft.app.state.substates;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.MoveNotification;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
@@ -10,7 +11,9 @@ import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterCla
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 import raf.dsw.classycraft.app.state.State;
 
+import java.awt.*;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +73,7 @@ public class MoveState implements State, IPublisher {
     private ArrayList<DiagramElementPainter> changeElementCoordinates(Point2D change, DiagramView diagramView) {
         ArrayList<DiagramElementPainter> changedPainters = diagramView.getDiagramElementPainters();
         ArrayList<DiagramElementPainter> selectedPainters = diagramView.getSelectedElements();
+        ArrayList<DiagramElementPainter> oldPainters = diagramView.getDiagramElementPainters();
         List<ConnectionPainter> connections = new ArrayList<>();
         for (DiagramElementPainter dep : changedPainters)
             if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
@@ -108,11 +112,88 @@ public class MoveState implements State, IPublisher {
                 } else {
                     copyForFromTo.add(null);
                 }
-
             }
         }
         changedPainters = moveConnections(connections, copyForFromTo, changedPainters);
-        return changedPainters;
+        if (checkCollision(changedPainters, oldPainters)) {
+            return changedPainters;
+        }
+        return oldPainters;
+    }
+
+    public boolean checkCollision(ArrayList<DiagramElementPainter> changedPainters,
+                                  ArrayList<DiagramElementPainter> oldPainters) {
+        for (DiagramElementPainter changedElement : changedPainters) {
+            if (changedElement instanceof InterClassPainter) {
+                int avoidIndex = changedPainters.indexOf(changedElement);
+                InterClass ogInterClass = ((InterClassPainter) changedElement).getInterClass();
+                Point2D newPosition = new Point2D.Double(ogInterClass.getPosition().getX() - 20,
+                        ogInterClass.getPosition().getY() - 20);
+                Dimension newSize = new Dimension((int) (ogInterClass.getSize().getWidth() + 40),
+                        (int) (ogInterClass.getSize().getHeight() + 40)) {
+                };
+                InterClassPainter testPainter =
+                        new InterClassPainter(new InterClass(ogInterClass.getName(), ogInterClass.getAccess(),
+                                newPosition, newSize) {
+                    @Override
+                    public Access getAccess() {
+                        return super.getAccess();
+                    }
+
+                    @Override
+                    public Point2D getPosition() {
+                        return super.getPosition();
+                    }
+
+                    @Override
+                    public Dimension getSize() {
+                        return super.getSize();
+                    }
+
+                    @Override
+                    public void changePosition(Point2D change) {
+                        super.changePosition(change);
+                    }
+
+                    @Override
+                    public void setAccess(Access access) {
+                        super.setAccess(access);
+                    }
+
+                    @Override
+                    public void setSize(Dimension size) {
+                        super.setSize(size);
+                    }
+                });
+
+                for (int i = 0; i < oldPainters.size(); i++) {
+                    if (i == avoidIndex) continue;
+                    DiagramElementPainter oldPainter = oldPainters.get(i);
+                    if (oldPainter instanceof InterClassPainter && ((InterClassPainter) oldPainter).getInterClass() != ogInterClass) {
+                        Point2D ogPos = ((InterClassPainter) oldPainter).getInterClass().getPosition();
+                        Dimension size = ((InterClassPainter) oldPainter).getInterClass().getSize();
+                        List<Point2D> testPoints = new ArrayList<>();
+
+                        testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY())); // TOP LEFT
+                        testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth() / 2, ogPos.getY())); // TOP
+                        testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth(), ogPos.getY())); // TOP RIGHT
+                        testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth(), ogPos.getY() + size.getHeight() / 2)); // RIGHT
+                        testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth(), ogPos.getY() + size.getHeight())); // BOTTOM RIGHT
+                        testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth() / 2, ogPos.getY() + size.getHeight())); // BOTTOM
+                        testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY() + size.getHeight())); // BOTTOM LEFT
+                        testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY() + size.getHeight() / 2)); // LEFT
+
+                        for (Point2D testPoint : testPoints) {
+                            if (testPainter.elementAt(testPoint)) {
+                                System.out.println("colliding");
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public void testForConnections(List<ConnectionPainter> connections,
