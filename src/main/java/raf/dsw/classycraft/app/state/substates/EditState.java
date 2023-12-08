@@ -35,8 +35,8 @@ public class EditState implements State {
     @Override
     public void classyMouseClicked(Point2D position, DiagramView diagramView) {
         List<DiagramElementPainter> toEdit = new ArrayList<>();
-        int a = 2;
-        Rectangle2D rectangle = new Rectangle2D.Double(position.getX()-a, position.getY()-a, 10, 10);
+        int a = 5;
+        Rectangle2D rectangle = new Rectangle2D.Double(position.getX()-5, position.getY()-5, a*2, a*2);
 
         for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
             if (dep instanceof InterClassPainter && dep.elementAt(position))

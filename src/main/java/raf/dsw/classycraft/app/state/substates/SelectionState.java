@@ -16,6 +16,7 @@ import javax.swing.text.html.ListView;
 import java.awt.*;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,11 +65,11 @@ public class SelectionState implements State {
                     else {
                         diagramView.unselectElement(dep);
                     }
-            } else if (dep instanceof ConnectionPainter && ((selectionPainter.elementAt(((ConnectionPainter) dep).getFromPointMin()))
-                    || selectionPainter.elementAt(((ConnectionPainter) dep).getToPointMin())))
+            } else if (dep instanceof ConnectionPainter && ((ConnectionPainter) dep).elementAtShape(selectionPainter.getRectangle()))
                 diagramView.selectElement(dep);
-            else
+            else {
                 diagramView.unselectElement(dep);
+            }
 
         }
         diagramView.markSelectedElements();
@@ -96,8 +97,7 @@ public class SelectionState implements State {
                 else {
                     diagramView.unselectElement(dep);
                 }
-            } else if (dep instanceof ConnectionPainter && ((selectionPainter.elementAt(((ConnectionPainter) dep).getFromPointMin()))
-                    || selectionPainter.elementAt(((ConnectionPainter) dep).getToPointMin())))
+            } else if (dep instanceof ConnectionPainter && ((ConnectionPainter) dep).elementAtShape(selectionPainter.getRectangle()))
                 diagramView.selectElement(dep);
             else
                 diagramView.unselectElement(dep);

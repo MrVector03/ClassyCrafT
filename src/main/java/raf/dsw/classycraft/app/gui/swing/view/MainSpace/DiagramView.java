@@ -8,6 +8,7 @@ import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
@@ -248,7 +249,7 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
         List<ConnectionPainter> connections = new ArrayList<>();
         for (DiagramElementPainter dep : this.diagramElementPainters)
             if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
-        List<InterClass> selected = new ArrayList<>();
+        List<DiagramElement> selected = new ArrayList<>();
 
         for (DiagramElementPainter dep : diagramElementPainters) {
             if (dep instanceof TemporarySelectionPainter) continue;
@@ -258,7 +259,7 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
                     ((InterClassPainter) dep).getInterClass().setStroke(new BasicStroke(3.0f));
                     ((InterClassPainter) dep).getInterClass().setColor(Color.BLUE);
                 } else {
-                    selected.add(null);
+                    selected.add(((ConnectionPainter)dep).getConnection());
                     ((ConnectionPainter) dep).getConnection().setColor(Color.BLUE);
                     ((ConnectionPainter) dep).getConnection().setStroke(new BasicStroke(3.0f));
                 }
@@ -270,7 +271,7 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
         }
     }
 
-    private void selectInConnections(List<ConnectionPainter> connections, List<InterClass> selected) {
+    private void selectInConnections(List<ConnectionPainter> connections, List<DiagramElement> selected) {
 
         for (ConnectionPainter cp : connections) {
 
@@ -306,14 +307,7 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
 
     private void revertAllSelectedElements() {
         for (DiagramElementPainter dep : selectedElements) {
-            if (dep instanceof InterClassPainter) {
-                ((InterClassPainter) dep).getInterClass().setColor(Color.BLACK);
-                ((InterClassPainter) dep).getInterClass().setStroke(new BasicStroke());
-            } else {
-                ((ConnectionPainter) dep).getConnection().setColor(Color.BLUE);
-                ((ConnectionPainter) dep).getConnection().setStroke(new BasicStroke());
-            }
-            repaint();
+            revertSelected(dep);
         }
     }
 

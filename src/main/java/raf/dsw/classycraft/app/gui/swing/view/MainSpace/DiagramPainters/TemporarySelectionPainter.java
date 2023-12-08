@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 public class TemporarySelectionPainter extends DiagramElementPainter {
     protected Shape shape;
@@ -63,5 +64,21 @@ public class TemporarySelectionPainter extends DiagramElementPainter {
                 && point.getY() <= this.startPoint.getY() + this.dimension.getHeight())
             return true;
         return false;
+    }
+
+    public Shape getShape() {
+        return shape;
+    }
+
+    public Point2D getStartPoint() {
+        return startPoint;
+    }
+
+    public Dimension2D getDimension() {
+        return dimension;
+    }
+
+    public Rectangle2D getRectangle() {
+        return new Rectangle2D.Double(this.getStartPoint().getX(), this.getStartPoint().getY(), this.getDimension().getWidth(), this.getDimension().getHeight());
     }
 }
