@@ -13,13 +13,15 @@ public class MoveNotification {
     private final Point2D change;
     private final boolean rev;
     private final boolean release;
+    private final ArrayList<Point2D> lastValidPoints;
 
-    public MoveNotification(DiagramView diagramView, ArrayList<DiagramElementPainter> changedPainters, Point2D change, boolean rev, boolean release) {
+    public MoveNotification(DiagramView diagramView, ArrayList<DiagramElementPainter> changedPainters, Point2D change, boolean rev, boolean release, ArrayList<Point2D> lastValidPoints) {
         this.diagramView = diagramView;
         this.changedPainters = changedPainters;
         this.change = change;
         this.rev = rev;
         this.release = release;
+        this.lastValidPoints = lastValidPoints;
     }
 
     public DiagramView getDiagramView() {
@@ -40,5 +42,9 @@ public class MoveNotification {
 
     public boolean isRelease() {
         return release;
+    }
+
+    public ArrayList<Point2D> getLastValidPoints() {
+        return lastValidPoints;
     }
 }

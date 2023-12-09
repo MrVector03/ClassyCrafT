@@ -23,6 +23,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,8 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
     private double zoom;
     private Point2D zoomPoint = new Point2D.Double(0, 0);
 
-    private ArrayList<DiagramElementPainter> lastValidPoints = new ArrayList<>();
+    //private ArrayList<DiagramElementPainter> lastValidPoints = new ArrayList<>();
+    private final List<Point2D> lastValidPoints = new ArrayList<>();
 
     public DiagramView(Diagram diagram, TabbedPane tabbedPane) {
         this.diagram = diagram;
@@ -206,14 +209,25 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
             MoveNotification n = (MoveNotification) notification;
             if (n.getDiagramView() == this) {
                 if (n.isRelease() && n.isRev()) {
-                    System.out.println("GOING BACK");
-                    System.out.println(diagramElementPainters);
-                    this.diagramElementPainters = this.lastValidPoints;
-                    System.out.println(diagramElementPainters);
+                    //System.out.println("GOING BACK");
+                    //System.out.println(diagramElementPainters);
+                    //for (DiagramElementPainter dep : diagramElementPainters) {
+                    //    if (dep instanceof InterClassPainter)
+                    //        System.out.println(((InterClassPainter) dep).getInterClass().getPosition());
+                    //}
+                    // this.diagramElementPainters = this.lastValidPoints;
+                    this.revertPoints(n.getLastValidPoints());
+                    //System.out.println("AFTER");
+                    //System.out.println(diagramElementPainters);
+                    //for (DiagramElementPainter dep : diagramElementPainters) {
+                    //    if (dep instanceof InterClassPainter)
+                    //        System.out.println(((InterClassPainter) dep).getInterClass().getPosition());
+                    //}
+                    System.out.println();
                     repaint();
                 } else if (n.isRelease() && !n.isRev()) {
                     this.diagramElementPainters = n.getChangedPainters();
-                    //this.lastValidPoints = this.diagramElementPainters;
+                    this.setLastValidPoints(this.diagramElementPainters);
                 } else {
                     this.diagramElementPainters = n.getChangedPainters();
                 }
@@ -249,7 +263,24 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
             }
             repaint();
         }
+    }
 
+    private void revertPoints() {
+        for (int i = 0; i < lastValidPoints.size(); i++) {
+            if (lastValidPoints.get(i) != null) {
+                Point2D revertedPos = new Point2D.Double(lastValidPoints.get(i).getX(), lastValidPoints.get(i).getY());
+                ((InterClassPainter) this.diagramElementPainters.get(i)).getInterClass().changePosition(revertedPos);
+            }
+        }
+    }
+
+    private void revertPoints(ArrayList<Point2D> revPoints) {
+        for (int i = 0; i < revPoints.size(); i++) {
+            if (revPoints.get(i) != null) {
+                Point2D revertedPos = new Point2D.Double((double) (int) revPoints.get(i).getX() / 2, (int)revPoints.get(i).getY() / 2);
+                ((InterClassPainter) this.diagramElementPainters.get(i)).getInterClass().changePosition(revertedPos);
+            }
+        }
     }
 
     @Override
@@ -425,11 +456,21 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
         return false;
     }
 
-    public ArrayList<DiagramElementPainter> getLastValidPoints() {
+    public List<Point2D> getLastValidPoints() {
         return lastValidPoints;
     }
 
     public void setLastValidPoints(ArrayList<DiagramElementPainter> lastValidPoints) {
-        this.lastValidPoints = lastValidPoints;
+        this.lastValidPoints.clear();
+        for (DiagramElementPainter dep : lastValidPoints) {
+
+            if (dep instanceof InterClassPainter) {
+                Point2D position = new Point2D.Double(((InterClassPainter) dep).getInterClass().getPosition().getX(), ((InterClassPainter) dep).getInterClass().getPosition()
+                        .getY());
+                this.lastValidPoints.add(position);
+            }
+            else
+                this.lastValidPoints.add(null);
+        }
     }
 }

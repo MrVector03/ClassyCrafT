@@ -16,6 +16,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class MoveState implements State, IPublisher {
     private Point2D endingPoint = null;
 
     private boolean revertBack = false;
+    private ArrayList<Point2D> revPoints = new ArrayList<>();
 
     @Override
     public void classyMouseClicked(Point2D position, DiagramView diagramView) {
@@ -35,6 +37,8 @@ public class MoveState implements State, IPublisher {
     @Override
     public void classyMousePressed(Point2D position, DiagramView diagramView) {
         diagramView.popTemporarySelectionPainter();
+        this.revPoints = new ArrayList<>(this.setLastValidPoints(diagramView.getDiagramElementPainters()));
+        // System.out.println("new revs");
         startingPoint = position;
     }
 
@@ -51,14 +55,30 @@ public class MoveState implements State, IPublisher {
         endingPoint = null;
     }
 
+    public ArrayList<Point2D> setLastValidPoints(ArrayList<DiagramElementPainter> lastValidPoints) {
+        ArrayList<Point2D> newPoints = new ArrayList<>();
+        for (DiagramElementPainter dep : lastValidPoints) {
+            if (dep instanceof InterClassPainter) {
+                Point2D position = new Point2D.Double(((InterClassPainter) dep).getInterClass().getPosition().getX(),
+                        ((InterClassPainter) dep).getInterClass().getPosition().getY());
+                newPoints.add(position);
+                // System.out.println("SETUP POS: " + position);
+            }
+            else
+                newPoints.add(null);
+        }
+        return newPoints;
+    }
+
     private void handleChange(Point2D endingPosition, DiagramView diagramView, boolean release) {
         endingPoint = endingPosition;
         Point2D change = new Point2D.Double(endingPoint.getX() - startingPoint.getX(), endingPoint.getY() - startingPoint.getY());
         ArrayList<DiagramElementPainter> changedPainters = this.changeElementCoordinates(change, diagramView);
-        if (changedPainters.isEmpty())
-            notifySubscribers(new MoveNotification(diagramView, changedPainters, change, revertBack, release));
-        else
-            notifySubscribers(new MoveNotification(diagramView, changedPainters, change, revertBack, release));
+        // System.out.println("POINTS BEFORE RUNNING:");
+        //for (Point2D point2D : revPoints) {
+        //    System.out.println(point2D);
+        //}
+        notifySubscribers(new MoveNotification(diagramView, changedPainters, change, revertBack, release, revPoints));
     }
 
     @Override
@@ -132,10 +152,10 @@ public class MoveState implements State, IPublisher {
             if (changedElement instanceof InterClassPainter) {
                 int avoidIndex = changedPainters.indexOf(changedElement);
                 InterClass ogInterClass = ((InterClassPainter) changedElement).getInterClass();
-                Point2D newPosition = new Point2D.Double(ogInterClass.getPosition().getX() - 5,
-                        ogInterClass.getPosition().getY() - 5);
-                Dimension newSize = new Dimension((int) (ogInterClass.getSize().getWidth()) + 10,
-                        (int) (ogInterClass.getSize().getHeight()) + 10) {
+                Point2D newPosition = new Point2D.Double(ogInterClass.getPosition().getX(),
+                        ogInterClass.getPosition().getY());
+                Dimension newSize = new Dimension((int) (ogInterClass.getSize().getWidth()),
+                        (int) (ogInterClass.getSize().getHeight())) {
                 };
                 InterClassPainter testPainter =
                         new InterClassPainter(new InterClass(ogInterClass.getName(), ogInterClass.getAccess(),
@@ -215,7 +235,7 @@ public class MoveState implements State, IPublisher {
                         //            ((InterClassPainter) changedElement).getInterClass().changePosition(new Point2D.Double(currPos.getX(), currPos.getY() + 5));
                         //        }
                         //        System.out.println("CHANGED: " + changedPainters.indexOf(changedElement));
-                        //    return false;
+                        //        return false;
                         //    }
                         //}
 
@@ -223,25 +243,16 @@ public class MoveState implements State, IPublisher {
 
                         for (Point2D testPoint : testPoints) {
                             if (testPainter.elementAt(testPoint)) {
-                                // System.out.println("COLLIDING");
                                 this.revertBack = true;
-                                System.out.println("rev: true");
                                 return false;
                             }
                         }
-
-                        // PLAN: C
-
-                        //Area mainArea = new Area(testPainter.getShape());
-                        //Area testArea = new Area(((InterClassPainter) oldPainter).getShape());
-
                     }
                 }
             }
         }
         // System.out.println("not colliding");
         this.revertBack = false;
-        System.out.println("rev: false");
         return true;
     }
 
