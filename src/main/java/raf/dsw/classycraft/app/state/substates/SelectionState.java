@@ -116,6 +116,7 @@ public class SelectionState implements State {
 
     }
 
+    @SuppressWarnings("ALL")
     public boolean testIntersectionLines(Point2D selStart, Point2D selEnd, Point2D elStart, Point2D elEnd, InterClassPainter icp) {
 
         if (selStart.getX() > selEnd.getX() && selStart.getY() > selEnd.getY()) {
@@ -134,10 +135,14 @@ public class SelectionState implements State {
             selEnd = newEnd;
         }
 
-        if ((selStart.getX() >= elStart.getX() && selStart.getX() <= elEnd.getX()) &&
+        if (((selStart.getX() >= elStart.getX() && selStart.getX() <= elEnd.getX()) &&
                 (selEnd.getX() >= elStart.getX() && selEnd.getX() <= elEnd.getX()) &&
                 (elStart.getY() >= selStart.getY() && elStart.getY() <= selEnd.getY()) &&
-                (elEnd.getY() >= selStart.getY() && elEnd.getY() <= selEnd.getY())) {
+                (elEnd.getY() >= selStart.getY() && elEnd.getY() <= selEnd.getY())) ||
+                ((selStart.getX() <= elStart.getX() && selStart.getX() <= elEnd.getX()) &&
+                        (selEnd.getX() >= elStart.getX() && selEnd.getX() >= elEnd.getX()) &&
+                        (elStart.getY() <= selStart.getY() && elStart.getY() <= selEnd.getY()) &&
+                        (elEnd.getY() >= selStart.getY() && elEnd.getY() >= selEnd.getY()))) {
             double m1 = (selEnd.getY() - selStart.getY()) / (selEnd.getX() - selStart.getX());
             double b1 = selStart.getY() - m1 * selStart.getX();
 

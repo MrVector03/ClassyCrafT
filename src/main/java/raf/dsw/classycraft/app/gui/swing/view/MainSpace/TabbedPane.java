@@ -158,6 +158,13 @@ public class TabbedPane extends JTabbedPane {
         }
     }
 
+    public void setupTemps() {
+        for (TabView tv : this.loadedTabs) {
+            tv.getDiagramView().setLastValidPoints(tv.getDiagramView().getDiagramElementPainters());
+        }
+    }
+
+
     public boolean testSelectors() {
         for (TabView tv : loadedTabs) {
             if (tv.getDiagramView().deleteSelected())

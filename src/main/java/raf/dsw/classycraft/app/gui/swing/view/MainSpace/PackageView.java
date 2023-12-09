@@ -89,6 +89,7 @@ public class PackageView extends JPanel implements ISubscriber {
     }
 
     public void startMoveState() {
+        this.tabbedPane.setupTemps();
         stateManager.setMoveState();
     }
 

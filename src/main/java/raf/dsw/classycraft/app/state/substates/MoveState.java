@@ -13,6 +13,7 @@ import raf.dsw.classycraft.app.state.State;
 
 import java.awt.*;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.Area;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class MoveState implements State, IPublisher {
 
     private Point2D startingPoint = null;
     private Point2D endingPoint = null;
+
+    private boolean revertBack = false;
 
     @Override
     public void classyMouseClicked(Point2D position, DiagramView diagramView) {
@@ -37,22 +40,25 @@ public class MoveState implements State, IPublisher {
 
     @Override
     public void classyMouseDragged(Point2D startingPosition, DiagramView diagramView) {
-        endingPoint = startingPosition;
-        Point2D change = new Point2D.Double(endingPoint.getX() - startingPoint.getX(), endingPoint.getY() - startingPoint.getY());
-        ArrayList<DiagramElementPainter> changedPainters = this.changeElementCoordinates(change, diagramView);
-
-        notifySubscribers(new MoveNotification(diagramView, changedPainters, change));
+        handleChange(startingPosition, diagramView, false);
         startingPoint = endingPoint;
     }
 
     @Override
     public void classyMouseReleased(Point2D endingPosition, DiagramView diagramView) {
+        handleChange(endingPosition, diagramView, true);
+        startingPoint = null;
+        endingPoint = null;
+    }
+
+    private void handleChange(Point2D endingPosition, DiagramView diagramView, boolean release) {
         endingPoint = endingPosition;
         Point2D change = new Point2D.Double(endingPoint.getX() - startingPoint.getX(), endingPoint.getY() - startingPoint.getY());
         ArrayList<DiagramElementPainter> changedPainters = this.changeElementCoordinates(change, diagramView);
-        notifySubscribers(new MoveNotification(diagramView, changedPainters, change));
-        startingPoint = null;
-        endingPoint = null;
+        if (changedPainters.isEmpty())
+            notifySubscribers(new MoveNotification(diagramView, changedPainters, change, revertBack, release));
+        else
+            notifySubscribers(new MoveNotification(diagramView, changedPainters, change, revertBack, release));
     }
 
     @Override
@@ -118,19 +124,18 @@ public class MoveState implements State, IPublisher {
         if (checkCollision(changedPainters, oldPainters)) {
             return changedPainters;
         }
-        return oldPainters;
+        return changedPainters;
     }
-
     public boolean checkCollision(ArrayList<DiagramElementPainter> changedPainters,
                                   ArrayList<DiagramElementPainter> oldPainters) {
         for (DiagramElementPainter changedElement : changedPainters) {
             if (changedElement instanceof InterClassPainter) {
                 int avoidIndex = changedPainters.indexOf(changedElement);
                 InterClass ogInterClass = ((InterClassPainter) changedElement).getInterClass();
-                Point2D newPosition = new Point2D.Double(ogInterClass.getPosition().getX() - 20,
-                        ogInterClass.getPosition().getY() - 20);
-                Dimension newSize = new Dimension((int) (ogInterClass.getSize().getWidth() + 40),
-                        (int) (ogInterClass.getSize().getHeight() + 40)) {
+                Point2D newPosition = new Point2D.Double(ogInterClass.getPosition().getX() - 5,
+                        ogInterClass.getPosition().getY() - 5);
+                Dimension newSize = new Dimension((int) (ogInterClass.getSize().getWidth()) + 10,
+                        (int) (ogInterClass.getSize().getHeight()) + 10) {
                 };
                 InterClassPainter testPainter =
                         new InterClassPainter(new InterClass(ogInterClass.getName(), ogInterClass.getAccess(),
@@ -174,25 +179,69 @@ public class MoveState implements State, IPublisher {
                         Dimension size = ((InterClassPainter) oldPainter).getInterClass().getSize();
                         List<Point2D> testPoints = new ArrayList<>();
 
+                         // 0 -> 2: x -= 1
                         testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY())); // TOP LEFT
-                        testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth() / 2, ogPos.getY())); // TOP
+                        testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY() + size.getHeight() / 2)); // LEFT
+                        testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY() + size.getHeight())); // BOTTOM LEFT
+//
+//
+                        // 3 -> 5: x += 1
                         testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth(), ogPos.getY())); // TOP RIGHT
                         testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth(), ogPos.getY() + size.getHeight() / 2)); // RIGHT
                         testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth(), ogPos.getY() + size.getHeight())); // BOTTOM RIGHT
+//
+                        // 6: y -= 1
+                        testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth() / 2, ogPos.getY())); // TOP
+//
+                        // 7: y += 1
                         testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth() / 2, ogPos.getY() + size.getHeight())); // BOTTOM
-                        testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY() + size.getHeight())); // BOTTOM LEFT
-                        testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY() + size.getHeight() / 2)); // LEFT
+
+                        // PLAN: B
+                        //for (int j = 0; j < testPoints.size(); j++) {
+                        //    if (testPainter.elementAt(testPoints.get(j))) {
+                        //        System.out.println("COLLIDING");
+                        //        Point2D currPos = ((InterClassPainter) changedElement).getInterClass().getPosition();
+                        //        if (j <= 2) {
+                        //            System.out.println("going left");
+                        //            ((InterClassPainter) changedElement).getInterClass().changePosition(new Point2D.Double(currPos.getX() - 5, currPos.getY()));
+                        //        } else if (j <= 5) {
+                        //            System.out.println("going right");
+                        //            ((InterClassPainter) changedElement).getInterClass().changePosition(new Point2D.Double(currPos.getX() + 5, currPos.getY()));
+                        //        } else if (j == 6) {
+                        //            System.out.println("going up");
+                        //            ((InterClassPainter) changedElement).getInterClass().changePosition(new Point2D.Double(currPos.getX(), currPos.getY() - 5));
+                        //        } else if (j == 7) {
+                        //            System.out.println("going down");
+                        //            ((InterClassPainter) changedElement).getInterClass().changePosition(new Point2D.Double(currPos.getX(), currPos.getY() + 5));
+                        //        }
+                        //        System.out.println("CHANGED: " + changedPainters.indexOf(changedElement));
+                        //    return false;
+                        //    }
+                        //}
+
+                        // PLAN: A
 
                         for (Point2D testPoint : testPoints) {
                             if (testPainter.elementAt(testPoint)) {
-                                System.out.println("colliding");
+                                // System.out.println("COLLIDING");
+                                this.revertBack = true;
+                                System.out.println("rev: true");
                                 return false;
                             }
                         }
+
+                        // PLAN: C
+
+                        //Area mainArea = new Area(testPainter.getShape());
+                        //Area testArea = new Area(((InterClassPainter) oldPainter).getShape());
+
                     }
                 }
             }
         }
+        // System.out.println("not colliding");
+        this.revertBack = false;
+        System.out.println("rev: false");
         return true;
     }
 

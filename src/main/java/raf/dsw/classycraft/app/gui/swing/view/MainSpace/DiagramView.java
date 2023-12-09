@@ -23,6 +23,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.DeflaterOutputStream;
@@ -118,6 +119,7 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
             diagramElementPainter.getDiagramElement().addSubscriber(this);
             diagram.addChild(diagramElementPainter.getDiagramElement());
         }
+        // this.lastValidPoints = diagramElementPainters;
         repaint();
     }
 
@@ -203,9 +205,48 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
         } else if (notification instanceof MoveNotification) {
             MoveNotification n = (MoveNotification) notification;
             if (n.getDiagramView() == this) {
-                this.diagramElementPainters = n.getChangedPainters();
-            }
+                if (n.isRelease() && n.isRev()) {
+                    System.out.println("GOING BACK");
+                    System.out.println(diagramElementPainters);
+                    this.diagramElementPainters = this.lastValidPoints;
+                    System.out.println(diagramElementPainters);
+                    repaint();
+                } else if (n.isRelease() && !n.isRev()) {
+                    this.diagramElementPainters = n.getChangedPainters();
+                    //this.lastValidPoints = this.diagramElementPainters;
+                } else {
+                    this.diagramElementPainters = n.getChangedPainters();
+                }
 
+                //if (n.isRev()) {
+                    //System.out.println(lastValidPoints);
+                    //this.diagramElementPainters = this.lastValidPoints;
+
+                    //repaint();
+                    //if (!this.selectedElements.isEmpty()) {
+//
+                    //    ArrayList<DiagramElementPainter> tmpToSelect = new ArrayList<>(this.selectedElements);
+//
+                    //    for (DiagramElementPainter selected : tmpToSelect) {
+                    //        unselectElement(selected);
+                    //        revertSelected(selected);
+                    //    }
+                    //    repaint();
+                    //    for (DiagramElementPainter selected : tmpToSelect) {
+                    //        selectElement(selected);
+                    //    }
+                    //    repaint();
+                    //    markSelectedElements();
+                    //    repaint();
+                    //}
+                //} else {
+                    //lastValidPoints = new ArrayList<>();
+                    //this.diagramElementPainters = n.getChangedPainters();
+                    //for (DiagramElementPainter dep : this.diagramElementPainters)
+                    //    lastValidPoints.add(dep);
+
+                //}
+            }
             repaint();
         }
 
@@ -382,5 +423,13 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
     @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
+    }
+
+    public ArrayList<DiagramElementPainter> getLastValidPoints() {
+        return lastValidPoints;
+    }
+
+    public void setLastValidPoints(ArrayList<DiagramElementPainter> lastValidPoints) {
+        this.lastValidPoints = lastValidPoints;
     }
 }
