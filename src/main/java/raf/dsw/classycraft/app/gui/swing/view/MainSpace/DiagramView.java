@@ -294,10 +294,9 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         AffineTransform transform = new AffineTransform();
-
+        transform.concatenate(((Graphics2D) g).getTransform());
         transform.scale(zoom, zoom);
 
-        g2d.setTransform(((Graphics2D) g).getTransform());
         g2d.setTransform(transform);
 
         for(DiagramElementPainter diagramElementPainter : diagramElementPainters) {

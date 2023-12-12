@@ -60,6 +60,7 @@ public class ZoomToFitAction extends AbstractClassyAction {
         if(newZoom > viewSize.getHeight()/(maxY-minY))
             newZoom = viewSize.getHeight()/(maxY-minY);
 
+
         curDV.setZoom(newZoom);
 
         ((JScrollPane)((TabView) MainFrame.getInstance().getPackageView().getTabbedPane().getSelectedComponent()).getLeftComponent()).getHorizontalScrollBar().setValue((int)(minX*curDV.getZoom()));
