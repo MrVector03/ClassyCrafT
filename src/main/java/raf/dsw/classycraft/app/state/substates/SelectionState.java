@@ -1,5 +1,8 @@
 package raf.dsw.classycraft.app.state.substates;
 
+import raf.dsw.classycraft.app.core.Observer.IPublisher;
+import raf.dsw.classycraft.app.core.Observer.ISubscriber;
+import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
@@ -20,7 +23,9 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectionState implements State {
+public class SelectionState implements State, IPublisher {
+
+    private final List<ISubscriber> subscribers = new ArrayList<>();
 
     private Point2D startingPoint = null;
     private Point2D endingPoint = null;
@@ -32,14 +37,16 @@ public class SelectionState implements State {
             if (dep.elementAt(position))
                 diagramView.selectElement(dep);
         }
-        diagramView.markSelectedElements();
+        markSelectedElements(diagramView);
         startingPoint = position;
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @Override
     public void classyMousePressed(Point2D position, DiagramView diagramView) {
         diagramView.getSelectedElements().clear();
         startingPoint = position;
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @SuppressWarnings("ALL")
@@ -72,8 +79,9 @@ public class SelectionState implements State {
             }
 
         }
-        diagramView.markSelectedElements();
+        markSelectedElements(diagramView);
         diagramView.addDiagramElementPainter(selectionPainter);
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @SuppressWarnings("ALL")
@@ -103,17 +111,81 @@ public class SelectionState implements State {
                 diagramView.unselectElement(dep);
 
         }
-        diagramView.markSelectedElements();
+        markSelectedElements(diagramView);
+
         diagramView.addDiagramElementPainter(selectionPainter);
 
         startingPoint = null;
         endingPoint = null;
-        diagramView.removeAllSelectionPainters();
+
+        //diagramView.removeAllSelectionPainters();
+
+        diagramView.getDiagramElementPainters().removeIf(dep -> dep instanceof TemporarySelectionPainter);
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @Override
     public void classyMouseWheelMoved(Point2D position, DiagramView diagramView, MouseWheelEvent e) {
 
+    }
+
+    public void markSelectedElements(DiagramView diagramView) {
+        List<ConnectionPainter> connections = new ArrayList<>();
+        for (DiagramElementPainter dep : diagramView.getDiagramElementPainters())
+            if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
+        List<DiagramElement> selected = new ArrayList<>();
+
+        for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
+            if (dep instanceof TemporarySelectionPainter) continue;
+            if (diagramView.getSelectedElements().contains(dep)) {
+                if (dep instanceof InterClassPainter) {
+                    selected.add(((InterClassPainter) dep).getInterClass());
+                    ((InterClassPainter) dep).getInterClass().setStroke(new BasicStroke(3.0f));
+                    ((InterClassPainter) dep).getInterClass().setColor(Color.BLUE);
+                } else {
+                    selected.add(((ConnectionPainter)dep).getConnection());
+                    ((ConnectionPainter) dep).getConnection().setColor(Color.BLUE);
+                    ((ConnectionPainter) dep).getConnection().setStroke(new BasicStroke(3.0f));
+                }
+            } else {
+                selected.add(null);
+            }
+            selectInConnections(connections, selected, diagramView);
+        }
+    }
+
+    private void selectInConnections(List<ConnectionPainter> connections,
+                                     List<DiagramElement> selected, DiagramView diagramView) {
+
+        for (ConnectionPainter cp : connections) {
+
+            int id = diagramView.getDiagramElementPainters().indexOf(cp);
+
+            InterClass from = cp.getConnection().getFrom();
+            InterClass to = cp.getConnection().getTo();
+            if (from == to) System.out.println("OLD SAME");
+
+
+            if (selected.contains(from) && selected.contains(to)) {
+                if (selected.contains(from) && diagramView.getDiagramElementPainters().get(selected.indexOf(from)) instanceof InterClassPainter) {
+                    from = (((InterClassPainter) diagramView.getDiagramElementPainters().get(selected.indexOf(from))).getInterClass());
+                }
+                if (selected.contains(to) && diagramView.getDiagramElementPainters().get(selected.indexOf(to)) instanceof InterClassPainter) {
+                    to = (((InterClassPainter) diagramView.getDiagramElementPainters().get(selected.indexOf(to))).getInterClass());
+                    cp.getConnection().setFrom(from);
+                    cp.getConnection().setTo(to);
+                } else if (selected.contains(from)) {
+                    if (selected.contains(from) && diagramView.getDiagramElementPainters().get(selected.indexOf(from)) instanceof InterClassPainter) {
+                        from = (((InterClassPainter) diagramView.getDiagramElementPainters().get(selected.indexOf(from))).getInterClass());
+                    }
+                    cp.getConnection().setFrom(from);
+                } else {
+                    if (selected.contains(to) && diagramView.getDiagramElementPainters().get(selected.indexOf(to)) instanceof InterClassPainter)
+                        to = (((InterClassPainter) diagramView.getDiagramElementPainters().get(selected.indexOf(to))).getInterClass());
+                    cp.getConnection().setTo(to);
+                }
+            }
+        }
     }
 
     @SuppressWarnings("ALL")
@@ -159,5 +231,21 @@ public class SelectionState implements State {
             return icp.elementAt(testPoint);
         }
         return false;
+    }
+
+    @Override
+    public void addSubscriber(ISubscriber subscriber) {
+        this.subscribers.add(subscriber);
+    }
+
+    @Override
+    public void removeSubscriber(ISubscriber subscriber) {
+        this.subscribers.remove(subscriber);
+    }
+
+    @Override
+    public void notifySubscribers(Object notification) {
+        for (ISubscriber subscriber : this.subscribers)
+            subscriber.update(notification);
     }
 }

@@ -2,7 +2,7 @@ package raf.dsw.classycraft.app.state.substates;
 
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
-import raf.dsw.classycraft.app.core.Observer.notifications.MoveNotification;
+import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
@@ -62,7 +62,6 @@ public class MoveState implements State, IPublisher {
                 Point2D position = new Point2D.Double(((InterClassPainter) dep).getInterClass().getPosition().getX(),
                         ((InterClassPainter) dep).getInterClass().getPosition().getY());
                 newPoints.add(position);
-                // System.out.println("SETUP POS: " + position);
             }
             else
                 newPoints.add(null);
@@ -74,11 +73,8 @@ public class MoveState implements State, IPublisher {
         endingPoint = endingPosition;
         Point2D change = new Point2D.Double(endingPoint.getX() - startingPoint.getX(), endingPoint.getY() - startingPoint.getY());
         ArrayList<DiagramElementPainter> changedPainters = this.changeElementCoordinates(change, diagramView);
-        // System.out.println("POINTS BEFORE RUNNING:");
-        //for (Point2D point2D : revPoints) {
-        //    System.out.println(point2D);
-        //}
-        notifySubscribers(new MoveNotification(diagramView, changedPainters, change, revertBack, release, revPoints));
+
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @Override
@@ -215,31 +211,6 @@ public class MoveState implements State, IPublisher {
 //
                         // 7: y += 1
                         testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth() / 2, ogPos.getY() + size.getHeight())); // BOTTOM
-
-                        // PLAN: B
-                        //for (int j = 0; j < testPoints.size(); j++) {
-                        //    if (testPainter.elementAt(testPoints.get(j))) {
-                        //        System.out.println("COLLIDING");
-                        //        Point2D currPos = ((InterClassPainter) changedElement).getInterClass().getPosition();
-                        //        if (j <= 2) {
-                        //            System.out.println("going left");
-                        //            ((InterClassPainter) changedElement).getInterClass().changePosition(new Point2D.Double(currPos.getX() - 5, currPos.getY()));
-                        //        } else if (j <= 5) {
-                        //            System.out.println("going right");
-                        //            ((InterClassPainter) changedElement).getInterClass().changePosition(new Point2D.Double(currPos.getX() + 5, currPos.getY()));
-                        //        } else if (j == 6) {
-                        //            System.out.println("going up");
-                        //            ((InterClassPainter) changedElement).getInterClass().changePosition(new Point2D.Double(currPos.getX(), currPos.getY() - 5));
-                        //        } else if (j == 7) {
-                        //            System.out.println("going down");
-                        //            ((InterClassPainter) changedElement).getInterClass().changePosition(new Point2D.Double(currPos.getX(), currPos.getY() + 5));
-                        //        }
-                        //        System.out.println("CHANGED: " + changedPainters.indexOf(changedElement));
-                        //        return false;
-                        //    }
-                        //}
-
-                        // PLAN: A
 
                         for (Point2D testPoint : testPoints) {
                             if (testPainter.elementAt(testPoint)) {

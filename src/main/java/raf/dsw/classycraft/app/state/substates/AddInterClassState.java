@@ -1,5 +1,8 @@
 package raf.dsw.classycraft.app.state.substates;
 
+import raf.dsw.classycraft.app.core.Observer.IPublisher;
+import raf.dsw.classycraft.app.core.Observer.ISubscriber;
+import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
@@ -16,8 +19,11 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 
-public class AddInterClassState implements State {
+public class AddInterClassState implements State, IPublisher {
+
+    private List<ISubscriber> subscribers = new ArrayList<>();
 
     @Override
     public void classyMouseClicked(Point2D position, DiagramView diagramView) {
@@ -29,6 +35,8 @@ public class AddInterClassState implements State {
         MainFrame.getInstance().setCurDiagramView(diagramView);
 
         MainFrame.getInstance().getChooseInterClassFrame().setVisible(true);
+        //System.out.println("notifying");
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @Override
@@ -48,5 +56,21 @@ public class AddInterClassState implements State {
     @Override
     public void classyMouseWheelMoved(Point2D position, DiagramView diagramView, MouseWheelEvent e) {
 
+    }
+
+    @Override
+    public void addSubscriber(ISubscriber subscriber) {
+        this.subscribers.add(subscriber);
+    }
+
+    @Override
+    public void removeSubscriber(ISubscriber subscriber) {
+        this.subscribers.remove(subscriber);
+    }
+
+    @Override
+    public void notifySubscribers(Object notification) {
+        for (ISubscriber subscriber : this.subscribers)
+            subscriber.update(notification);
     }
 }

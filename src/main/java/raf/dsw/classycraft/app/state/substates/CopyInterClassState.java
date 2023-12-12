@@ -2,6 +2,9 @@ package raf.dsw.classycraft.app.state.substates;
 
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
+import raf.dsw.classycraft.app.core.Observer.IPublisher;
+import raf.dsw.classycraft.app.core.Observer.ISubscriber;
+import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
@@ -18,7 +21,9 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CopyInterClassState implements State {
+public class CopyInterClassState implements State, IPublisher {
+    private final List<ISubscriber> subscribers = new ArrayList<>();
+
     @Override
     public void classyMouseClicked(Point2D position, DiagramView diagramView) {
         List<DiagramElementPainter> toCopy = new ArrayList<>();
@@ -27,7 +32,7 @@ public class CopyInterClassState implements State {
                 toCopy.add(dep);
         }
 
-        if(toCopy.size() == 0)
+        if(toCopy.isEmpty())
             return;
 
         if(toCopy.size() > 1) {
@@ -37,26 +42,12 @@ public class CopyInterClassState implements State {
 
         if(toCopy.get(0).getDiagramElement() instanceof InterClass)
             copyPaint(toCopy.get(0), diagramView);
+
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @Override
     public void classyMousePressed(Point2D position, DiagramView diagramView) {
-        // List<DiagramElementPainter> toCopy = new ArrayList<>();
-        // for (DiagramElementPainter dep : diagramView.getDiagramElementPainters()) {
-        //     if (dep.elementAt(position))
-        //         toCopy.add(dep);
-        // }
-//
-        // if(toCopy.size() == 0)
-        //     return;
-//
-        // if(toCopy.size() > 1) {
-        //     ApplicationFramework.getInstance().getMessageGenerator().generateMessage("CAN_COPY_ONLY_ONE_INTERCLASS", MessageType.WARNING);
-        //     return;
-        // }
-//
-        // if(toCopy.get(0).getDiagramElement() instanceof InterClass)
-        //     copyPaint(toCopy.get(0), diagramView);
     }
 
     @Override
@@ -92,5 +83,21 @@ public class CopyInterClassState implements State {
                 copyElement = new InterClassPainter(new Interface(tmpInterClass.getName(), tmpInterClass.getAccess(), newPosition, tmpInterClass.getSize(), ((Interface) tmpInterClass).getMethods()));
         }
         diagramView.addDiagramElementPainter(copyElement);
+    }
+
+    @Override
+    public void addSubscriber(ISubscriber subscriber) {
+        this.subscribers.add(subscriber);
+    }
+
+    @Override
+    public void removeSubscriber(ISubscriber subscriber) {
+        this.subscribers.remove(subscriber);
+    }
+
+    @Override
+    public void notifySubscribers(Object notification) {
+        for (ISubscriber subscriber : this.subscribers)
+            subscriber.update(notification);
     }
 }

@@ -134,7 +134,7 @@ public class TabbedPane extends JTabbedPane {
     public void removeDiagram(ClassyNode diagram) {
         for (TabView tv : this.loadedTabs) {
             if (tv.getDiagramView().getDiagram() == diagram) {
-                this.getClassyPackage().getPackageView().removeMoveStateSubscriber(tv.getDiagramView());
+                this.getClassyPackage().getPackageView().masterRemoveSubscriber(tv.getDiagramView());
                 remove(tv);
                 revalidate();
                 return;

@@ -1,5 +1,8 @@
 package raf.dsw.classycraft.app.state.substates;
 
+import raf.dsw.classycraft.app.core.Observer.IPublisher;
+import raf.dsw.classycraft.app.core.Observer.ISubscriber;
+import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
@@ -12,8 +15,12 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.List;
 
-public class DeleteState implements State {
+public class DeleteState implements State, IPublisher {
+
+    private final List<ISubscriber> subscribers = new ArrayList<>();
+
     @Override
     public void classyMouseClicked(Point2D position, DiagramView diagramView) {
         ArrayList<DiagramElementPainter> toDelete = new ArrayList<DiagramElementPainter>();
@@ -37,6 +44,8 @@ public class DeleteState implements State {
             diagramView.getDiagram().deleteChild(dep.getDiagramElement());
             ((ClassyTreeImplementation) MainFrame.getInstance().getClassyTree()).removeNode(dep.getDiagramElement());
         }
+
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @Override
@@ -56,5 +65,25 @@ public class DeleteState implements State {
     @Override
     public void classyMouseWheelMoved(Point2D position, DiagramView diagramView, MouseWheelEvent e) {
 
+    }
+
+    public void immediateDelete() {
+
+    }
+
+    @Override
+    public void addSubscriber(ISubscriber subscriber) {
+        this.subscribers.add(subscriber);
+    }
+
+    @Override
+    public void removeSubscriber(ISubscriber subscriber) {
+        this.subscribers.remove(subscriber);
+    }
+
+    @Override
+    public void notifySubscribers(Object notification) {
+        for (ISubscriber subscriber : this.subscribers)
+            subscriber.update(notification);
     }
 }
