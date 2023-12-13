@@ -32,8 +32,5 @@ public class ChangeAuthorConfirmAction extends AbstractClassyAction {
         }
 
         ((Project)selected.getClassyNode()).setAuthor(newAuthor);
-
-        System.out.println("new author:" + newAuthor);
-        System.out.println(((Project) selected.getClassyNode()).getAuthor());
     }
 }

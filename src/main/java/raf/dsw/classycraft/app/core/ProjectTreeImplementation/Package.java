@@ -19,7 +19,6 @@ import java.util.List;
 public class Package extends ClassyNodeComposite implements IPublisher {
     public Package(String name) {
         super(name);
-        subscribers.add(MainFrame.getInstance().getPackageView());
     }
 
     private final List<ISubscriber> subscribers = new ArrayList<>();
@@ -39,8 +38,6 @@ public class Package extends ClassyNodeComposite implements IPublisher {
     }
 
     public void displayOnScreen() {
-        if (subscribers.isEmpty())
-            subscribers.add(MainFrame.getInstance().getPackageView());
         notifySubscribers(new SubscriberNotification(Type.OPEN, this));
     }
 
@@ -82,6 +79,10 @@ public class Package extends ClassyNodeComposite implements IPublisher {
 
     public boolean checkSubscriber(ISubscriber subscriber) {
         return this.subscribers.contains(subscriber);
+    }
+
+    public PackageView getPackageView() {
+        return (PackageView) subscribers.get(0);
     }
 
     @Override

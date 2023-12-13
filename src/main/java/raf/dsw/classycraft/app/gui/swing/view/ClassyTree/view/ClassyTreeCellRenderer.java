@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.gui.swing.view.ClassyTree.view;
 
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
@@ -26,6 +28,10 @@ public class ClassyTreeCellRenderer extends DefaultTreeCellRenderer {
             imageUrl = getClass().getResource("/images/package.png");
         else if (((ClassyTreeItem)value).getClassyNode() instanceof Diagram)
             imageUrl = getClass().getResource("/images/diagram.png");
+        else if (((ClassyTreeItem)value).getClassyNode() instanceof InterClass)
+            imageUrl = getClass().getResource("/images/interclass.png");
+        else if (((ClassyTreeItem)value).getClassyNode() instanceof Connection)
+            imageUrl = getClass().getResource("/images/connection.png");
 
         Icon icon = null;
         if(imageUrl != null)

@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class ChoosePackageOrDiagramFrame extends JFrame{
     public ChoosePackageOrDiagramFrame() {
-        setTitle("Change project author");
+        setTitle("Choose element to add");
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenHeight = screenSize.height;
