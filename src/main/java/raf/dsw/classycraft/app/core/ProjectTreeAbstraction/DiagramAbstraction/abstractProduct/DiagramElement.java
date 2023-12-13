@@ -1,4 +1,4 @@
-package raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction;
+package raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.abstractProduct;
 
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 

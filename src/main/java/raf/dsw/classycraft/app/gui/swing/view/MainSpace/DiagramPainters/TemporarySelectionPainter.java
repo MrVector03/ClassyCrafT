@@ -1,6 +1,6 @@
 package raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters;
 
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
 
 import java.awt.*;
 import java.awt.geom.Dimension2D;

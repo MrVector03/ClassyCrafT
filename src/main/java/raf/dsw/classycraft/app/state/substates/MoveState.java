@@ -4,22 +4,20 @@ import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.ConnectionPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.InterClassPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 import raf.dsw.classycraft.app.state.State;
 
 import java.awt.*;
 import java.awt.event.MouseWheelEvent;
-import java.awt.geom.Area;
-import java.awt.geom.Dimension2D;
 import java.awt.geom.Point2D;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class MoveState implements State, IPublisher {
 
@@ -109,6 +107,7 @@ public class MoveState implements State, IPublisher {
         for (DiagramElementPainter dep : changedPainters)
             if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
         List<InterClass> copyForFromTo = new ArrayList<>();
+        ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
         if (selectedPainters.isEmpty()) {
             for (DiagramElementPainter dep : changedPainters) {
                 if (dep instanceof ConnectionPainter) {
@@ -119,7 +118,7 @@ public class MoveState implements State, IPublisher {
                 if (dep instanceof InterClassPainter) {
                     int id = changedPainters.indexOf(dep);
                     InterClassPainter test = (InterClassPainter) changedPainters.get(id);
-                    InterClassPainter icp = new InterClassPainter(((InterClassPainter) dep).getInterClass());
+                    InterClassPainter icp = (InterClassPainter) painterManufacturer.createPainter(((InterClassPainter) dep).getInterClass());
                     icp.getInterClass().changePosition(change);
                     testForConnections(connections, test, icp);
                     changedPainters.set(id, icp);
@@ -135,7 +134,7 @@ public class MoveState implements State, IPublisher {
                     copyForFromTo.add(((InterClassPainter) dep).getInterClass());
                     int id = changedPainters.indexOf(dep);
                     InterClassPainter test = (InterClassPainter) changedPainters.get(id);
-                    InterClassPainter icp = new InterClassPainter(((InterClassPainter) dep).getInterClass());
+                    InterClassPainter icp = (InterClassPainter) painterManufacturer.createPainter(((InterClassPainter) dep).getInterClass());
                     ((InterClassPainter) dep).getInterClass().changePosition(change);
                     // testForConnections(connections, test, icp);
                     changedPainters.set(id, icp);
@@ -162,8 +161,10 @@ public class MoveState implements State, IPublisher {
                 Dimension newSize = new Dimension((int) (ogInterClass.getSize().getWidth()),
                         (int) (ogInterClass.getSize().getHeight())) {
                 };
+
+                ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
                 InterClassPainter testPainter =
-                        new InterClassPainter(new InterClass(ogInterClass.getName(), ogInterClass.getAccess(),
+                        (InterClassPainter) painterManufacturer.createPainter(new InterClass(ogInterClass.getName(), ogInterClass.getAccess(),
                                 newPosition, newSize) {
                     @Override
                     public Access getAccess() {

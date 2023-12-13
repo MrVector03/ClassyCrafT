@@ -2,15 +2,13 @@ package raf.dsw.classycraft.app.core.ProjectTreeImplementation;
 
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
-import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.abstractProduct.DiagramElement;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Factories.FactoryUtils;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.view.ClassyTreeView;
-import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;

@@ -1,7 +1,8 @@
-package raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction;
+package raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products;
 
 import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.abstractProduct.DiagramElement;
 
 import java.awt.*;
 

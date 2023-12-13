@@ -1,12 +1,14 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections;
 
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyAbstractFactory;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyManufacturer;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ConnectionType;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Generalization;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Interface;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
 import raf.dsw.classycraft.app.state.substates.EditState;
 
 import java.awt.event.ActionEvent;
@@ -25,12 +27,18 @@ public class GeneralizationConfirmAction extends AbstractClassyAction {
 
         MainFrame.getInstance().getEditGeneralizationFrame().setVisible(false);
 
+        ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
+
         if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
             Generalization curEditGeneralization = ((Generalization)MainFrame.getInstance().getPackageView().getCurEditElement());
 
             curEditGeneralization.setName(newConName);
         }
-        else
-            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new ConnectionPainter(new Generalization(newConName, newFrom, newTo)));
+        else {
+            ClassyAbstractFactory manufacturer = new ClassyManufacturer();
+            Generalization newGeneralization = (Generalization) manufacturer.createConnection(ConnectionType.GENERALIZATION,
+                    newConName, newFrom, newTo, null, ' ', ' ', null) ;
+            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newGeneralization));
+        }
     }
 }

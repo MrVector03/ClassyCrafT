@@ -1,11 +1,14 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections;
 
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyAbstractFactory;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyManufacturer;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ConnectionType;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Dependency;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Generalization;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
 import raf.dsw.classycraft.app.state.substates.EditState;
 
 import java.awt.event.ActionEvent;
@@ -26,13 +29,19 @@ public class DependencyConfirmAction extends AbstractClassyAction {
 
         MainFrame.getInstance().getEditDependencyFrame().setVisible(false);
 
+        ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
+
         if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
             Dependency curEditDependency = ((Dependency)MainFrame.getInstance().getPackageView().getCurEditElement());
 
             curEditDependency.setName(newConName);
             curEditDependency.setType(newConType);
         }
-        else
-            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new ConnectionPainter(new Dependency(newConName, newFrom, newTo, newConType)));
+        else {
+            ClassyAbstractFactory manufacturer = new ClassyManufacturer();
+            Dependency newDependency = (Dependency) manufacturer.createConnection(ConnectionType.DEPENDENCY,
+                    newConName, newFrom, newTo, null, ' ', ' ', newConType);
+            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newDependency));
+        }
     }
 }

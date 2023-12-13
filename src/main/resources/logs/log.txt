@@ -156,3 +156,4 @@ Format methods as: public int method()
 Format methods as: public int method()
 [NOTIFICATION][2023-12-13 12:07:12] Format methods as: public int method()
 [NOTIFICATION][2023-12-13 12:07:25] Format methods as: public int method()
+[ERROR][2023-12-13 17:53:49] CLASS_NAME_CANNOT_BE_EMPTY

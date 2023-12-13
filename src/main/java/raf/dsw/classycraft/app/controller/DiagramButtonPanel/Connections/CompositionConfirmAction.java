@@ -1,11 +1,14 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections;
 
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Aggregation;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyAbstractFactory;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyManufacturer;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ConnectionType;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.Connections.Composition;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
 import raf.dsw.classycraft.app.state.substates.EditState;
 
 import java.awt.event.ActionEvent;
@@ -29,6 +32,8 @@ public class CompositionConfirmAction extends AbstractClassyAction {
 
         MainFrame.getInstance().getEditCompositionFrame().setVisible(false);
 
+        ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
+
         if (MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
             Composition curEditComposition = ((Composition) MainFrame.getInstance().getPackageView().getCurEditElement());
 
@@ -36,7 +41,11 @@ public class CompositionConfirmAction extends AbstractClassyAction {
             curEditComposition.setVarName(newVarName);
             curEditComposition.setCardFrom(newCardFrom);
             curEditComposition.setCardTo(newCardTo);
-        } else
-            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(new ConnectionPainter(new Composition(newConName, newFrom, newTo, newVarName, newCardFrom, newCardTo)));
+        } else {
+            ClassyAbstractFactory manufacturer = new ClassyManufacturer();
+            Composition newComposition = (Composition) manufacturer.createConnection(ConnectionType.COMPOSITION,
+                    newConName, newFrom, newTo, newVarName, newCardFrom, newCardTo, null);
+            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newComposition));
+        }
     }
 }

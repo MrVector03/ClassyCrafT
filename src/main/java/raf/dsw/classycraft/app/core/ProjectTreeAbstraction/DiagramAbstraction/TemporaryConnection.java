@@ -1,5 +1,8 @@
 package raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction;
 
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.abstractProduct.DiagramElement;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
+
 import java.awt.geom.Point2D;
 
 public abstract class TemporaryConnection extends DiagramElement {

@@ -3,13 +3,11 @@ package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.abstractProduct.DiagramElement;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
 import raf.dsw.classycraft.app.state.State;
 import raf.dsw.classycraft.app.state.StateManager;
-import raf.dsw.classycraft.app.state.substates.DeleteState;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

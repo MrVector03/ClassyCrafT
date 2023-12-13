@@ -5,13 +5,17 @@ import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyAbstractFactory;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyManufacturer;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.InterClassType;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Enum;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Interface;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.InterClassPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 import raf.dsw.classycraft.app.state.State;
 
@@ -74,13 +78,29 @@ public class CopyInterClassState implements State, IPublisher {
 
         InterClassPainter copyElement;
 
+        ClassyAbstractFactory manufacturer = new ClassyManufacturer();
+        ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
+
         if(tmpInterClass instanceof Class) {
-            copyElement = new InterClassPainter(new Class(tmpInterClass.getName(), tmpInterClass.getAccess(), newPosition, tmpInterClass.getSize(), ((Class) tmpInterClass).getClassContents(), ((Class) tmpInterClass).isAbstract())); }
+
+            Class classCopy = (Class) manufacturer.createInterClass(InterClassType.CLASS, tmpInterClass.getName(), tmpInterClass.getAccess(), newPosition,
+                    tmpInterClass.getSize(), ((Class) tmpInterClass).getClassContents(), ((Class) tmpInterClass).isAbstract(), null, null);
+
+            copyElement = (InterClassPainter) painterManufacturer.createPainter(classCopy);
+        }
         else {
-            if (tmpInterClass instanceof Enum)
-                copyElement = new InterClassPainter(new Enum(tmpInterClass.getName(), tmpInterClass.getAccess(), tmpInterClass.getPosition(), tmpInterClass.getSize(), ((Enum) tmpInterClass).getValues()));
-            else
-                copyElement = new InterClassPainter(new Interface(tmpInterClass.getName(), tmpInterClass.getAccess(), newPosition, tmpInterClass.getSize(), ((Interface) tmpInterClass).getMethods()));
+            if (tmpInterClass instanceof Enum) {
+                Enum enumCopy = (Enum) manufacturer.createInterClass(InterClassType.ENUM, tmpInterClass.getName(), tmpInterClass.getAccess(),
+                        tmpInterClass.getPosition(),
+                        tmpInterClass.getSize(), null, false, ((Enum) tmpInterClass).getValues(), null);
+
+                copyElement = (InterClassPainter) painterManufacturer.createPainter(enumCopy);
+            } else {
+                Interface interfaceCopy = (Interface) manufacturer.createInterClass(InterClassType.INTERFACE, tmpInterClass.getName(), tmpInterClass.getAccess(),
+                        newPosition, tmpInterClass.getSize(), null, false, null, ((Interface) tmpInterClass).getMethods());
+
+                copyElement = (InterClassPainter) painterManufacturer.createPainter(interfaceCopy);
+            }
         }
         diagramView.addDiagramElementPainter(copyElement);
     }
