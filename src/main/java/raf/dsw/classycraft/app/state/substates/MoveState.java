@@ -19,6 +19,7 @@ import java.awt.geom.Point2D;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MoveState implements State, IPublisher {
 
@@ -37,8 +38,7 @@ public class MoveState implements State, IPublisher {
     @Override
     public void classyMousePressed(Point2D position, DiagramView diagramView) {
         diagramView.popTemporarySelectionPainter();
-        this.revPoints = new ArrayList<>(this.setLastValidPoints(diagramView.getDiagramElementPainters()));
-        // System.out.println("new revs");
+        this.revPoints.addAll(this.setLastValidPoints(diagramView.getDiagramElementPainters()));
         startingPoint = position;
     }
 
@@ -51,6 +51,7 @@ public class MoveState implements State, IPublisher {
     @Override
     public void classyMouseReleased(Point2D endingPosition, DiagramView diagramView) {
         handleChange(endingPosition, diagramView, true);
+        this.revPoints.clear();
         startingPoint = null;
         endingPoint = null;
     }
@@ -72,8 +73,16 @@ public class MoveState implements State, IPublisher {
     private void handleChange(Point2D endingPosition, DiagramView diagramView, boolean release) {
         endingPoint = endingPosition;
         Point2D change = new Point2D.Double(endingPoint.getX() - startingPoint.getX(), endingPoint.getY() - startingPoint.getY());
-        ArrayList<DiagramElementPainter> changedPainters = this.changeElementCoordinates(change, diagramView);
 
+
+        ArrayList<DiagramElementPainter> changedPainters = this.changeElementCoordinates(change, diagramView);
+        if (revertBack && release) {
+            for (int i = 0; i < revPoints.size(); i++) {
+                if (changedPainters.get(i) instanceof InterClassPainter) {
+                    ((InterClassPainter) changedPainters.get(i)).getInterClass().setPosition(revPoints.get(i));
+                }
+            }
+        }
         notifySubscribers(new StateNotification(diagramView));
     }
 

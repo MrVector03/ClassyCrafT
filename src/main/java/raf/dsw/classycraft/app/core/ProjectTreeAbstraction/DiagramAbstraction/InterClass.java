@@ -30,6 +30,10 @@ public abstract class InterClass extends DiagramElement{
         return position;
     }
 
+    public void setPosition(Point2D position) {
+        this.position = position;
+    }
+
     public Dimension getSize() {
         return size;
     }
