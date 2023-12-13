@@ -1,8 +1,7 @@
-package raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters;
+package raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct;
 
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.abstractProduct.DiagramElement;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
 

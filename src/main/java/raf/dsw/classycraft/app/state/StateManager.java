@@ -51,6 +51,34 @@ public class StateManager {
         return moveState;
     }
 
+    public AddInterClassState getAddInterClassState() {
+        return addInterClassState;
+    }
+
+    public AddConnectionState getAddConnectionState() {
+        return addConnectionState;
+    }
+
+    public AddElementState getAddElementState() {
+        return addElementState;
+    }
+
+    public DeleteState getDeleteState() {
+        return deleteState;
+    }
+
+    public SelectionState getSelectionState() {
+        return selectionState;
+    }
+
+    public CopyInterClassState getCopyInterClassState() {
+        return copyInterClassState;
+    }
+
+    public EditState getEditState() {
+        return editState;
+    }
+
     public void setEditState() { this.currentState = this.editState; }
 
     public void setZoomInState() {

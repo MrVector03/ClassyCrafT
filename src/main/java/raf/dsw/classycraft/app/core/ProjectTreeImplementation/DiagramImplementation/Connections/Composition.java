@@ -2,8 +2,8 @@ package raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementa
 
 import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.Connection;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 
 public class Composition extends Connection {
     private String varName;
@@ -17,9 +17,9 @@ public class Composition extends Connection {
         this.cardTo = cardTo;
     }
 
-    public Composition(String name, InterClass from, InterClass to) {
-        super(name, from, to);
-    }
+    // public Composition(String name, InterClass from, InterClass to) {
+    //     super(name, from, to);
+    // }
 
     public void setVarName(String varName) {
         this.varName = varName;

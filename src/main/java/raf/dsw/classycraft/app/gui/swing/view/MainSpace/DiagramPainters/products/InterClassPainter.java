@@ -1,11 +1,11 @@
-package raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters;
+package raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products;
 
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.DiagramElement;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Enum;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Interface;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
 
 import java.awt.*;
 import java.awt.geom.Dimension2D;
@@ -37,6 +37,12 @@ public class InterClassPainter extends DiagramElementPainter {
         ((GeneralPath)shape).lineTo(interClassPos.getX(), interClassPos.getY() + interClassSize.getHeight());
 
         ((GeneralPath)shape).lineTo(interClassPos.getX(), interClassPos.getY());
+
+        ((GeneralPath)shape).lineTo(interClassPos.getX(), interClassPos.getY() + 20);
+
+        ((GeneralPath)shape).lineTo(interClassPos.getX() + interClassSize.getWidth(), interClassPos.getY() + 20);
+
+        ((GeneralPath)shape).lineTo(interClassPos.getX() + interClassSize.getWidth(), interClassPos.getY());
 
         ((GeneralPath)shape).closePath();
 

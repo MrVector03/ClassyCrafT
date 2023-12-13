@@ -138,3 +138,22 @@
 [WARNING][2023-12-09 04:07:17] USE_DIAGRAM_TOOLS_TO_DELETE_ELEMENTS
 [ERROR][2023-12-09 04:28:50] CLASS_NAME_CANNOT_BE_EMPTY
 [ERROR][2023-12-09 04:35:31] NODE_CANNOT_BE_DELETED
+[NOTIFICATION][2023-12-13 12:01:07] Format attributes as: public int attribute
+Format methods as: public int method()
+[NOTIFICATION][2023-12-13 12:01:31] Format attributes as: public int attribute
+Format methods as: public int method()
+[NOTIFICATION][2023-12-13 12:03:10] Format attributes as: public int attribute
+Format methods as: public int method()
+[NOTIFICATION][2023-12-13 12:03:28] Format attributes as: public int attribute
+Format methods as: public int method()
+[NOTIFICATION][2023-12-13 12:03:49] Format attributes as: public int attribute
+Format methods as: public int method()
+[NOTIFICATION][2023-12-13 12:04:54] Format attributes as: public int attribute
+Format methods as: public int method()
+[NOTIFICATION][2023-12-13 12:05:30] Format attributes as: public int attribute
+Format methods as: public int method()
+[NOTIFICATION][2023-12-13 12:05:49] Format attributes as: public int attribute
+Format methods as: public int method()
+[NOTIFICATION][2023-12-13 12:07:12] Format methods as: public int method()
+[NOTIFICATION][2023-12-13 12:07:25] Format methods as: public int method()
+[ERROR][2023-12-13 17:53:49] CLASS_NAME_CANNOT_BE_EMPTY

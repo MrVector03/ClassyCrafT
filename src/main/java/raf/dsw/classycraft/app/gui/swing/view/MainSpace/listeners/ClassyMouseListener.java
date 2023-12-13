@@ -21,21 +21,21 @@ public class ClassyMouseListener extends MouseAdapter {
     public void mouseClicked(MouseEvent e) {
         diagramView.getTabbedPane().getClassyPackage().getPackageView().getCurrentState()
                 .classyMouseClicked(fixPositionForZoom(e.getPoint()), diagramView);
-        diagramView.repaint();
+        // diagramView.repaint();
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         diagramView.getTabbedPane().getClassyPackage().getPackageView().getCurrentState()
                 .classyMousePressed(fixPositionForZoom(e.getPoint()), diagramView);
-        diagramView.repaint();
+        // diagramView.repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         diagramView.getTabbedPane().getClassyPackage().getPackageView().getCurrentState()
                 .classyMouseReleased(fixPositionForZoom(e.getPoint()), diagramView);
-        diagramView.repaint();
+        //diagramView.repaint();
     }
 
     @Override

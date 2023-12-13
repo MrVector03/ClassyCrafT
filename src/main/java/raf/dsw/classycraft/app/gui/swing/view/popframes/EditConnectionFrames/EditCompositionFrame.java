@@ -8,9 +8,8 @@ import java.awt.*;
 
 public class EditCompositionFrame extends JFrame {
     private JTextField nameTextField;
-    private JTextField cardFromTextField;
-    private JTextField cardToTextField;
     private JTextField varNameTextField;
+    private JComboBox cardCmb;
     public EditCompositionFrame() {
         JPanel jpanel = new JPanel();
         jpanel.setBorder(new EmptyBorder(10,20,10,20));
@@ -36,15 +35,9 @@ public class EditCompositionFrame extends JFrame {
         JLabel cardLabel0 = new JLabel("Cardinality:");
         cardLabel0.setAlignmentX((float)0.5);
 
-        JLabel cardLabel = new JLabel("...");
-        JPanel newPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        cardFromTextField = new JTextField();
-        cardFromTextField.setPreferredSize(new Dimension(15,30));
-        cardToTextField = new JTextField();
-        cardToTextField.setPreferredSize(new Dimension(15,30));
-        newPanel.add(cardFromTextField);
-        newPanel.add(cardLabel);
-        newPanel.add(cardToTextField);
+        String cardList[] = {"1...*", "0...1" };
+        cardCmb = new JComboBox(cardList);
+        cardCmb.setAlignmentX((float)0.5);
 
         nameTextField = new JTextField();
         nameTextField.setAlignmentX((float)0.5);
@@ -58,7 +51,7 @@ public class EditCompositionFrame extends JFrame {
         add(varNameLabel);
         add(varNameTextField);
         add(cardLabel0);
-        add(newPanel);
+        add(cardCmb);
         add(confirmButton);
 
         setLocationRelativeTo(null);
@@ -68,12 +61,8 @@ public class EditCompositionFrame extends JFrame {
         return nameTextField;
     }
 
-    public JTextField getCardFromTextField() {
-        return cardFromTextField;
-    }
-
-    public JTextField getCardToTextField() {
-        return cardToTextField;
+    public JComboBox getCardCmb() {
+        return cardCmb;
     }
 
     public JTextField getVarNameTextField() {

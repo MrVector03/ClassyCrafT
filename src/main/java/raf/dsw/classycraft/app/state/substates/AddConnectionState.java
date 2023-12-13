@@ -1,21 +1,26 @@
 package raf.dsw.classycraft.app.state.substates;
 
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.Observer.IPublisher;
+import raf.dsw.classycraft.app.core.Observer.ISubscriber;
+import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.TemporaryConnection;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.ConnectionPainter;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.DiagramElementPainter;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.InterClassPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.InterClassPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.TemporaryConnectionPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 import raf.dsw.classycraft.app.state.State;
 
-import java.awt.*;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AddConnectionState implements State {
+public class AddConnectionState implements State, IPublisher {
+
+    private List<ISubscriber> subscribers = new ArrayList<>();
+
     private InterClass from;
     private InterClass to;
 
@@ -31,6 +36,7 @@ public class AddConnectionState implements State {
                 return;
             }
         }
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @Override
@@ -50,6 +56,7 @@ public class AddConnectionState implements State {
 
         TemporaryConnectionPainter connectionPainter = new TemporaryConnectionPainter(temporaryConnection);
         diagramView.addDiagramElementPainter(connectionPainter);
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @Override
@@ -69,23 +76,10 @@ public class AddConnectionState implements State {
 
         MainFrame.getInstance().getChooseConnectionFrame().setVisible(true);
 
-        /*Connection connection = new Connection("Placeholder", from, to) {
-            @Override
-            public InterClass getFrom() {
-                return super.getFrom();
-            }
-
-            @Override
-            public InterClass getTo() {
-                return super.getTo();
-            }
-        };
-
-        ConnectionPainter connectionPainter = new ConnectionPainter(connection);
-        diagramView.addDiagramElementPainter(connectionPainter);*/
-
         from = null;
         to = null;
+
+        notifySubscribers(new StateNotification(diagramView));
     }
 
     @Override
@@ -93,4 +87,19 @@ public class AddConnectionState implements State {
 
     }
 
+    @Override
+    public void addSubscriber(ISubscriber subscriber) {
+        this.subscribers.add(subscriber);
+    }
+
+    @Override
+    public void removeSubscriber(ISubscriber subscriber) {
+        this.subscribers.remove(subscriber);
+    }
+
+    @Override
+    public void notifySubscribers(Object notification) {
+        for (ISubscriber subscriber : this.subscribers)
+            subscriber.update(notification);
+    }
 }

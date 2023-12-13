@@ -5,7 +5,7 @@ import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.Message;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.HeadlineSpace;
@@ -74,7 +74,7 @@ public class MainFrame extends JFrame implements ISubscriber {
         Dimension screenSize = kit.getScreenSize();
         int screenHeight = screenSize.height;
         int screenWidth = screenSize.width;
-        setSize(screenWidth / 2, screenHeight / 2);
+        setSize(screenWidth / 2, screenHeight / 2 + 50);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("ClassyCrafT");

@@ -1,14 +1,14 @@
-package raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction;
+package raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products;
 
 import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.abstractProduct.DiagramElement;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 
-public abstract class InterClass extends DiagramElement{
+public abstract class InterClass extends DiagramElement {
     private Access access;
     private Point2D position;
     private Dimension size;
@@ -28,6 +28,10 @@ public abstract class InterClass extends DiagramElement{
 
     public Point2D getPosition() {
         return position;
+    }
+
+    public void setPosition(Point2D position) {
+        this.position = position;
     }
 
     public Dimension getSize() {

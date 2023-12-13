@@ -15,8 +15,7 @@ public class CompositionChosenAction extends AbstractClassyAction {
     public void actionPerformed(ActionEvent e) {
         MainFrame.getInstance().getEditCompositionFrame().getNameTextField().setText("");
         MainFrame.getInstance().getEditCompositionFrame().getVarNameTextField().setText("");
-        MainFrame.getInstance().getEditCompositionFrame().getCardFromTextField().setText("");
-        MainFrame.getInstance().getEditCompositionFrame().getCardToTextField().setText("");
+        MainFrame.getInstance().getEditAggregationFrame().getCardCmb().setSelectedIndex(0);
 
         MainFrame.getInstance().getChooseConnectionFrame().setVisible(false);
         MainFrame.getInstance().getEditCompositionFrame().setVisible(true);

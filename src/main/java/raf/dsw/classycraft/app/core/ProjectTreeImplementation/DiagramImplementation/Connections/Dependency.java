@@ -2,8 +2,8 @@ package raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementa
 
 import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Connection;
-import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.Connection;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 
 public class Dependency extends Connection {
     private String type;

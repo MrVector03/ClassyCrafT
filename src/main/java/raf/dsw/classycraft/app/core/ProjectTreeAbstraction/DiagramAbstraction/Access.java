@@ -20,4 +20,14 @@ public enum Access {
     {
         return super.toString();
     }
+
+    public static Access fromString(String str)
+    {
+        for(Access acc : values()) {
+            if(str.equalsIgnoreCase(acc.toStringNames()))
+                return acc;
+        }
+
+        return null;
+    }
 }
