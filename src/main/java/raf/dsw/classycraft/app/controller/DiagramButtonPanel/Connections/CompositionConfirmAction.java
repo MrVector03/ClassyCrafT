@@ -21,8 +21,8 @@ public class CompositionConfirmAction extends AbstractClassyAction {
         String newConName = MainFrame.getInstance().getEditCompositionFrame().getNameTextField().getText();
         String newVarName = MainFrame.getInstance().getEditCompositionFrame().getVarNameTextField().getText();
 
-        char newCardFrom = MainFrame.getInstance().getEditCompositionFrame().getCardFromTextField().getText().charAt(0);
-        char newCardTo = MainFrame.getInstance().getEditCompositionFrame().getCardToTextField().getText().charAt(0);
+        char newCardFrom = ((String)MainFrame.getInstance().getEditCompositionFrame().getCardCmb().getSelectedItem()).charAt(0);
+        char newCardTo = ((String)MainFrame.getInstance().getEditCompositionFrame().getCardCmb().getSelectedItem()).charAt(4);
 
         InterClass newFrom = MainFrame.getInstance().getCurFrom();
         InterClass newTo = MainFrame.getInstance().getCurTo();

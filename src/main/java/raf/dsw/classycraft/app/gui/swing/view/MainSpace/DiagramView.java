@@ -336,24 +336,11 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
     }
 
     public void zoomIn() {
-        if(zoom < 3) {
-            zoom *= 1.1;
-            if(zoom > 3)
-                zoom = 3;
-        }
-
-        setPreferredSize(new Dimension((int)((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()*3*zoom), (int)((int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()*3*zoom)));
+        setZoom(zoom*1.1);
     }
 
     public void zoomOut() {
-        if(zoom > 0.3) {
-            zoom /= 1.1;
-
-            if(zoom < 0.3)
-                zoom = 0.3;
-        }
-
-        setPreferredSize(new Dimension((int)((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()*3*zoom), (int)((int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()*3*zoom)));
+        setZoom(zoom/1.1);
     }
 
 
@@ -370,6 +357,7 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
             this.zoom = zoom;
 
         setPreferredSize(new Dimension((int)((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()*3*zoom), (int)((int)Toolkit.getDefaultToolkit().getScreenSize().getHeight()*3*zoom)));
+        repaint();
     }
 
     public Point2D getZoomPoint() {

@@ -15,8 +15,7 @@ public class AggregrationChosenAction extends AbstractClassyAction {
     public void actionPerformed(ActionEvent e) {
         MainFrame.getInstance().getEditAggregationFrame().getNameTextField().setText("");
         MainFrame.getInstance().getEditAggregationFrame().getVarNameTextField().setText("");
-        MainFrame.getInstance().getEditAggregationFrame().getCardFromTextField().setText("");
-        MainFrame.getInstance().getEditAggregationFrame().getCardToTextField().setText("");
+        MainFrame.getInstance().getEditAggregationFrame().getCardCmb().setSelectedIndex(0);
 
         MainFrame.getInstance().getChooseConnectionFrame().setVisible(false);
         MainFrame.getInstance().getEditAggregationFrame().setVisible(true);

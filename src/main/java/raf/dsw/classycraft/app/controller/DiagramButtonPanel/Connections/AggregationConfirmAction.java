@@ -21,8 +21,8 @@ public class AggregationConfirmAction extends AbstractClassyAction {
         String newConName = MainFrame.getInstance().getEditAggregationFrame().getNameTextField().getText();
         String newVarName = MainFrame.getInstance().getEditAggregationFrame().getVarNameTextField().getText();
 
-        char newCardFrom = MainFrame.getInstance().getEditAggregationFrame().getCardFromTextField().getText().charAt(0);
-        char newCardTo = MainFrame.getInstance().getEditAggregationFrame().getCardToTextField().getText().charAt(0);
+        char newCardFrom = ((String)MainFrame.getInstance().getEditAggregationFrame().getCardCmb().getSelectedItem()).charAt(0);
+        char newCardTo = ((String)MainFrame.getInstance().getEditAggregationFrame().getCardCmb().getSelectedItem()).charAt(4);
 
         InterClass newFrom = MainFrame.getInstance().getCurFrom();
         InterClass newTo = MainFrame.getInstance().getCurTo();

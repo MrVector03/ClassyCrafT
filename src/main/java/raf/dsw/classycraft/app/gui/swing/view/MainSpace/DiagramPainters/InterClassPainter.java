@@ -38,6 +38,12 @@ public class InterClassPainter extends DiagramElementPainter {
 
         ((GeneralPath)shape).lineTo(interClassPos.getX(), interClassPos.getY());
 
+        ((GeneralPath)shape).lineTo(interClassPos.getX(), interClassPos.getY() + 20);
+
+        ((GeneralPath)shape).lineTo(interClassPos.getX() + interClassSize.getWidth(), interClassPos.getY() + 20);
+
+        ((GeneralPath)shape).lineTo(interClassPos.getX() + interClassSize.getWidth(), interClassPos.getY());
+
         ((GeneralPath)shape).closePath();
 
         g.setColor(super.diagramElement.getColor());

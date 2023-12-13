@@ -55,6 +55,11 @@ public class InterfaceEditConfirmAction extends AbstractClassyAction {
 
             ClassContent newClassContent;
 
+            if(Access.fromString(arr[0]) == null || arr.length < 3) {
+                ApplicationFramework.getInstance().getMessageGenerator().generateMessage("Format methods as: public int method()", MessageType.NOTIFICATION);
+                return;
+            }
+
             if(arr[arr.length - 1].charAt(arr[arr.length - 1].length() - 1) == ')') {
                 String arr2[] = arr[2].split("\\(");
                 newClassContent = new Method(Access.valueOf(arr[0].toUpperCase()), arr[1], arr2[0]);

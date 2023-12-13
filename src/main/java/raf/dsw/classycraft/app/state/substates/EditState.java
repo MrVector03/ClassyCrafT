@@ -130,8 +130,7 @@ public class EditState implements State, IPublisher {
 
             eaf.getNameTextField().setText(aggregationToEdit.getName());
             eaf.getVarNameTextField().setText(aggregationToEdit.getVarName());
-            eaf.getCardFromTextField().setText("" + aggregationToEdit.getCardFrom());
-            eaf.getCardToTextField().setText("" + aggregationToEdit.getCardTo());
+            eaf.getCardCmb().setSelectedItem(aggregationToEdit.getCardFrom() + "..." + aggregationToEdit.getCardTo());
 
             MainFrame.getInstance().getPackageView().setCurEditElement(aggregationToEdit);
 
@@ -144,8 +143,7 @@ public class EditState implements State, IPublisher {
 
             ecf.getNameTextField().setText(compositionToEdit.getName());
             ecf.getVarNameTextField().setText(compositionToEdit.getVarName());
-            ecf.getCardFromTextField().setText("" + compositionToEdit.getCardFrom());
-            ecf.getCardToTextField().setText("" + compositionToEdit.getCardTo());
+            ecf.getCardCmb().setSelectedItem(compositionToEdit.getCardFrom() + "..." + compositionToEdit.getCardTo());
 
             MainFrame.getInstance().getPackageView().setCurEditElement(compositionToEdit);
 
