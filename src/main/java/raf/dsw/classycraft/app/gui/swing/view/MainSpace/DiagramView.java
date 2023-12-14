@@ -115,7 +115,7 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
 
         // this.lastValidPoints = diagramElementPainters;
 
-        repaint();
+        // repaint();
     }
 
     public void popTemporaryConnectionPainter() {

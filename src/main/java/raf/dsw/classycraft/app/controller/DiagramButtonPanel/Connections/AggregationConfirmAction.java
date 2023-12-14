@@ -1,6 +1,7 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections;
 
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
+import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyAbstractFactory;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyManufacturer;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ConnectionType;
@@ -9,9 +10,12 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementat
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
+import raf.dsw.classycraft.app.state.substates.AddConnectionState;
+import raf.dsw.classycraft.app.state.substates.AddInterClassState;
 import raf.dsw.classycraft.app.state.substates.EditState;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
 
 public class AggregationConfirmAction extends AbstractClassyAction {
     public AggregationConfirmAction() {
@@ -41,11 +45,15 @@ public class AggregationConfirmAction extends AbstractClassyAction {
             curEditAggregation.setVarName(newVarName);
             curEditAggregation.setCardFrom(newCardFrom);
             curEditAggregation.setCardTo(newCardTo);
+
+            ((EditState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
         } else {
             ClassyAbstractFactory manufacturer = new ClassyManufacturer();
             Aggregation newAggregation = (Aggregation) manufacturer.createConnection(ConnectionType.AGGREGATION,
                     newConName, newFrom, newTo, newVarName, newCardFrom, newCardTo, null);
             MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newAggregation));
+            ((AddConnectionState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
+
         }
     }
 }
