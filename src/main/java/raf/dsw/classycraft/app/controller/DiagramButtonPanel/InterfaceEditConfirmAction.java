@@ -3,6 +3,7 @@ package raf.dsw.classycraft.app.controller.DiagramButtonPanel;
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
+import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyAbstractFactory;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyManufacturer;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.InterClassType;
@@ -14,6 +15,7 @@ import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.InterClassPainter;
+import raf.dsw.classycraft.app.state.substates.AddInterClassState;
 import raf.dsw.classycraft.app.state.substates.EditState;
 
 import java.awt.*;
@@ -85,6 +87,9 @@ public class InterfaceEditConfirmAction extends AbstractClassyAction {
             curEditInterface.setName(newICName);
             curEditInterface.setMethods(methods);
             curEditInterface.setSize(interClassDimension);
+
+            ((EditState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
+
         }
         else {
             ClassyAbstractFactory manufacturer = new ClassyManufacturer();

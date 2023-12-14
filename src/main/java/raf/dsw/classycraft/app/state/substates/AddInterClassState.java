@@ -27,7 +27,7 @@ public class AddInterClassState implements State, IPublisher {
         MainFrame.getInstance().setCurDiagramView(diagramView);
 
         MainFrame.getInstance().getChooseInterClassFrame().setVisible(true);
-        //System.out.println("notifying");
+
         notifySubscribers(new StateNotification(diagramView));
     }
 
