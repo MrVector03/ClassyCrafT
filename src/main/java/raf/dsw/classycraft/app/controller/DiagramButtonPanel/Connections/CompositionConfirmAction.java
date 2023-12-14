@@ -51,8 +51,6 @@ public class CompositionConfirmAction extends AbstractClassyAction {
             Composition newComposition = (Composition) manufacturer.createConnection(ConnectionType.COMPOSITION,
                     newConName, newFrom, newTo, newVarName, newCardFrom, newCardTo, null);
             MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newComposition));
-            ((AddConnectionState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
-
         }
     }
 }

@@ -43,9 +43,6 @@ public class GeneralizationConfirmAction extends AbstractClassyAction {
             Generalization newGeneralization = (Generalization) manufacturer.createConnection(ConnectionType.GENERALIZATION,
                     newConName, newFrom, newTo, null, ' ', ' ', null) ;
             MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newGeneralization));
-
-            ((AddConnectionState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
-
         }
     }
 }

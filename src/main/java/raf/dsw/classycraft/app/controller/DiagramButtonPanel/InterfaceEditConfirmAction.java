@@ -99,8 +99,6 @@ public class InterfaceEditConfirmAction extends AbstractClassyAction {
                     null, false, null, methods);
 
             MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newInterface));
-            ((AddInterClassState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
-
         }
         System.out.println("finished painting interface");
     }

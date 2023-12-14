@@ -103,7 +103,6 @@ public class ClassEditConfirmAction extends AbstractClassyAction {
                     attributes, isAbs, null, null);
 
             MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newClass));
-            ((AddInterClassState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
         }
         System.out.println("finished painting class");
     }

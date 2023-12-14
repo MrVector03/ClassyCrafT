@@ -115,7 +115,7 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
 
         // this.lastValidPoints = diagramElementPainters;
 
-        // repaint();
+        repaint();
     }
 
     public void popTemporaryConnectionPainter() {
@@ -257,66 +257,6 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
         }
         // repaint();
     }
-
-
-    // public void markSelectedElements() {
-    //     List<ConnectionPainter> connections = new ArrayList<>();
-    //     for (DiagramElementPainter dep : this.diagramElementPainters)
-    //         if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
-    //     List<DiagramElement> selected = new ArrayList<>();
-//
-    //     for (DiagramElementPainter dep : diagramElementPainters) {
-    //         if (dep instanceof TemporarySelectionPainter) continue;
-    //         if (selectedElements.contains(dep)) {
-    //             if (dep instanceof InterClassPainter) {
-    //                 selected.add(((InterClassPainter) dep).getInterClass());
-    //                 ((InterClassPainter) dep).getInterClass().setStroke(new BasicStroke(3.0f));
-    //                 ((InterClassPainter) dep).getInterClass().setColor(Color.BLUE);
-    //             } else {
-    //                 selected.add(((ConnectionPainter)dep).getConnection());
-    //                 ((ConnectionPainter) dep).getConnection().setColor(Color.BLUE);
-    //                 ((ConnectionPainter) dep).getConnection().setStroke(new BasicStroke(3.0f));
-    //             }
-    //         } else {
-    //             selected.add(null);
-    //         }
-    //         selectInConnections(connections, selected);
-    //         repaint();
-    //     }
-    // }
-
-    // private void selectInConnections(List<ConnectionPainter> connections, List<DiagramElement> selected) {
-//
-    //     for (ConnectionPainter cp : connections) {
-//
-    //         int id = diagramElementPainters.indexOf(cp);
-//
-    //         InterClass from = cp.getConnection().getFrom();
-    //         InterClass to = cp.getConnection().getTo();
-    //         if (from == to) System.out.println("OLD SAME");
-//
-//
-    //         if (selected.contains(from) && selected.contains(to)) {
-    //             if (selected.contains(from) && diagramElementPainters.get(selected.indexOf(from)) instanceof InterClassPainter) {
-    //                 from = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(from))).getInterClass());
-    //             }
-    //             if (selected.contains(to) && diagramElementPainters.get(selected.indexOf(to)) instanceof InterClassPainter) {
-    //                 to = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(to))).getInterClass());
-    //                 cp.getConnection().setFrom(from);
-    //                 cp.getConnection().setTo(to);
-    //             } else if (selected.contains(from)) {
-    //                 if (selected.contains(from) && diagramElementPainters.get(selected.indexOf(from)) instanceof InterClassPainter) {
-    //                     from = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(from))).getInterClass());
-    //                 }
-    //                 cp.getConnection().setFrom(from);
-    //             } else {
-    //                 if (selected.contains(to) && diagramElementPainters.get(selected.indexOf(to)) instanceof InterClassPainter)
-    //                     to = (((InterClassPainter) diagramElementPainters.get(selected.indexOf(to))).getInterClass());
-    //                 cp.getConnection().setTo(to);
-    //             }
-    //         }
-    //     }
-    // }
 
 
     private void revertAllSelectedElements() {

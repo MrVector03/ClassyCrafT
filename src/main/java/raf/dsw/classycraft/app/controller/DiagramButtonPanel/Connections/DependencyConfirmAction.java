@@ -47,8 +47,6 @@ public class DependencyConfirmAction extends AbstractClassyAction {
             Dependency newDependency = (Dependency) manufacturer.createConnection(ConnectionType.DEPENDENCY,
                     newConName, newFrom, newTo, null, ' ', ' ', newConType);
             MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newDependency));
-            ((AddConnectionState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
-
         }
     }
 }

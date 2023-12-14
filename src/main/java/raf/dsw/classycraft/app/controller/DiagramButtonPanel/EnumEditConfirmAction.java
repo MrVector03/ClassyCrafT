@@ -83,8 +83,6 @@ public class EnumEditConfirmAction extends AbstractClassyAction {
                     interClassDimension, null, false, values, null);
 
             MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newEnum));
-            ((AddInterClassState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
-
         }
         System.out.println("finished painting interface");
     }

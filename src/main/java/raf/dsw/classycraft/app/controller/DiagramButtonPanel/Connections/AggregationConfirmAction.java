@@ -52,8 +52,6 @@ public class AggregationConfirmAction extends AbstractClassyAction {
             Aggregation newAggregation = (Aggregation) manufacturer.createConnection(ConnectionType.AGGREGATION,
                     newConName, newFrom, newTo, newVarName, newCardFrom, newCardTo, null);
             MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newAggregation));
-            ((AddConnectionState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
-
         }
     }
 }
