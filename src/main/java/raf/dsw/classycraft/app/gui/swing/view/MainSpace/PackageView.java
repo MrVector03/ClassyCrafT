@@ -238,4 +238,8 @@ public class PackageView extends JPanel implements ISubscriber {
     public Package getFocusedPackage() {
         return focusedPackage;
     }
+
+    public StateManager getStateManager() {
+        return stateManager;
+    }
 }

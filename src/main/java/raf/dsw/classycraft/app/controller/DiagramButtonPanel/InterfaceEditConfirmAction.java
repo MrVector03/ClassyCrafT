@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel;
 
+import raf.dsw.classycraft.app.command.commands.AddInterfaceCommand;
+import raf.dsw.classycraft.app.command.commands.EditInterfaceCommand;
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
@@ -82,24 +84,14 @@ public class InterfaceEditConfirmAction extends AbstractClassyAction {
 
         if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
             Interface curEditInterface = ((Interface)MainFrame.getInstance().getPackageView().getCurEditElement());
-
-            curEditInterface.setAccess(newICAccess);
-            curEditInterface.setName(newICName);
-            curEditInterface.setMethods(methods);
-            curEditInterface.setSize(interClassDimension);
+            EditInterfaceCommand editInterfaceCommand = new EditInterfaceCommand(curEditInterface.getName(), curEditInterface.getAccess(), curEditInterface.getMethods(), curEditInterface.getSize(), newICName, newICAccess, methods, interClassDimension, MainFrame.getInstance().getCurDiagramView(), curEditInterface);
+            ApplicationFramework.getInstance().getCommandManager().addCommand(editInterfaceCommand);
 
             ((EditState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
-
         }
         else {
-            ClassyAbstractFactory manufacturer = new ClassyManufacturer();
-            ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
-            Interface newInterface = (Interface) manufacturer.createInterClass(InterClassType.INTERFACE, newICName, newICAccess,
-                    new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()), interClassDimension,
-                    null, false, null, methods);
-
-            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newInterface));
+            AddInterfaceCommand addInterfaceCommand = new AddInterfaceCommand(newICName, newICAccess, methods, interClassDimension, new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()), MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(addInterfaceCommand);
         }
-        System.out.println("finished painting interface");
     }
 }

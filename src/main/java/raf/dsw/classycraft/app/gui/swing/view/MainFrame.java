@@ -220,4 +220,5 @@ public class MainFrame extends JFrame implements ISubscriber {
     public EditDependencyFrame getEditDependencyFrame() {
         return editDependencyFrame;
     }
+
 }

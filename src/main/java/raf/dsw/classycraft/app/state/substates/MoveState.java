@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.state.substates;
 
+import raf.dsw.classycraft.app.command.commands.MoveInterClassCommand;
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
@@ -49,6 +51,7 @@ public class MoveState implements State, IPublisher {
     @Override
     public void classyMouseReleased(Point2D endingPosition, DiagramView diagramView) {
         handleChange(endingPosition, diagramView, true);
+
         this.revPoints.clear();
         startingPoint = null;
         endingPoint = null;
@@ -68,7 +71,7 @@ public class MoveState implements State, IPublisher {
         return newPoints;
     }
 
-    private void handleChange(Point2D endingPosition, DiagramView diagramView, boolean release) {
+    public Point2D handleChange(Point2D endingPosition, DiagramView diagramView, boolean release) {
         endingPoint = endingPosition;
         Point2D change = new Point2D.Double(endingPoint.getX() - startingPoint.getX(), endingPoint.getY() - startingPoint.getY());
 
@@ -82,6 +85,8 @@ public class MoveState implements State, IPublisher {
             }
         }
         notifySubscribers(new StateNotification(diagramView));
+
+        return change;
     }
 
     @Override
@@ -108,6 +113,7 @@ public class MoveState implements State, IPublisher {
             if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
         List<InterClass> copyForFromTo = new ArrayList<>();
         ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
+
         if (selectedPainters.isEmpty()) {
             for (DiagramElementPainter dep : changedPainters) {
                 if (dep instanceof ConnectionPainter) {
@@ -115,6 +121,7 @@ public class MoveState implements State, IPublisher {
                     continue;
                 }
                 copyForFromTo.add(((InterClassPainter) dep).getInterClass());
+
                 if (dep instanceof InterClassPainter) {
                     int id = changedPainters.indexOf(dep);
                     InterClassPainter test = (InterClassPainter) changedPainters.get(id);
