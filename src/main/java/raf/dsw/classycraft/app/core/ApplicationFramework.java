@@ -1,5 +1,6 @@
 package raf.dsw.classycraft.app.core;
 
+import raf.dsw.classycraft.app.command.CommandManager;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageGenerator;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyRepositoryImplementation;
 import raf.dsw.classycraft.app.core.logger.ConsoleLogger;
@@ -15,6 +16,7 @@ public class ApplicationFramework {
 
     private ConsoleLogger consoleLogger;
     private FileLogger fileLogger;
+    private CommandManager commandManager;
 
     //buduca polja za model celog projekta
 
@@ -29,6 +31,7 @@ public class ApplicationFramework {
         messageGenerator.addSubscriber(consoleLogger);
         messageGenerator.addSubscriber(fileLogger);
 
+        commandManager = new CommandManager();
     }
 
     public void initialize(){
@@ -49,5 +52,9 @@ public class ApplicationFramework {
 
     public MessageGenerator getMessageGenerator() {
         return messageGenerator;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 }

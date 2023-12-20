@@ -25,7 +25,7 @@ public class DeleteState implements State, IPublisher {
     public void classyMouseClicked(Point2D position, DiagramView diagramView) {
         ArrayList<DiagramElementPainter> toDelete = new ArrayList<DiagramElementPainter>();
         int a = 5;
-        Rectangle2D rectangle = new Rectangle2D.Double(position.getX()-5, position.getY()-5, a*2, a*2);
+        Rectangle2D rectangle = new Rectangle2D.Double(position.getX()-a, position.getY()-a, a*2, a*2);
 
         for(DiagramElementPainter diagramElementPainter : diagramView.getDiagramElementPainters()) {
             if (diagramElementPainter.elementAt(position))

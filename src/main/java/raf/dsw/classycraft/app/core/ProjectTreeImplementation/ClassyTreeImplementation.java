@@ -120,4 +120,8 @@ public class ClassyTreeImplementation implements ClassyTree {
     public void setChosenNodeIndex(int chosenNodeIndex) {
         this.chosenNodeIndex = chosenNodeIndex;
     }
+
+    public ClassyTreeView getClassyTreeView() {
+        return classyTreeView;
+    }
 }
