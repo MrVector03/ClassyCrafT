@@ -27,7 +27,14 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
     private final TabbedPane tabbedPane;
     private final Diagram diagram;
     private String name;
-    private ArrayList<DiagramElementPainter> diagramElementPainters = new ArrayList<DiagramElementPainter>();
+    private ArrayList<DiagramElementPainter> diagramElementPainters = new ArrayList<DiagramElementPainter>() {
+        @Override
+        public boolean remove(Object o) {
+            boolean p = super.remove(o);
+            repaint();
+            return p;
+        }
+    };
     private final ArrayList<DiagramElementPainter> selectedElements = new ArrayList<>() {
         @Override
         public void clear() {
