@@ -16,13 +16,18 @@ public class HeadlineSpace extends JPanel {
 
         JButton undoButton = new JButton();
         undoButton.setAction(MainFrame.getInstance().getActionManager().getUndoAction());
+
         JButton redoButton = new JButton();
         redoButton.setAction(MainFrame.getInstance().getActionManager().getRedoAction());
+
+        JButton exportImageButton = new JButton();
+        exportImageButton.setAction(MainFrame.getInstance().getActionManager().getExportImageAction());
 
         add(undoButton);
         add(redoButton);
         add(projectLabel);
         add(authorLabel);
+        add(exportImageButton);
     }
 
     public void setup(String projectName, String author) {

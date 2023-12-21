@@ -45,6 +45,7 @@ public class ActionManager {
     private GeneralizationConfirmAction generalizationConfirmAction;
     private UndoAction undoAction;
     private RedoAction redoAction;
+    private ExportImageAction exportImageAction;
 
     public ActionManager() {
         aboutUsAction = new AboutUsAction();
@@ -89,6 +90,8 @@ public class ActionManager {
 
         undoAction = new UndoAction();
         redoAction = new RedoAction();
+
+        exportImageAction = new ExportImageAction();
     }
 
     public AboutUsAction getAboutUsAction() {
@@ -229,5 +232,9 @@ public class ActionManager {
 
     public RedoAction getRedoAction() {
         return redoAction;
+    }
+
+    public ExportImageAction getExportImageAction() {
+        return exportImageAction;
     }
 }
