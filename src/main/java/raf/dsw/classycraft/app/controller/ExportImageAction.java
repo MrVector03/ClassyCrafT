@@ -1,6 +1,5 @@
 package raf.dsw.classycraft.app.controller;
 
-import javafx.stage.Screen;
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageGenerator;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
