@@ -6,6 +6,7 @@ import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.Connection;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
@@ -18,6 +19,7 @@ import raf.dsw.classycraft.app.state.State;
 import java.awt.*;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -232,7 +234,12 @@ public class MoveState implements State, IPublisher {
                     public void setSize(Dimension size) {
                         super.setSize(size);
                     }
-                });
+
+                            @Override
+                            public void convertToCode(FileWriter fileWriter, ArrayList<Connection> connections) {
+
+                            }
+                        });
 
                 for (int i = 0; i < oldPainters.size(); i++) {
                     if (i == avoidIndex) continue;

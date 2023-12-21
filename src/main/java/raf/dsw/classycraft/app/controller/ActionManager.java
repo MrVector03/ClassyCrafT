@@ -4,7 +4,6 @@ import raf.dsw.classycraft.app.controller.CommandActions.RedoAction;
 import raf.dsw.classycraft.app.controller.CommandActions.UndoAction;
 import raf.dsw.classycraft.app.controller.DiagramButtonPanel.*;
 import raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections.*;
-import raf.dsw.classycraft.app.controller.SerializerActions.SaveProjectAction;
 import raf.dsw.classycraft.app.controller.stateActions.*;
 import raf.dsw.classycraft.app.controller.tree.*;
 
@@ -47,7 +46,7 @@ public class ActionManager {
     private UndoAction undoAction;
     private RedoAction redoAction;
     private ExportImageAction exportImageAction;
-    private SaveProjectAction saveProjectAction;
+    private ExportJavaCodeAction exportJavaCodeAction;
 
     public ActionManager() {
         aboutUsAction = new AboutUsAction();
@@ -94,8 +93,7 @@ public class ActionManager {
         redoAction = new RedoAction();
 
         exportImageAction = new ExportImageAction();
-        saveProjectAction = new SaveProjectAction();
-
+        exportJavaCodeAction = new ExportJavaCodeAction();
     }
 
     public AboutUsAction getAboutUsAction() {
@@ -242,7 +240,7 @@ public class ActionManager {
         return exportImageAction;
     }
 
-    public SaveProjectAction getSaveProjectAction() {
-        return saveProjectAction;
+    public ExportJavaCodeAction getExportJavaCodeAction() {
+        return exportJavaCodeAction;
     }
 }
