@@ -5,6 +5,6 @@ import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 
 import java.io.IOException;
 
-public interface Logger extends ISubscriber {
+public interface Logger extends ISubscriber{
     void log(Message message) throws IOException;
 }
