@@ -1,6 +1,9 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections;
 
+import raf.dsw.classycraft.app.command.commands.connections.AddGeneralizationCommand;
+import raf.dsw.classycraft.app.command.commands.connections.EditGeneralizationCommand;
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyAbstractFactory;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyManufacturer;
@@ -29,20 +32,18 @@ public class GeneralizationConfirmAction extends AbstractClassyAction {
 
         MainFrame.getInstance().getEditGeneralizationFrame().setVisible(false);
 
-        ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
+
 
         if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
             Generalization curEditGeneralization = ((Generalization)MainFrame.getInstance().getPackageView().getCurEditElement());
-
-            curEditGeneralization.setName(newConName);
+            EditGeneralizationCommand editGeneralizationCommand = new EditGeneralizationCommand(curEditGeneralization.getName(), newConName, curEditGeneralization, MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(editGeneralizationCommand);
 
             ((EditState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
         }
         else {
-            ClassyAbstractFactory manufacturer = new ClassyManufacturer();
-            Generalization newGeneralization = (Generalization) manufacturer.createConnection(ConnectionType.GENERALIZATION,
-                    newConName, newFrom, newTo, null, ' ', ' ', null) ;
-            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newGeneralization));
+            AddGeneralizationCommand addGeneralizationCommand = new AddGeneralizationCommand(newConName, newFrom, newTo, MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(addGeneralizationCommand);
         }
     }
 }
