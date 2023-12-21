@@ -1,5 +1,6 @@
 package raf.dsw.classycraft.app.state.substates;
 
+import raf.dsw.classycraft.app.command.commands.CopyCommand;
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
@@ -44,8 +45,10 @@ public class CopyInterClassState implements State, IPublisher {
             return;
         }
 
-        if(toCopy.get(0).getDiagramElement() instanceof InterClass)
-            copyPaint(toCopy.get(0), diagramView);
+        if(toCopy.get(0).getDiagramElement() instanceof InterClass) {
+            CopyCommand copyCommand = new CopyCommand((InterClassPainter)toCopy.get(0), diagramView);
+            ApplicationFramework.getInstance().getCommandManager().addCommand(copyCommand);
+        }
 
         notifySubscribers(new StateNotification(diagramView));
     }
@@ -67,42 +70,6 @@ public class CopyInterClassState implements State, IPublisher {
     @Override
     public void classyMouseWheelMoved(Point2D position, DiagramView diagramView, MouseWheelEvent e) {
 
-    }
-
-    private void copyPaint(DiagramElementPainter elementPainter, DiagramView diagramView) {
-        InterClass tmpInterClass = ((InterClassPainter) elementPainter).getInterClass();
-        Point newPosition = new Point();
-
-        newPosition.setLocation(tmpInterClass.getPosition().getX() + tmpInterClass.getSize().getWidth(),
-                tmpInterClass.getPosition().getY() + tmpInterClass.getSize().getHeight());
-
-        InterClassPainter copyElement;
-
-        ClassyAbstractFactory manufacturer = new ClassyManufacturer();
-        ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
-
-        if(tmpInterClass instanceof Class) {
-
-            Class classCopy = (Class) manufacturer.createInterClass(InterClassType.CLASS, tmpInterClass.getName(), tmpInterClass.getAccess(), newPosition,
-                    tmpInterClass.getSize(), ((Class) tmpInterClass).getClassContents(), ((Class) tmpInterClass).isAbstract(), null, null);
-
-            copyElement = (InterClassPainter) painterManufacturer.createPainter(classCopy);
-        }
-        else {
-            if (tmpInterClass instanceof Enum) {
-                Enum enumCopy = (Enum) manufacturer.createInterClass(InterClassType.ENUM, tmpInterClass.getName(), tmpInterClass.getAccess(),
-                        tmpInterClass.getPosition(),
-                        tmpInterClass.getSize(), null, false, ((Enum) tmpInterClass).getValues(), null);
-
-                copyElement = (InterClassPainter) painterManufacturer.createPainter(enumCopy);
-            } else {
-                Interface interfaceCopy = (Interface) manufacturer.createInterClass(InterClassType.INTERFACE, tmpInterClass.getName(), tmpInterClass.getAccess(),
-                        newPosition, tmpInterClass.getSize(), null, false, null, ((Interface) tmpInterClass).getMethods());
-
-                copyElement = (InterClassPainter) painterManufacturer.createPainter(interfaceCopy);
-            }
-        }
-        diagramView.addDiagramElementPainter(copyElement);
     }
 
     @Override

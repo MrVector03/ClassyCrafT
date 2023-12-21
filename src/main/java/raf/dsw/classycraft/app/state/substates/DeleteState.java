@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.state.substates;
 
+import raf.dsw.classycraft.app.command.commands.DeleteCommand;
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
@@ -34,16 +36,8 @@ public class DeleteState implements State, IPublisher {
                 toDelete.add(diagramElementPainter);
         }
 
-        for(DiagramElementPainter dep : toDelete)
-            if(dep instanceof InterClassPainter)
-                diagramView.testConnections(((InterClassPainter) dep).getInterClass());
-
-        diagramView.getDiagramElementPainters().removeAll(toDelete);
-
-        for(DiagramElementPainter dep : toDelete) {
-            diagramView.getDiagram().deleteChild(dep.getDiagramElement());
-            ((ClassyTreeImplementation) MainFrame.getInstance().getClassyTree()).removeNode(dep.getDiagramElement());
-        }
+        DeleteCommand deleteCommand = new DeleteCommand(toDelete, diagramView);
+        ApplicationFramework.getInstance().getCommandManager().addCommand(deleteCommand);
 
         notifySubscribers(new StateNotification(diagramView));
     }
