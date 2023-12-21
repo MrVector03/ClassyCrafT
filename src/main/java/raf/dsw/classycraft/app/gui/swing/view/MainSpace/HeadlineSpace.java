@@ -2,6 +2,7 @@ package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
+import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,9 +12,15 @@ public class HeadlineSpace extends JPanel {
     private JLabel authorLabel = new JLabel(" ");
 
     public HeadlineSpace() {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        projectLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        authorLabel.setAlignmentX(LEFT_ALIGNMENT);
+        setLayout(new FlowLayout(1,20, 0));
+
+        JButton undoButton = new JButton();
+        undoButton.setAction(MainFrame.getInstance().getActionManager().getUndoAction());
+        JButton redoButton = new JButton();
+        redoButton.setAction(MainFrame.getInstance().getActionManager().getRedoAction());
+
+        add(undoButton);
+        add(redoButton);
         add(projectLabel);
         add(authorLabel);
     }

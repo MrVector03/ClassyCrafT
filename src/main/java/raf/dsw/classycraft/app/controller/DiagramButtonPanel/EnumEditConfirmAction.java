@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel;
 
+import raf.dsw.classycraft.app.command.commands.AddEnumCommand;
+import raf.dsw.classycraft.app.command.commands.EditEnumCommand;
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
@@ -66,24 +68,14 @@ public class EnumEditConfirmAction extends AbstractClassyAction {
 
         if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
             Enum curEditEnum = ((Enum)MainFrame.getInstance().getPackageView().getCurEditElement());
-
-            curEditEnum.setAccess(newICAccess);
-            curEditEnum.setName(newICName);
-            curEditEnum.setValues(values);
-            curEditEnum.setSize(interClassDimension);
+            EditEnumCommand editEnumCommand = new EditEnumCommand(curEditEnum.getName(), curEditEnum.getAccess(), curEditEnum.getSize(), curEditEnum.getValues(), curEditEnum.getName(), newICAccess, interClassDimension, values,MainFrame.getInstance().getCurDiagramView(), curEditEnum);
+            ApplicationFramework.getInstance().getCommandManager().addCommand(editEnumCommand);
 
             ((EditState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
-
         }
         else {
-            ClassyAbstractFactory manufacturer = new ClassyManufacturer();
-            ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
-            Enum newEnum = (Enum) manufacturer.createInterClass(InterClassType.ENUM, newICName, newICAccess,
-                    new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()),
-                    interClassDimension, null, false, values, null);
-
-            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newEnum));
+            AddEnumCommand addEnumCommand = new AddEnumCommand(newICName, newICAccess, interClassDimension, values, MainFrame.getInstance().getCurMousePos() ,MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(addEnumCommand);
         }
-        System.out.println("finished painting interface");
     }
 }

@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.controller;
 
+import raf.dsw.classycraft.app.controller.CommandActions.RedoAction;
+import raf.dsw.classycraft.app.controller.CommandActions.UndoAction;
 import raf.dsw.classycraft.app.controller.DiagramButtonPanel.*;
 import raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections.*;
 import raf.dsw.classycraft.app.controller.stateActions.*;
@@ -41,6 +43,8 @@ public class ActionManager {
     private CompositionConfirmAction compositionConfirmAction;
     private DependencyConfirmAction dependencyConfirmAction;
     private GeneralizationConfirmAction generalizationConfirmAction;
+    private UndoAction undoAction;
+    private RedoAction redoAction;
 
     public ActionManager() {
         aboutUsAction = new AboutUsAction();
@@ -82,6 +86,9 @@ public class ActionManager {
         compositionConfirmAction = new CompositionConfirmAction();
         dependencyConfirmAction = new DependencyConfirmAction();
         generalizationConfirmAction = new GeneralizationConfirmAction();
+
+        undoAction = new UndoAction();
+        redoAction = new RedoAction();
     }
 
     public AboutUsAction getAboutUsAction() {
@@ -214,5 +221,13 @@ public class ActionManager {
 
     public ZoomToFitAction getZoomToFitAction() {
         return zoomToFitAction;
+    }
+
+    public UndoAction getUndoAction() {
+        return undoAction;
+    }
+
+    public RedoAction getRedoAction() {
+        return redoAction;
     }
 }

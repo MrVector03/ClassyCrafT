@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 
+import raf.dsw.classycraft.app.command.commands.DeleteCommand;
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
@@ -27,7 +29,14 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
     private final TabbedPane tabbedPane;
     private final Diagram diagram;
     private String name;
-    private ArrayList<DiagramElementPainter> diagramElementPainters = new ArrayList<DiagramElementPainter>();
+    private ArrayList<DiagramElementPainter> diagramElementPainters = new ArrayList<DiagramElementPainter>() {
+        @Override
+        public boolean remove(Object o) {
+            boolean p = super.remove(o);
+            repaint();
+            return p;
+        }
+    };
     private final ArrayList<DiagramElementPainter> selectedElements = new ArrayList<>() {
         @Override
         public void clear() {
@@ -134,7 +143,7 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
         repaint();
     }
 
-    public void testConnections(InterClass interClass) {
+    public List<ConnectionPainter> testConnections(InterClass interClass) {
         List<ConnectionPainter> toRemove = new ArrayList<>();
         for (DiagramElementPainter dep : diagramElementPainters) {
             if (dep instanceof ConnectionPainter) {
@@ -147,23 +156,19 @@ public class DiagramView extends JPanel implements ISubscriber, Scrollable {
             diagramElementPainters.remove(cp);
             ((ClassyTreeImplementation) MainFrame.getInstance().getClassyTree()).removeNode(cp.getDiagramElement());
         }
+
+        return toRemove;
     }
 
     public boolean deleteSelected() {
         if (this.selectedElements.isEmpty())
             return true;
         else {
-            for (DiagramElementPainter elementPainter : selectedElements) {
-                this.diagramElementPainters.remove(elementPainter);
-                diagram.deleteChild(elementPainter.getDiagramElement());
-                ((ClassyTreeImplementation) MainFrame.getInstance().getClassyTree()).removeNode(elementPainter.getDiagramElement());
-
-                if (elementPainter instanceof InterClassPainter)
-                    testConnections(((InterClassPainter) elementPainter).getInterClass());
+                DeleteCommand deleteCommand = new DeleteCommand(selectedElements, this);
+                ApplicationFramework.getInstance().getCommandManager().addCommand(deleteCommand);
             }
             // repaint();
             return false;
-        }
     }
 
     public ArrayList<DiagramElementPainter> getSelectedElements() {

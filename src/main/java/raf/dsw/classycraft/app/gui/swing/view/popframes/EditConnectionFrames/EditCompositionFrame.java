@@ -15,7 +15,7 @@ public class EditCompositionFrame extends JFrame {
         jpanel.setBorder(new EmptyBorder(10,20,10,20));
         setContentPane(jpanel);
 
-        setTitle("Set generalization values");
+        setTitle("Set composition values");
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenHeight = screenSize.height;

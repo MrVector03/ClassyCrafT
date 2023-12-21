@@ -278,3 +278,4 @@ Format methods as: public int method()
 [NOTIFICATION][2023-12-14 11:45:26] Format attributes as: public int attribute
 Format methods as: public int method()
 [ERROR][2023-12-14 20:29:58] CLASS_NAME_CANNOT_BE_EMPTY
+[ERROR][2023-12-20 21:45:43] INTERFACE_VALUES_MUST_BE_METHODS

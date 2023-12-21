@@ -1,6 +1,9 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections;
 
+import raf.dsw.classycraft.app.command.commands.connections.AddAggregationCommand;
+import raf.dsw.classycraft.app.command.commands.connections.EditAggregationCommand;
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyAbstractFactory;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyManufacturer;
@@ -36,22 +39,16 @@ public class AggregationConfirmAction extends AbstractClassyAction {
 
         MainFrame.getInstance().getEditAggregationFrame().setVisible(false);
 
-        ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
 
         if (MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
             Aggregation curEditAggregation = ((Aggregation) MainFrame.getInstance().getPackageView().getCurEditElement());
-
-            curEditAggregation.setName(newConName);
-            curEditAggregation.setVarName(newVarName);
-            curEditAggregation.setCardFrom(newCardFrom);
-            curEditAggregation.setCardTo(newCardTo);
+            EditAggregationCommand editAggregationCommand = new EditAggregationCommand(curEditAggregation.getName(), curEditAggregation.getVarName(), curEditAggregation.getCardFrom(), curEditAggregation.getCardTo(), newConName, newVarName, newCardFrom, newCardTo, curEditAggregation, MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(editAggregationCommand);
 
             ((EditState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
         } else {
-            ClassyAbstractFactory manufacturer = new ClassyManufacturer();
-            Aggregation newAggregation = (Aggregation) manufacturer.createConnection(ConnectionType.AGGREGATION,
-                    newConName, newFrom, newTo, newVarName, newCardFrom, newCardTo, null);
-            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newAggregation));
+            AddAggregationCommand addAggregationCommand = new AddAggregationCommand(newConName, newVarName, newCardFrom, newCardTo, newFrom, newTo, MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(addAggregationCommand);
         }
     }
 }

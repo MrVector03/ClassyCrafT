@@ -6,12 +6,14 @@ import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.abstractProduct.DiagramElement;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.state.State;
 import raf.dsw.classycraft.app.state.StateManager;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 
 public class PackageView extends JPanel implements ISubscriber {
     private final HeadlineSpace headlineSpace;
@@ -148,8 +150,9 @@ public class PackageView extends JPanel implements ISubscriber {
     }
 
     public void startDeleteState() {
-        if (tabbedPane.testSelectors())
+        if (tabbedPane.testSelectors()) {
             stateManager.setDeleteState();
+        }
         else {
             tabbedPane.removeAllSelectors();
             stateManager.setSelectionState();
@@ -234,5 +237,9 @@ public class PackageView extends JPanel implements ISubscriber {
 
     public Package getFocusedPackage() {
         return focusedPackage;
+    }
+
+    public StateManager getStateManager() {
+        return stateManager;
     }
 }

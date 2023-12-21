@@ -1,6 +1,9 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections;
 
+import raf.dsw.classycraft.app.command.commands.connections.AddDependencyCommand;
+import raf.dsw.classycraft.app.command.commands.connections.EditDependencyCommand;
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyAbstractFactory;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyManufacturer;
@@ -35,18 +38,14 @@ public class DependencyConfirmAction extends AbstractClassyAction {
 
         if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
             Dependency curEditDependency = ((Dependency)MainFrame.getInstance().getPackageView().getCurEditElement());
-
-            curEditDependency.setName(newConName);
-            curEditDependency.setType(newConType);
+            EditDependencyCommand editDependencyCommand = new EditDependencyCommand(curEditDependency.getName(), curEditDependency.getType(), newConName,newConType,curEditDependency,MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(editDependencyCommand);
 
             ((EditState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
-
         }
         else {
-            ClassyAbstractFactory manufacturer = new ClassyManufacturer();
-            Dependency newDependency = (Dependency) manufacturer.createConnection(ConnectionType.DEPENDENCY,
-                    newConName, newFrom, newTo, null, ' ', ' ', newConType);
-            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newDependency));
+            AddDependencyCommand addDependencyCommand = new AddDependencyCommand(newConName,newConType,newFrom,newTo,MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(addDependencyCommand);
         }
     }
 }

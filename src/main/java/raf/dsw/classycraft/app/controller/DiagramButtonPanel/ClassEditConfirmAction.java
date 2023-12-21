@@ -1,5 +1,8 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel;
 
+import raf.dsw.classycraft.app.command.CommandManager;
+import raf.dsw.classycraft.app.command.commands.AddClassCommand;
+import raf.dsw.classycraft.app.command.commands.EditClassCommand;
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
@@ -86,24 +89,12 @@ public class ClassEditConfirmAction extends AbstractClassyAction {
 
         if(MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
             Class curEditClass = ((Class)MainFrame.getInstance().getPackageView().getCurEditElement());
-
-            curEditClass.setAbstract(isAbs);
-            curEditClass.setAccess(newICAccess);
-            curEditClass.setName(newICName);
-            curEditClass.setClassContents(attributes);
-            curEditClass.setSize(interClassDimension);
-
-            ((EditState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
+            EditClassCommand editClassCommand = new EditClassCommand(curEditClass.getName(), curEditClass.getAccess(), curEditClass.getClassContents(), curEditClass.getSize(), curEditClass.isAbstract(), newICName, newICAccess, attributes, interClassDimension, isAbs, MainFrame.getInstance().getCurDiagramView(), curEditClass);
+            ApplicationFramework.getInstance().getCommandManager().addCommand(editClassCommand);
         }
         else {
-            ClassyAbstractFactory manufacturer = new ClassyManufacturer();
-            ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
-            Class newClass = (Class) manufacturer.createInterClass(InterClassType.CLASS, newICName, newICAccess,
-                    new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()), interClassDimension,
-                    attributes, isAbs, null, null);
-
-            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newClass));
+            AddClassCommand addClassCommand = new AddClassCommand(newICName, newICAccess, attributes, interClassDimension, isAbs, new Point2D.Double(MainFrame.getInstance().getCurMousePos().getX(), MainFrame.getInstance().getCurMousePos().getY()), MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(addClassCommand);
         }
-        System.out.println("finished painting class");
     }
 }

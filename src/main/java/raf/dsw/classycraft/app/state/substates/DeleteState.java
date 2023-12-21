@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.state.substates;
 
+import raf.dsw.classycraft.app.command.commands.DeleteCommand;
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
@@ -25,7 +27,7 @@ public class DeleteState implements State, IPublisher {
     public void classyMouseClicked(Point2D position, DiagramView diagramView) {
         ArrayList<DiagramElementPainter> toDelete = new ArrayList<DiagramElementPainter>();
         int a = 5;
-        Rectangle2D rectangle = new Rectangle2D.Double(position.getX()-5, position.getY()-5, a*2, a*2);
+        Rectangle2D rectangle = new Rectangle2D.Double(position.getX()-a, position.getY()-a, a*2, a*2);
 
         for(DiagramElementPainter diagramElementPainter : diagramView.getDiagramElementPainters()) {
             if (diagramElementPainter.elementAt(position))
@@ -34,16 +36,8 @@ public class DeleteState implements State, IPublisher {
                 toDelete.add(diagramElementPainter);
         }
 
-        for(DiagramElementPainter dep : toDelete)
-            if(dep instanceof InterClassPainter)
-                diagramView.testConnections(((InterClassPainter) dep).getInterClass());
-
-        diagramView.getDiagramElementPainters().removeAll(toDelete);
-
-        for(DiagramElementPainter dep : toDelete) {
-            diagramView.getDiagram().deleteChild(dep.getDiagramElement());
-            ((ClassyTreeImplementation) MainFrame.getInstance().getClassyTree()).removeNode(dep.getDiagramElement());
-        }
+        DeleteCommand deleteCommand = new DeleteCommand(toDelete, diagramView);
+        ApplicationFramework.getInstance().getCommandManager().addCommand(deleteCommand);
 
         notifySubscribers(new StateNotification(diagramView));
     }

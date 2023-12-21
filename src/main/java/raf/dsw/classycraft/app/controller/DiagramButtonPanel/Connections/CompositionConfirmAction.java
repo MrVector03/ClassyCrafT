@@ -1,6 +1,10 @@
 package raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections;
 
+import raf.dsw.classycraft.app.command.commands.connections.AddAggregationCommand;
+import raf.dsw.classycraft.app.command.commands.connections.AddCompositionCommand;
+import raf.dsw.classycraft.app.command.commands.connections.EditCompositionCommand;
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyAbstractFactory;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.AbstractDiagramElementFactory.ClassyManufacturer;
@@ -34,23 +38,16 @@ public class CompositionConfirmAction extends AbstractClassyAction {
 
         MainFrame.getInstance().getEditCompositionFrame().setVisible(false);
 
-        ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
-
         if (MainFrame.getInstance().getPackageView().getCurrentState() instanceof EditState) {
             Composition curEditComposition = ((Composition) MainFrame.getInstance().getPackageView().getCurEditElement());
-
-            curEditComposition.setName(newConName);
-            curEditComposition.setVarName(newVarName);
-            curEditComposition.setCardFrom(newCardFrom);
-            curEditComposition.setCardTo(newCardTo);
+            EditCompositionCommand editCompositionCommand = new EditCompositionCommand(curEditComposition.getName(), curEditComposition.getVarName(), curEditComposition.getCardFrom(), curEditComposition.getCardTo(), newConName, newVarName, newCardFrom, newCardTo, curEditComposition, MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(editCompositionCommand);
 
             ((EditState) MainFrame.getInstance().getPackageView().getCurrentState()).notifySubscribers(new StateNotification(MainFrame.getInstance().getCurDiagramView()));
 
         } else {
-            ClassyAbstractFactory manufacturer = new ClassyManufacturer();
-            Composition newComposition = (Composition) manufacturer.createConnection(ConnectionType.COMPOSITION,
-                    newConName, newFrom, newTo, newVarName, newCardFrom, newCardTo, null);
-            MainFrame.getInstance().getCurDiagramView().addDiagramElementPainter(painterManufacturer.createPainter(newComposition));
+            AddCompositionCommand addCompositionCommand = new AddCompositionCommand(newConName, newVarName, newCardFrom, newCardTo, newFrom, newTo, MainFrame.getInstance().getCurDiagramView());
+            ApplicationFramework.getInstance().getCommandManager().addCommand(addCompositionCommand);
         }
     }
 }

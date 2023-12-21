@@ -1,5 +1,7 @@
 package raf.dsw.classycraft.app.state.substates;
 
+import raf.dsw.classycraft.app.command.commands.MoveInterClassCommand;
+import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
@@ -25,6 +27,10 @@ public class MoveState implements State, IPublisher {
 
     private Point2D startingPoint = null;
     private Point2D endingPoint = null;
+    //Za command
+    private Point2D startStartPoint = null;
+    private Point2D endEndPoint = null;
+    ///
 
     private boolean revertBack = false;
     private ArrayList<Point2D> revPoints = new ArrayList<>();
@@ -38,6 +44,7 @@ public class MoveState implements State, IPublisher {
         diagramView.popTemporarySelectionPainter();
         this.revPoints.addAll(this.setLastValidPoints(diagramView.getDiagramElementPainters()));
         startingPoint = position;
+        startStartPoint = position;
     }
 
     @Override
@@ -49,6 +56,7 @@ public class MoveState implements State, IPublisher {
     @Override
     public void classyMouseReleased(Point2D endingPosition, DiagramView diagramView) {
         handleChange(endingPosition, diagramView, true);
+
         this.revPoints.clear();
         startingPoint = null;
         endingPoint = null;
@@ -68,12 +76,37 @@ public class MoveState implements State, IPublisher {
         return newPoints;
     }
 
-    private void handleChange(Point2D endingPosition, DiagramView diagramView, boolean release) {
+    public Point2D handleChange(Point2D endingPosition, DiagramView diagramView, boolean release) {
         endingPoint = endingPosition;
         Point2D change = new Point2D.Double(endingPoint.getX() - startingPoint.getX(), endingPoint.getY() - startingPoint.getY());
 
+        ArrayList<DiagramElementPainter> changedPainters = new ArrayList<DiagramElementPainter>();
+        ArrayList<DiagramElementPainter> oldPainters = new ArrayList<DiagramElementPainter>();
+        oldPainters.addAll(diagramView.getDiagramElementPainters());
 
-        ArrayList<DiagramElementPainter> changedPainters = this.changeElementCoordinates(change, diagramView);
+        if(release && !revertBack) {
+            changedPainters.addAll(this.changeElementCoordinates(change, diagramView));
+
+            MoveInterClassCommand moveInterClassCommand;
+
+            if(diagramView.getSelectedElements().isEmpty())
+                moveInterClassCommand = new MoveInterClassCommand(new Point2D.Double(endingPosition.getX() - startStartPoint.getX(), endingPosition.getY() - startStartPoint.getY()), diagramView, changedPainters, diagramView.getDiagramElementPainters());
+            else
+                moveInterClassCommand = new MoveInterClassCommand(new Point2D.Double(endingPosition.getX() - startStartPoint.getX(), endingPosition.getY() - startStartPoint.getY()), diagramView, changedPainters, diagramView.getSelectedElements());
+
+            ApplicationFramework.getInstance().getCommandManager().addCommand(moveInterClassCommand);
+
+            for (DiagramElementPainter dep : changedPainters) {
+                if(dep instanceof InterClassPainter) {
+                    if((!diagramView.getSelectedElements().isEmpty() && diagramView.getSelectedElements().contains(dep)) || diagramView.getSelectedElements().isEmpty())
+                        ((InterClassPainter) dep).getInterClass().changePosition(new Point2D.Double(-endingPosition.getX() + startStartPoint.getX(), -endingPosition.getY() + startStartPoint.getY()));
+                }
+            }
+        }
+        else {
+            changedPainters.addAll(this.changeElementCoordinates(change, diagramView));
+        }
+
         if (revertBack && release) {
             for (int i = 0; i < revPoints.size(); i++) {
                 if (changedPainters.get(i) instanceof InterClassPainter) {
@@ -82,6 +115,8 @@ public class MoveState implements State, IPublisher {
             }
         }
         notifySubscribers(new StateNotification(diagramView));
+
+        return change;
     }
 
     @Override
@@ -99,7 +134,7 @@ public class MoveState implements State, IPublisher {
         this.subscribers.remove(subscriber);
     }
 
-    private ArrayList<DiagramElementPainter> changeElementCoordinates(Point2D change, DiagramView diagramView) {
+    public ArrayList<DiagramElementPainter> changeElementCoordinates(Point2D change, DiagramView diagramView) {
         ArrayList<DiagramElementPainter> changedPainters = diagramView.getDiagramElementPainters();
         ArrayList<DiagramElementPainter> selectedPainters = diagramView.getSelectedElements();
         ArrayList<DiagramElementPainter> oldPainters = diagramView.getDiagramElementPainters();
@@ -108,6 +143,7 @@ public class MoveState implements State, IPublisher {
             if (dep instanceof ConnectionPainter) connections.add((ConnectionPainter) dep);
         List<InterClass> copyForFromTo = new ArrayList<>();
         ClassyAbstractPainterFactory painterManufacturer = new ClassyPainterManufacturer();
+
         if (selectedPainters.isEmpty()) {
             for (DiagramElementPainter dep : changedPainters) {
                 if (dep instanceof ConnectionPainter) {
@@ -115,13 +151,14 @@ public class MoveState implements State, IPublisher {
                     continue;
                 }
                 copyForFromTo.add(((InterClassPainter) dep).getInterClass());
+
                 if (dep instanceof InterClassPainter) {
                     int id = changedPainters.indexOf(dep);
                     InterClassPainter test = (InterClassPainter) changedPainters.get(id);
-                    InterClassPainter icp = (InterClassPainter) painterManufacturer.createPainter(((InterClassPainter) dep).getInterClass());
-                    icp.getInterClass().changePosition(change);
-                    testForConnections(connections, test, icp);
-                    changedPainters.set(id, icp);
+                    // icp = (InterClassPainter) painterManufacturer.createPainter(((InterClassPainter) dep).getInterClass());
+                    test.getInterClass().changePosition(change);
+                    testForConnections(connections, test, test);
+                    changedPainters.set(id, test);
                 }
             }
         } else {
@@ -134,11 +171,11 @@ public class MoveState implements State, IPublisher {
                     copyForFromTo.add(((InterClassPainter) dep).getInterClass());
                     int id = changedPainters.indexOf(dep);
                     InterClassPainter test = (InterClassPainter) changedPainters.get(id);
-                    InterClassPainter icp = (InterClassPainter) painterManufacturer.createPainter(((InterClassPainter) dep).getInterClass());
+                    //InterClassPainter icp = (InterClassPainter) painterManufacturer.createPainter(((InterClassPainter) dep).getInterClass());
                     ((InterClassPainter) dep).getInterClass().changePosition(change);
                     // testForConnections(connections, test, icp);
-                    changedPainters.set(id, icp);
-                    selectedPainters.set(selectedPainters.indexOf(dep), icp);
+                    changedPainters.set(id, test);
+                    selectedPainters.set(selectedPainters.indexOf(dep), test);
                 } else {
                     copyForFromTo.add(null);
                 }
