@@ -9,6 +9,8 @@ import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.abstractProduct.DiagramElement;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.Connection;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 
 import java.io.File;
@@ -70,9 +72,27 @@ public class Diagram extends ClassyNodeComposite implements IPublisher {
             if(file.createNewFile()) {
                 FileWriter fileWriter = new FileWriter(file);
 
+                for(ClassyNode ic : getChildren()) {
+                    if (ic instanceof InterClass) {
+
+                        ArrayList<Connection> curIcCons = new ArrayList<Connection>();
+                        for (ClassyNode con : getChildren())
+                            if (con instanceof Connection) {
+                                if (((Connection) con).getFrom().equals(ic) || ((Connection) con).getTo().equals(ic)) {
+                                    //resavanje svih konekcija povezanih sa ovim elementom
+                                    curIcCons.add((Connection) con);
+                                }
+                            }
+
+                        ((InterClass) ic).convertToCode(fileWriter, curIcCons);
+                    }
+
+                    fileWriter.write("\n");
+                }
+
                 fileWriter.close();
             }
-        }catch (IOException ex) {
+        } catch (IOException ex) {
             ApplicationFramework.getInstance().getMessageGenerator().generateMessage(ex.getMessage(), MessageType.ERROR);
         }
     }
