@@ -20,8 +20,10 @@ import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.AlertFactory;
 import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.AlertFrame;
 
 import javax.swing.*;
+import javax.swing.plaf.FileChooserUI;
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.io.File;
 
 public class MainFrame extends JFrame implements ISubscriber {
     private static MainFrame instance;
@@ -42,6 +44,7 @@ public class MainFrame extends JFrame implements ISubscriber {
     private EditAggregationFrame editAggregationFrame;
     private EditCompositionFrame editCompositionFrame;
     private EditDependencyFrame editDependencyFrame;
+    private JFileChooser fileChooser;
 
     private TabbedPane tabbedPane;
     private HeadlineSpace headlineSpace;
@@ -98,6 +101,7 @@ public class MainFrame extends JFrame implements ISubscriber {
         editCompositionFrame = new EditCompositionFrame();
         editDependencyFrame = new EditDependencyFrame();
 
+        fileChooser = new JFileChooser();
 
         JTree projectTreeView = classyTree.generateTree(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
         // JPanel workView = new JPanel();
@@ -219,6 +223,11 @@ public class MainFrame extends JFrame implements ISubscriber {
 
     public EditDependencyFrame getEditDependencyFrame() {
         return editDependencyFrame;
+    }
+    public File displayFileChooser() {
+        fileChooser.showSaveDialog(this);
+
+        return fileChooser.getSelectedFile();
     }
 
 }
