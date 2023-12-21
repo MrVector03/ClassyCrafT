@@ -279,3 +279,5 @@ Format methods as: public int method()
 Format methods as: public int method()
 [ERROR][2023-12-14 20:29:58] CLASS_NAME_CANNOT_BE_EMPTY
 [ERROR][2023-12-20 21:45:43] INTERFACE_VALUES_MUST_BE_METHODS
+[ERROR][2023-12-21 15:29:20] No such file or directory
+[ERROR][2023-12-21 15:29:22] No such file or directory

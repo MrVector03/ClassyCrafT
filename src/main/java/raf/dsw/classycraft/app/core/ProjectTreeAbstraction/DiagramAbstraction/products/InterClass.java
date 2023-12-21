@@ -7,6 +7,8 @@ import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.ab
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.io.FileWriter;
+import java.util.ArrayList;
 
 public abstract class InterClass extends DiagramElement {
     private Access access;
@@ -52,4 +54,6 @@ public abstract class InterClass extends DiagramElement {
         this.size = size;
         notifySubscribers(new SubscriberNotification(Type.EDIT_DIAGRAM_ELEMENT, this));
     }
+
+    public abstract void convertToCode(FileWriter fileWriter, ArrayList<Connection>connections);
 }
