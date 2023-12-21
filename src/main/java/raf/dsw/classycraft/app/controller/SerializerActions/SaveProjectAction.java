@@ -1,11 +1,10 @@
 package raf.dsw.classycraft.app.controller.SerializerActions;
 
 import raf.dsw.classycraft.app.controller.AbstractClassyAction;
-import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
-import raf.dsw.classycraft.app.serializer.Json;
+import raf.dsw.classycraft.app.json.Json;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -18,7 +17,7 @@ public class SaveProjectAction extends AbstractClassyAction {
     public SaveProjectAction() {
         // setEnabled(false);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-        putValue(SMALL_ICON, loadIcon("/images/redo.png"));
+        putValue(SMALL_ICON, loadIcon("/images/saveProject.png"));
         putValue(NAME, "Save Project");
         putValue(SHORT_DESCRIPTION, "Save selected project");
     }

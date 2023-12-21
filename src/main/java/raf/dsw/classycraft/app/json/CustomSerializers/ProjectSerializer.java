@@ -1,4 +1,4 @@
-package raf.dsw.classycraft.app.serializer.CustomSerializers;
+package raf.dsw.classycraft.app.json.CustomSerializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

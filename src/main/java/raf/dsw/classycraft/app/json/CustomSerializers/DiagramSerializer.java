@@ -1,11 +1,10 @@
-package raf.dsw.classycraft.app.serializer.CustomSerializers;
+package raf.dsw.classycraft.app.json.CustomSerializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
-import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
 
 import java.io.IOException;
 

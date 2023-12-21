@@ -1,4 +1,4 @@
-package raf.dsw.classycraft.app.serializer.CustomSerializers.DiagramElements;
+package raf.dsw.classycraft.app.json.CustomSerializers.DiagramElements;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

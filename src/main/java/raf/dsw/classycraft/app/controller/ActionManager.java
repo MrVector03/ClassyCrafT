@@ -4,6 +4,9 @@ import raf.dsw.classycraft.app.controller.CommandActions.RedoAction;
 import raf.dsw.classycraft.app.controller.CommandActions.UndoAction;
 import raf.dsw.classycraft.app.controller.DiagramButtonPanel.*;
 import raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections.*;
+import raf.dsw.classycraft.app.controller.SerializerActions.LoadProjectAction;
+import raf.dsw.classycraft.app.controller.SerializerActions.SaveProjectAction;
+import raf.dsw.classycraft.app.controller.SerializerActions.SaveProjectAsAction;
 import raf.dsw.classycraft.app.controller.stateActions.*;
 import raf.dsw.classycraft.app.controller.tree.*;
 
@@ -47,6 +50,9 @@ public class ActionManager {
     private RedoAction redoAction;
     private ExportImageAction exportImageAction;
     private ExportJavaCodeAction exportJavaCodeAction;
+    private SaveProjectAction saveProjectAction;
+    private SaveProjectAsAction saveProjectAsAction;
+    private LoadProjectAction loadProjectAction;
 
     public ActionManager() {
         aboutUsAction = new AboutUsAction();
@@ -94,6 +100,10 @@ public class ActionManager {
 
         exportImageAction = new ExportImageAction();
         exportJavaCodeAction = new ExportJavaCodeAction();
+
+        saveProjectAction = new SaveProjectAction();
+        saveProjectAsAction = new SaveProjectAsAction();
+        loadProjectAction = new LoadProjectAction();
     }
 
     public AboutUsAction getAboutUsAction() {
@@ -242,5 +252,17 @@ public class ActionManager {
 
     public ExportJavaCodeAction getExportJavaCodeAction() {
         return exportJavaCodeAction;
+    }
+
+    public SaveProjectAction getSaveProjectAction() {
+        return saveProjectAction;
+    }
+
+    public SaveProjectAsAction getSaveProjectAsAction() {
+        return saveProjectAsAction;
+    }
+
+    public LoadProjectAction getLoadProjectAction() {
+        return loadProjectAction;
     }
 }

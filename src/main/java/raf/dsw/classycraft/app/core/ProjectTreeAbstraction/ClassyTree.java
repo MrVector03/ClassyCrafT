@@ -15,5 +15,7 @@ public interface ClassyTree {
 
     void addDiagramChild(Diagram diagram, ClassyNode newChild);
 
+    void loadProject(ClassyTreeItem root, ClassyNode newProject);
+
     Component getClassyTreeView();
 }

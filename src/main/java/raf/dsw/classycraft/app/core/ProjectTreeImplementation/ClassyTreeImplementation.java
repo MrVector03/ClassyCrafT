@@ -19,10 +19,13 @@ public class ClassyTreeImplementation implements ClassyTree {
     private DefaultTreeModel defaultTreeModel;
     private int chosenNodeIndex; //0 is package, 1 is diagram
     private ArrayList<ClassyTreeItem> diagrams = new ArrayList<ClassyTreeItem>();
+    private ClassyTreeItem treeRoot;
+
 
     @Override
     public ClassyTreeView generateTree(ProjectExplorer projectExplorer) {
         ClassyTreeItem root = new ClassyTreeItem(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
+        this.treeRoot = root;
         defaultTreeModel = new DefaultTreeModel(root);
         classyTreeView = new ClassyTreeView(defaultTreeModel);
 
@@ -51,6 +54,27 @@ public class ClassyTreeImplementation implements ClassyTree {
             diagrams.add(newClassyTreeItem);
         }
 
+    }
+
+    @Override
+    public void loadProject(ClassyTreeItem parent, ClassyNode child) {
+        if (!(parent.getClassyNode() instanceof ClassyNodeComposite))
+            return;
+
+        ClassyTreeItem newClassyTreeItem = new ClassyTreeItem(child);
+
+        parent.add(newClassyTreeItem);
+
+        child.setParent(parent.getClassyNode());
+        ((ClassyNodeComposite) parent.getClassyNode()).addChild(child);
+
+        classyTreeView.expandPath(classyTreeView.getSelectionPath());
+        SwingUtilities.updateComponentTreeUI(classyTreeView);
+
+        if (child instanceof Diagram) {
+            ((Diagram) child).addToScreen();
+            diagrams.add(newClassyTreeItem);
+        }
     }
 
     @Override
@@ -119,6 +143,10 @@ public class ClassyTreeImplementation implements ClassyTree {
 
     public void setChosenNodeIndex(int chosenNodeIndex) {
         this.chosenNodeIndex = chosenNodeIndex;
+    }
+
+    public ClassyTreeItem getRootNode() {
+        return this.treeRoot;
     }
 
     public ClassyTreeView getClassyTreeView() {
