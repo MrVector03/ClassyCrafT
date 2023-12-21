@@ -13,15 +13,36 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class MoveInterClassCommand extends AbstractCommand {
+    private Point2D change;
+    private DiagramView curDiagramView;
+    private ArrayList<DiagramElementPainter> changedPainters = new ArrayList<DiagramElementPainter>();
+    private ArrayList<DiagramElementPainter> selectedPainters = new ArrayList<DiagramElementPainter>();
 
-    public MoveInterClassCommand(Point2D endingPos,Point2D change, DiagramView curDiagramView) {
+    public MoveInterClassCommand(Point2D change, DiagramView curDiagramView, ArrayList<DiagramElementPainter> changedPainters, ArrayList<DiagramElementPainter> selectedPainters) {
+        this.change = new Point2D.Double(change.getX(), change.getY());
+        this.curDiagramView = curDiagramView;
+
+        this.changedPainters.addAll(changedPainters);
+        this.selectedPainters.addAll(selectedPainters);
     }
 
     @Override
     public void doCommand() {
+        for (DiagramElementPainter dep : changedPainters) {
+            if(dep instanceof InterClassPainter) {
+                if(selectedPainters.contains(dep))
+                    ((InterClassPainter) dep).getInterClass().changePosition(new Point2D.Double(change.getX(), change.getY()));
+            }
+        }
     }
 
     @Override
     public void undoCommand() {
+        for (DiagramElementPainter dep : changedPainters) {
+            if(dep instanceof InterClassPainter) {
+                if(selectedPainters.contains(dep))
+                    ((InterClassPainter) dep).getInterClass().changePosition(new Point2D.Double(-change.getX(), -change.getY()));
+            }
+        }
     }
 }
