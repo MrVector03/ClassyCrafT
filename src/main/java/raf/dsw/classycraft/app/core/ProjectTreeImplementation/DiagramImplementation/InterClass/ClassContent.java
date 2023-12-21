@@ -21,4 +21,16 @@ public class ClassContent {
     public String toStringNames() {
         return access.toStringNames() + " " + returnType + " " + name;
     }
+
+    public Access getAccess() {
+        return access;
+    }
+
+    public String getReturnType() {
+        return returnType;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
