@@ -1,13 +1,19 @@
 package raf.dsw.classycraft.app.core.ProjectTreeImplementation;
 
+import raf.dsw.classycraft.app.core.ApplicationFramework;
+import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.SubscriberNotification;
 import raf.dsw.classycraft.app.core.Observer.notifications.Type;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNodeComposite;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.abstractProduct.DiagramElement;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,5 +63,17 @@ public class Diagram extends ClassyNodeComposite implements IPublisher {
     @Override
     public void deleteChild(ClassyNode child) {
         super.deleteChild(child);
+    }
+
+    public void convertToCode(File file) {
+        try {
+            if(file.createNewFile()) {
+                FileWriter fileWriter = new FileWriter(file);
+
+                fileWriter.close();
+            }
+        }catch (IOException ex) {
+            ApplicationFramework.getInstance().getMessageGenerator().generateMessage(ex.getMessage(), MessageType.ERROR);
+        }
     }
 }

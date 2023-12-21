@@ -46,6 +46,7 @@ public class ActionManager {
     private UndoAction undoAction;
     private RedoAction redoAction;
     private ExportImageAction exportImageAction;
+    private ExportJavaCodeAction exportJavaCodeAction;
 
     public ActionManager() {
         aboutUsAction = new AboutUsAction();
@@ -92,6 +93,7 @@ public class ActionManager {
         redoAction = new RedoAction();
 
         exportImageAction = new ExportImageAction();
+        exportJavaCodeAction = new ExportJavaCodeAction();
     }
 
     public AboutUsAction getAboutUsAction() {
@@ -236,5 +238,9 @@ public class ActionManager {
 
     public ExportImageAction getExportImageAction() {
         return exportImageAction;
+    }
+
+    public ExportJavaCodeAction getExportJavaCodeAction() {
+        return exportJavaCodeAction;
     }
 }
