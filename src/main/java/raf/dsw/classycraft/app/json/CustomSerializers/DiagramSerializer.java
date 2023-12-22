@@ -22,7 +22,7 @@ public class DiagramSerializer extends StdSerializer<Diagram> {
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeStringField("diagram name", diagram.getName());
-
+        jsonGenerator.writeStringField("type", "diagram");
         jsonGenerator.writeArrayFieldStart("diagram elements");
         for (ClassyNode cn : diagram.getChildren())
             jsonGenerator.writeObject(cn);

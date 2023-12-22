@@ -1,4 +1,4 @@
-package raf.dsw.classycraft.app.json.CustomSerializers.DiagramElements;
+package raf.dsw.classycraft.app.json.CustomSerializers.DiagramElementSerializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -27,7 +27,7 @@ public class ClassContentSerializer extends StdSerializer<ClassContent> {
             jsonGenerator.writeStringField("type", "field");
 
         jsonGenerator.writeStringField("access", classContent.getAccess().toString());
-        jsonGenerator.writeStringField("returnType", classContent.getReturnType());
+        jsonGenerator.writeStringField("return type", classContent.getReturnType());
         jsonGenerator.writeStringField("name", classContent.getName());
 
         jsonGenerator.writeEndObject();

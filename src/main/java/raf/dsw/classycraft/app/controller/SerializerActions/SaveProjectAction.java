@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class SaveProjectAction extends AbstractClassyAction {
     public SaveProjectAction() {
@@ -29,19 +30,22 @@ public class SaveProjectAction extends AbstractClassyAction {
         if (selected == null) return;
 
         File projectFile = null;
-        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView());
-        int r = jfc.showSaveDialog(null);
+        if (!Objects.equals(((Project) selected.getClassyNode()).getLocalPath(), "/"))
+            projectFile = new File(((Project) selected.getClassyNode()).getLocalPath());
+        else {
+            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView());
+            int r = jfc.showSaveDialog(null);
 
-        if (r == JFileChooser.APPROVE_OPTION) {
-            projectFile = new File(jfc.getSelectedFile().getAbsolutePath());
-        } else return;
-
+            if (r == JFileChooser.APPROVE_OPTION) {
+                projectFile = new File(jfc.getSelectedFile().getAbsolutePath());
+            } else return;
+        }
 
         Project project = (Project) selected.getClassyNode();
         project.setLocalPath(projectFile.getPath());
         Json json = new Json();
         try {
-            json.parseToJson(projectFile, project);
+            json.parseProjectToJson(projectFile, project);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

@@ -1,6 +1,5 @@
 package raf.dsw.classycraft.app.json;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.Connection;
@@ -9,10 +8,15 @@ import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.ClassContent;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
+import raf.dsw.classycraft.app.json.CustomDeserializers.DiagramDeserializer;
+import raf.dsw.classycraft.app.json.CustomDeserializers.DiagramElementDeserializers.ClassContentDeserializer;
+import raf.dsw.classycraft.app.json.CustomDeserializers.DiagramElementDeserializers.ConnectionDeserializer;
+import raf.dsw.classycraft.app.json.CustomDeserializers.DiagramElementDeserializers.InterClassDeserializer;
+import raf.dsw.classycraft.app.json.CustomDeserializers.PackageDeserializer;
 import raf.dsw.classycraft.app.json.CustomDeserializers.ProjectDeserializer;
-import raf.dsw.classycraft.app.json.CustomSerializers.DiagramElements.ClassContentSerializer;
-import raf.dsw.classycraft.app.json.CustomSerializers.DiagramElements.ConnectionSerializer;
-import raf.dsw.classycraft.app.json.CustomSerializers.DiagramElements.InterClassSerializer;
+import raf.dsw.classycraft.app.json.CustomSerializers.DiagramElementSerializers.ClassContentSerializer;
+import raf.dsw.classycraft.app.json.CustomSerializers.DiagramElementSerializers.ConnectionSerializer;
+import raf.dsw.classycraft.app.json.CustomSerializers.DiagramElementSerializers.InterClassSerializer;
 import raf.dsw.classycraft.app.json.CustomSerializers.DiagramSerializer;
 import raf.dsw.classycraft.app.json.CustomSerializers.PackageSerializer;
 import raf.dsw.classycraft.app.json.CustomSerializers.ProjectSerializer;
@@ -21,7 +25,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Json {
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public Json() {
         SimpleModule module = new SimpleModule();
@@ -34,7 +38,11 @@ public class Json {
         module.addSerializer(Connection.class, new ConnectionSerializer());
 
         module.addDeserializer(Project.class, new ProjectDeserializer());
-
+        module.addDeserializer(Package.class, new PackageDeserializer());
+        module.addDeserializer(Diagram.class, new DiagramDeserializer());
+        module.addDeserializer(InterClass.class, new InterClassDeserializer());
+        module.addDeserializer(ClassContent.class, new ClassContentDeserializer());
+        module.addDeserializer(Connection.class, new ConnectionDeserializer());
 
         objectMapper.registerModule(module);
     }
@@ -43,14 +51,18 @@ public class Json {
         return new ObjectMapper();
     }
 
+    private static ObjectMapper getMapper() {
+        return objectMapper;
+    }
+
     // PROJECT TO JSON
-    public void parseToJson(File file, Project project) throws IOException {
-        this.objectMapper.writeValue(file, project);
+    public void parseProjectToJson(File file, Project project) throws IOException {
+        objectMapper.writeValue(file, project);
     }
 
     // JSON TO PROJECT
     public Project parseToProject(File file) throws IOException {
-        return this.objectMapper.readValue(file, Project.class);
+        return objectMapper.readValue(file, Project.class);
     }
 
 

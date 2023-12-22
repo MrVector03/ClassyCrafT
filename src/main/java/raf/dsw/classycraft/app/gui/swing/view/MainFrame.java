@@ -46,6 +46,8 @@ public class MainFrame extends JFrame implements ISubscriber {
     private EditDependencyFrame editDependencyFrame;
     private JFileChooser fileChooser;
 
+    private JTree projectTreeView;
+
     private TabbedPane tabbedPane;
     private HeadlineSpace headlineSpace;
     private PackageView packageView;
@@ -103,7 +105,7 @@ public class MainFrame extends JFrame implements ISubscriber {
 
         fileChooser = new JFileChooser();
 
-        JTree projectTreeView = classyTree.generateTree(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
+        projectTreeView = classyTree.generateTree(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
         // JPanel workView = new JPanel();
 
         JScrollPane treeScrollPane = new JScrollPane(projectTreeView);
@@ -224,10 +226,14 @@ public class MainFrame extends JFrame implements ISubscriber {
     public EditDependencyFrame getEditDependencyFrame() {
         return editDependencyFrame;
     }
+
     public File displayFileChooser() {
         fileChooser.showSaveDialog(this);
 
         return fileChooser.getSelectedFile();
     }
 
+    public JTree getProjectTreeView() {
+        return projectTreeView;
+    }
 }

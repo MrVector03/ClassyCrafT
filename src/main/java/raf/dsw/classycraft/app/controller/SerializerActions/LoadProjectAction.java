@@ -4,6 +4,8 @@ import raf.dsw.classycraft.app.controller.AbstractClassyAction;
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
@@ -46,13 +48,12 @@ public class LoadProjectAction extends AbstractClassyAction {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        ClassyNode root = ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot();
 
-        ClassyTreeItem treeRoot = (ClassyTreeItem) MainFrame.getInstance().getClassyTree().getSelectedNode().getRoot();
-
+        ClassyTreeItem treeRoot = ((ClassyTreeImplementation) MainFrame.getInstance().getClassyTree()).getRootNode();
 
         MainFrame.getInstance().getClassyTree().loadProject(treeRoot, newProject);
-        // project.setLocalPath(projectFile.getPath());
+
+        MainFrame.getInstance().getProjectTreeView().expandRow(0);
 
     }
 }

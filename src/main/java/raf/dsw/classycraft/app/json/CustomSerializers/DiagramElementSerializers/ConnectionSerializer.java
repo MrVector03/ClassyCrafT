@@ -1,4 +1,4 @@
-package raf.dsw.classycraft.app.json.CustomSerializers.DiagramElements;
+package raf.dsw.classycraft.app.json.CustomSerializers.DiagramElementSerializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -26,28 +26,26 @@ public class ConnectionSerializer extends StdSerializer<Connection> {
 
         jsonGenerator.writeStringField("name", connection.getName());
 
+        jsonGenerator.writeStringField("general type", "connection");
+
         if (connection instanceof Aggregation) jsonGenerator.writeStringField("type", "aggregation");
         else if (connection instanceof Composition) jsonGenerator.writeStringField("type", "composition");
         else if (connection instanceof Dependency) jsonGenerator.writeStringField("type", "dependency");
         else if (connection instanceof Generalization) jsonGenerator.writeStringField("type", "generalization");
 
-        jsonGenerator.writeArrayFieldStart("from-to");
-
-        jsonGenerator.writeObject(connection.getFrom());
-        jsonGenerator.writeObject(connection.getTo());
-
-        jsonGenerator.writeEndArray();
+        jsonGenerator.writeObjectField("from", connection.getFrom());
+        jsonGenerator.writeObjectField("to", connection.getTo());
 
         if (connection instanceof Aggregation) {
-            jsonGenerator.writeStringField("varName", ((Aggregation) connection).getVarName());
-            jsonGenerator.writeStringField("cardFrom", String.valueOf(((Aggregation) connection).getCardFrom()));
-            jsonGenerator.writeStringField("cardTo", String.valueOf(((Aggregation) connection).getCardTo()));
+            jsonGenerator.writeStringField("connection name", ((Aggregation) connection).getVarName());
+            jsonGenerator.writeStringField("cardinality from", String.valueOf(((Aggregation) connection).getCardFrom()));
+            jsonGenerator.writeStringField("cardinality to", String.valueOf(((Aggregation) connection).getCardTo()));
         } else if (connection instanceof Composition) {
-            jsonGenerator.writeStringField("varName", ((Composition) connection).getVarName());
-            jsonGenerator.writeStringField("cardFrom", String.valueOf(((Composition) connection).getCardFrom()));
-            jsonGenerator.writeStringField("cardTo", String.valueOf(((Composition) connection).getCardTo()));
+            jsonGenerator.writeStringField("connection name", ((Composition) connection).getVarName());
+            jsonGenerator.writeStringField("cardinality from", String.valueOf(((Composition) connection).getCardFrom()));
+            jsonGenerator.writeStringField("cardinality to", String.valueOf(((Composition) connection).getCardTo()));
         } else if (connection instanceof Dependency) {
-            jsonGenerator.writeStringField("dependencyType", ((Dependency) connection).getType());
+            jsonGenerator.writeStringField("dependency type", ((Dependency) connection).getType());
         }
 
         jsonGenerator.writeEndObject();

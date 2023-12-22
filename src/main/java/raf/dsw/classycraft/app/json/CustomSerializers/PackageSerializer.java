@@ -21,7 +21,8 @@ public class PackageSerializer extends StdSerializer<Package> {
     public void serialize(Package classyPackage, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField("package custom name", classyPackage.getName());
+        jsonGenerator.writeStringField("package name", classyPackage.getName());
+        jsonGenerator.writeStringField("type", "package");
         jsonGenerator.writeArrayFieldStart("children");
 
         for (ClassyNode cn : classyPackage.getChildren())

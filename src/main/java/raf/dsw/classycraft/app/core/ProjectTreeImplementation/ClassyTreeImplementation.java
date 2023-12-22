@@ -19,7 +19,7 @@ public class ClassyTreeImplementation implements ClassyTree {
     private DefaultTreeModel defaultTreeModel;
     private int chosenNodeIndex; //0 is package, 1 is diagram
     private ArrayList<ClassyTreeItem> diagrams = new ArrayList<ClassyTreeItem>();
-    private ClassyTreeItem treeRoot;
+    private ClassyTreeItem treeRoot = null;
 
 
     @Override
@@ -68,14 +68,48 @@ public class ClassyTreeImplementation implements ClassyTree {
         child.setParent(parent.getClassyNode());
         ((ClassyNodeComposite) parent.getClassyNode()).addChild(child);
 
+        unloadProject(newClassyTreeItem, child);
+
         classyTreeView.expandPath(classyTreeView.getSelectionPath());
         SwingUtilities.updateComponentTreeUI(classyTreeView);
+    }
 
-        if (child instanceof Diagram) {
-            ((Diagram) child).addToScreen();
-            diagrams.add(newClassyTreeItem);
+    private void unloadProject(ClassyTreeItem treeItemProject, ClassyNode project) {
+        for (ClassyNode pkg : ((Project) project).getChildren()) {
+            ClassyTreeItem packageTreeItem = new ClassyTreeItem(pkg);
+            treeItemProject.add(packageTreeItem);
+
+            pkg.setParent(project);
+
+            unloadPackage(packageTreeItem, pkg);
         }
     }
+
+    private void unloadPackage(ClassyTreeItem treeItemPackage, ClassyNode currentPackage) {
+        for (ClassyNode cn : ((Package) currentPackage).getChildren()) {
+            if (cn instanceof Diagram) {
+                ClassyTreeItem newDiagramTreeItem = new ClassyTreeItem(cn);
+                treeItemPackage.add(newDiagramTreeItem);
+                cn.setParent(currentPackage);
+
+                unloadDiagram(newDiagramTreeItem, (Diagram) cn);
+            } else {
+                ClassyTreeItem newPackageTreeItem = new ClassyTreeItem(cn);
+                treeItemPackage.add(newPackageTreeItem);
+                cn.setParent(currentPackage);
+
+                unloadPackage(newPackageTreeItem, cn);
+            }
+        }
+    }
+
+    private void unloadDiagram(ClassyTreeItem treeItemDiagram, Diagram diagram) {
+        for (ClassyNode el : diagram.getChildren()) {
+            treeItemDiagram.add(new ClassyTreeItem(el));
+            el.setParent(diagram);
+        }
+    }
+
 
     @Override
     public void addDiagramChild(Diagram diagram, ClassyNode newChild) {

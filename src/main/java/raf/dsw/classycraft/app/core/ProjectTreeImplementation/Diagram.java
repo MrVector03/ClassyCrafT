@@ -67,6 +67,10 @@ public class Diagram extends ClassyNodeComposite implements IPublisher {
         super.deleteChild(child);
     }
 
+    public void loadChild(ClassyNode child) {
+        super.addChild(child);
+    }
+
     public void convertToCode(File file) {
         try {
             if(file.createNewFile()) {

@@ -1,4 +1,4 @@
-package raf.dsw.classycraft.app.json.CustomSerializers.DiagramElements;
+package raf.dsw.classycraft.app.json.CustomSerializers.DiagramElementSerializers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -23,6 +23,8 @@ public class InterClassSerializer extends StdSerializer<InterClass> {
     public void serialize(InterClass interClass, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
 
+        jsonGenerator.writeObjectField("general type", "interclass");
+
         if (interClass instanceof Class) jsonGenerator.writeStringField("type", "class");
         else if (interClass instanceof Enum) jsonGenerator.writeStringField("type", "enum");
         else if (interClass instanceof Interface) jsonGenerator.writeStringField("type", "interface");
@@ -40,7 +42,7 @@ public class InterClassSerializer extends StdSerializer<InterClass> {
         if (interClass instanceof Class) {
             jsonGenerator.writeBooleanField("abstract", ((Class) interClass).isAbstract());
 
-            jsonGenerator.writeArrayFieldStart("diagram elements");
+            jsonGenerator.writeArrayFieldStart("content");
             for (ClassContent cn : ((Class) interClass).getClassContents())
                 jsonGenerator.writeObject(cn);
             jsonGenerator.writeEndArray();

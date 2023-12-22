@@ -30,4 +30,18 @@ public enum Access {
 
         return null;
     }
+
+    public static Access fromSymbol(String symbol) {
+        switch (symbol) {
+            case "+":
+                return PUBLIC;
+            case "-":
+                return PRIVATE;
+            case "#":
+                return PROTECTED;
+            case "~":
+                return DEFAULT;
+        }
+        return null;
+    }
 }
