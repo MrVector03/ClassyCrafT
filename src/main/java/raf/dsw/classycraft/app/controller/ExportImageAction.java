@@ -26,7 +26,7 @@ public class ExportImageAction extends AbstractClassyAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        File fileToSave = MainFrame.getInstance().displayFileChooser();
+        File fileToSave = MainFrame.getInstance().displayFileChooser("save");
 
 
         int width = 3*(int)Toolkit.getDefaultToolkit().getScreenSize().width, height = 3*(int)Toolkit.getDefaultToolkit().getScreenSize().height;

@@ -39,7 +39,7 @@ public class ProjectDeserializer extends StdDeserializer<Project> {
             }
         }
 
-        System.out.println(newProject.getChildren().get(0).getName());
+        //System.out.println(newProject.getChildren().get(0).getName());
 
         return newProject;
     }

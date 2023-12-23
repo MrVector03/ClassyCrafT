@@ -29,16 +29,13 @@ public class SaveProjectAction extends AbstractClassyAction {
 
         if (selected == null) return;
 
-        File projectFile = null;
+        File projectFile;
+
         if (!Objects.equals(((Project) selected.getClassyNode()).getLocalPath(), "/"))
             projectFile = new File(((Project) selected.getClassyNode()).getLocalPath());
         else {
-            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView());
-            int r = jfc.showSaveDialog(null);
-
-            if (r == JFileChooser.APPROVE_OPTION) {
-                projectFile = new File(jfc.getSelectedFile().getAbsolutePath());
-            } else return;
+            projectFile = MainFrame.getInstance().displayFileChooser("save");
+            if (projectFile == null) return;
         }
 
         Project project = (Project) selected.getClassyNode();

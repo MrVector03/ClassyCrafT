@@ -32,8 +32,9 @@ public class ConnectionDeserializer extends StdDeserializer<Connection> {
 
         String name = node.get("name").asText();
         InterClass from = getConnectionClass(jsonParser, deserializationContext, node.get("from"), "from");
-        InterClass to = getConnectionClass(jsonParser, deserializationContext, node.get("to"), "to");
 
+        InterClass to = getConnectionClass(jsonParser, deserializationContext, node.get("to"), "to");
+        System.out.println("finished with classes");
         Connection newConnection;
 
         if (node.get("type").asText().equals("aggregation")
@@ -57,12 +58,14 @@ public class ConnectionDeserializer extends StdDeserializer<Connection> {
 
     private InterClass getConnectionClass(JsonParser jsonParser, DeserializationContext deserializationContext, JsonNode node, String type) throws IOException {
         InterClass interClass;
+        System.out.println("NODE:");
+        System.out.println(node);
         if (node.get("type").asText().equals("class"))
-            interClass = deserializationContext.readValue(node.traverse(jsonParser.getCodec()), Class.class);
+            interClass = deserializationContext.readValue(node.traverse(jsonParser.getCodec()), InterClass.class);
         else if (node.get("type").asText().equals("interface"))
-            interClass = deserializationContext.readValue(node.traverse(jsonParser.getCodec()), Interface.class);
+            interClass = deserializationContext.readValue(node.traverse(jsonParser.getCodec()), InterClass.class);
         else
-            interClass = deserializationContext.readValue(node.traverse(jsonParser.getCodec()), Enum.class);
+            interClass = deserializationContext.readValue(node.traverse(jsonParser.getCodec()), InterClass.class);
         return interClass;
     }
 }

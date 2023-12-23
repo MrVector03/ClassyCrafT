@@ -227,9 +227,12 @@ public class MainFrame extends JFrame implements ISubscriber {
         return editDependencyFrame;
     }
 
-    public File displayFileChooser() {
-        fileChooser.showSaveDialog(this);
-
+    public File displayFileChooser(String type) {
+        fileChooser = new JFileChooser();
+        if (type.equals("save"))
+            fileChooser.showSaveDialog(this);
+        else
+            fileChooser.showOpenDialog(this);
         return fileChooser.getSelectedFile();
     }
 

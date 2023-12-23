@@ -61,6 +61,8 @@ public class ClassyTreeImplementation implements ClassyTree {
         if (!(parent.getClassyNode() instanceof ClassyNodeComposite))
             return;
 
+        System.out.println("unloading project");
+
         ClassyTreeItem newClassyTreeItem = new ClassyTreeItem(child);
 
         parent.add(newClassyTreeItem);
@@ -93,6 +95,7 @@ public class ClassyTreeImplementation implements ClassyTree {
                 cn.setParent(currentPackage);
 
                 unloadDiagram(newDiagramTreeItem, (Diagram) cn);
+                diagrams.add(newDiagramTreeItem);
             } else {
                 ClassyTreeItem newPackageTreeItem = new ClassyTreeItem(cn);
                 treeItemPackage.add(newPackageTreeItem);
@@ -109,7 +112,6 @@ public class ClassyTreeImplementation implements ClassyTree {
             el.setParent(diagram);
         }
     }
-
 
     @Override
     public void addDiagramChild(Diagram diagram, ClassyNode newChild) {
