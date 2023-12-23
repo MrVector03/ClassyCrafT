@@ -65,5 +65,11 @@ public class Json {
         return objectMapper.readValue(file, Project.class);
     }
 
+    public void parseDiagramToTemplate(File file, Diagram diagram) throws IOException {
+        objectMapper.writeValue(file, diagram);
+    }
 
+    public Diagram parseToDiagram(File file) throws IOException {
+        return objectMapper.readValue(file, Diagram.class);
+    }
 }

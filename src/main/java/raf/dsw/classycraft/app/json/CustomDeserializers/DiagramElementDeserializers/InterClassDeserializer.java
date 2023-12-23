@@ -29,17 +29,12 @@ public class InterClassDeserializer extends StdDeserializer<InterClass> {
     public InterClass deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
-        System.out.println("reading name");
         String name = node.get("name").asText();
-        System.out.println("reading access");
         Access access = Access.fromSymbol(node.get("access").asText());
 
-        System.out.println("reading position");
         double positionX = node.get("positionX").asDouble();
         double positionY = node.get("positionY").asDouble();
 
-
-        System.out.println("reading size");
         int width = node.get("dimensionWidth").asInt();
         int height = node.get("dimensionHeight").asInt();
 
@@ -48,8 +43,6 @@ public class InterClassDeserializer extends StdDeserializer<InterClass> {
 
 
         InterClass newInterClass = null;
-
-        System.out.println("reading specifics");
 
         if (node.get("type").asText().equals("class")) {
             ArrayList<ClassContent> classContents = new ArrayList<>();
@@ -80,8 +73,6 @@ public class InterClassDeserializer extends StdDeserializer<InterClass> {
             newInterClass = new Interface(name, access, position, dimension, methods);
         }
         if (newInterClass == null) return null;
-        System.out.println("DESERIALIZED AN INTER CLASS");
-        System.out.println(newInterClass.getName());
         return newInterClass;
     }
 }

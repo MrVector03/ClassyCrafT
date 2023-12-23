@@ -53,6 +53,7 @@ public class TabbedPane extends JTabbedPane {
             if (cn instanceof Diagram) {
                 if (((Diagram) cn).getSubscribers().isEmpty()) {
                     DiagramView newDiagram = new DiagramView((Diagram) cn, this);
+                    System.out.println("loading diagram");
                     if (!((Diagram) cn).getChildren().isEmpty()) {
                         for (ClassyNode diagramElement : ((Diagram) cn).getChildren()) {
                             if (diagramElement instanceof InterClass)
@@ -79,6 +80,14 @@ public class TabbedPane extends JTabbedPane {
 
     public void addNewDiagram(Diagram diagram) {
         DiagramView newDiagram = new DiagramView(diagram, this);
+        if (!(diagram.getChildren().isEmpty())) {
+            for (ClassyNode diagramElement : diagram.getChildren()) {
+                if (diagramElement instanceof InterClass)
+                    newDiagram.getDiagramElementPainters().add(new InterClassPainter((InterClass) diagramElement));
+                else
+                    newDiagram.getDiagramElementPainters().add(new ConnectionPainter((Connection) diagramElement));
+            }
+        }
         TabView newTab = new TabView(newDiagram, new WorkSpaceButtons());
         this.loadedTabs.add(newTab);
         addTab(newTab.getDiagramView().getName(), newTab);

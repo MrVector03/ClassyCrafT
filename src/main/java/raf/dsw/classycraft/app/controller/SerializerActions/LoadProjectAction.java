@@ -25,7 +25,6 @@ import java.util.List;
 
 public class LoadProjectAction extends AbstractClassyAction {
     public LoadProjectAction() {
-        // setEnabled(false);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
         putValue(SMALL_ICON, loadIcon("/images/loadProject.png"));
         putValue(NAME, "Load Project");
@@ -49,9 +48,8 @@ public class LoadProjectAction extends AbstractClassyAction {
             throw new RuntimeException(ex);
         }
 
-        setupConnectionAnchors(newProject);
+        LoadUtility.setupConnectionAnchors(newProject);
 
-        System.out.println("parsed");
         ClassyTreeItem treeRoot = ((ClassyTreeImplementation) MainFrame.getInstance().getClassyTree()).getRootNode();
         MainFrame.getInstance().getClassyTree().loadProject(treeRoot, newProject);
 
@@ -77,45 +75,4 @@ public class LoadProjectAction extends AbstractClassyAction {
         }
     }
 
-    private void setupConnectionAnchors(ClassyNode node) {
-        if (node instanceof Project) {
-            for (ClassyNode pkg : ((Project) node).getChildren()) {
-                setupConnectionAnchors(pkg);
-            }
-        } else if (node instanceof Package) {
-            for (ClassyNode el : ((Package) node).getChildren()) {
-                if (el instanceof Package)
-                    setupConnectionAnchors(el);
-                else {
-                    Diagram diagram = (Diagram) el;
-                    List<ClassyNode> diagramChildren = diagram.getChildren();
-                    for (ClassyNode diagramElement : diagramChildren) {
-                        if (diagramElement instanceof Connection) {
-                            Connection connectionCpy = (Connection) diagramElement;
-                            findProperAnchor(connectionCpy, diagramChildren, "from");
-                            findProperAnchor(connectionCpy, diagramChildren, "to");
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void findProperAnchor(Connection connection, List<ClassyNode> diagramChildren, String type) {
-        InterClass anchor;
-        if (type.equals("from"))
-            anchor = connection.getFrom();
-        else
-            anchor = connection.getTo();
-        for (ClassyNode cn : diagramChildren) {
-            if (cn instanceof InterClass) {
-                InterClass cpy = (InterClass) cn;
-                if (cpy.getName().equals(anchor.getName()) && cpy.getPosition().equals(anchor.getPosition()) && cpy.getSize().equals(anchor.getSize())) {
-                    if (type.equals("from")) connection.setFrom(cpy);
-                    else connection.setTo(cpy);
-                    return;
-                }
-            }
-        }
-    }
 }

@@ -17,5 +17,7 @@ public interface ClassyTree {
 
     void loadProject(ClassyTreeItem root, ClassyNode newProject);
 
+    void loadTemplate(ClassyTreeItem root, ClassyNode newDiagram);
+
     Component getClassyTreeView();
 }

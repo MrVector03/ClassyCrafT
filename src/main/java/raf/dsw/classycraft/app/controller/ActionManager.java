@@ -4,9 +4,7 @@ import raf.dsw.classycraft.app.controller.CommandActions.RedoAction;
 import raf.dsw.classycraft.app.controller.CommandActions.UndoAction;
 import raf.dsw.classycraft.app.controller.DiagramButtonPanel.*;
 import raf.dsw.classycraft.app.controller.DiagramButtonPanel.Connections.*;
-import raf.dsw.classycraft.app.controller.SerializerActions.LoadProjectAction;
-import raf.dsw.classycraft.app.controller.SerializerActions.SaveProjectAction;
-import raf.dsw.classycraft.app.controller.SerializerActions.SaveProjectAsAction;
+import raf.dsw.classycraft.app.controller.SerializerActions.*;
 import raf.dsw.classycraft.app.controller.stateActions.*;
 import raf.dsw.classycraft.app.controller.tree.*;
 
@@ -53,6 +51,9 @@ public class ActionManager {
     private SaveProjectAction saveProjectAction;
     private SaveProjectAsAction saveProjectAsAction;
     private LoadProjectAction loadProjectAction;
+    private SaveDiagramAsTemplate saveDiagramAsTemplate;
+    private SaveDiagramAsTemplateConfirm saveDiagramAsTemplateConfirm;
+    private LoadTemplateAction loadTemplateAction;
 
     public ActionManager() {
         aboutUsAction = new AboutUsAction();
@@ -104,6 +105,10 @@ public class ActionManager {
         saveProjectAction = new SaveProjectAction();
         saveProjectAsAction = new SaveProjectAsAction();
         loadProjectAction = new LoadProjectAction();
+
+        saveDiagramAsTemplate = new SaveDiagramAsTemplate();
+        saveDiagramAsTemplateConfirm = new SaveDiagramAsTemplateConfirm();
+        loadTemplateAction = new LoadTemplateAction();
     }
 
     public AboutUsAction getAboutUsAction() {
@@ -264,5 +269,17 @@ public class ActionManager {
 
     public LoadProjectAction getLoadProjectAction() {
         return loadProjectAction;
+    }
+
+    public SaveDiagramAsTemplate getSaveDiagramAsTemplate() {
+        return saveDiagramAsTemplate;
+    }
+
+    public SaveDiagramAsTemplateConfirm getSaveDiagramAsTemplateConfirm() {
+        return saveDiagramAsTemplateConfirm;
+    }
+
+    public LoadTemplateAction getLoadTemplate() {
+        return loadTemplateAction;
     }
 }

@@ -61,8 +61,6 @@ public class ClassyTreeImplementation implements ClassyTree {
         if (!(parent.getClassyNode() instanceof ClassyNodeComposite))
             return;
 
-        System.out.println("unloading project");
-
         ClassyTreeItem newClassyTreeItem = new ClassyTreeItem(child);
 
         parent.add(newClassyTreeItem);
@@ -71,6 +69,24 @@ public class ClassyTreeImplementation implements ClassyTree {
         ((ClassyNodeComposite) parent.getClassyNode()).addChild(child);
 
         unloadProject(newClassyTreeItem, child);
+
+        classyTreeView.expandPath(classyTreeView.getSelectionPath());
+        SwingUtilities.updateComponentTreeUI(classyTreeView);
+    }
+
+    @Override
+    public void loadTemplate(ClassyTreeItem parent, ClassyNode child) {
+        if (!(parent.getClassyNode() instanceof ClassyNodeComposite))
+            return;
+
+        ClassyTreeItem newClassyTreeItem = new ClassyTreeItem(child);
+
+        parent.add(newClassyTreeItem);
+
+        child.setParent(parent.getClassyNode());
+        ((Package) parent.getClassyNode()).addChild(child);
+
+        unloadDiagram(newClassyTreeItem, (Diagram) child);
 
         classyTreeView.expandPath(classyTreeView.getSelectionPath());
         SwingUtilities.updateComponentTreeUI(classyTreeView);
