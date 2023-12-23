@@ -34,7 +34,7 @@ public class ExportJavaCodeAction extends AbstractClassyAction {
             return;
         }
 
-        File fileToSave = MainFrame.getInstance().displayFileChooser();
+        File fileToSave = MainFrame.getInstance().displayFileChooser("save");
 
         exportProject(fileToSave, (Project)selected.getClassyNode());
     }

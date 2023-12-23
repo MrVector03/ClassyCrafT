@@ -1,10 +1,15 @@
 package raf.dsw.classycraft.app.gui.swing.view.MainSpace;
 
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyNode;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.Connection;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Diagram;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ProjectExplorer;
+import raf.dsw.classycraft.app.gui.swing.view.ClassyTree.model.ClassyTreeItem;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.ConnectionPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.InterClassPainter;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -48,6 +53,15 @@ public class TabbedPane extends JTabbedPane {
             if (cn instanceof Diagram) {
                 if (((Diagram) cn).getSubscribers().isEmpty()) {
                     DiagramView newDiagram = new DiagramView((Diagram) cn, this);
+                    System.out.println("loading diagram");
+                    if (!((Diagram) cn).getChildren().isEmpty()) {
+                        for (ClassyNode diagramElement : ((Diagram) cn).getChildren()) {
+                            if (diagramElement instanceof InterClass)
+                                newDiagram.getDiagramElementPainters().add(new InterClassPainter((InterClass) diagramElement));
+                            else
+                                newDiagram.getDiagramElementPainters().add(new ConnectionPainter((Connection) diagramElement));
+                        }
+                    }
                     TabView newTab = new TabView(newDiagram, new WorkSpaceButtons());
                     this.loadedTabs.add(newTab);
                 } else {
@@ -66,6 +80,14 @@ public class TabbedPane extends JTabbedPane {
 
     public void addNewDiagram(Diagram diagram) {
         DiagramView newDiagram = new DiagramView(diagram, this);
+        if (!(diagram.getChildren().isEmpty())) {
+            for (ClassyNode diagramElement : diagram.getChildren()) {
+                if (diagramElement instanceof InterClass)
+                    newDiagram.getDiagramElementPainters().add(new InterClassPainter((InterClass) diagramElement));
+                else
+                    newDiagram.getDiagramElementPainters().add(new ConnectionPainter((Connection) diagramElement));
+            }
+        }
         TabView newTab = new TabView(newDiagram, new WorkSpaceButtons());
         this.loadedTabs.add(newTab);
         addTab(newTab.getDiagramView().getName(), newTab);

@@ -19,10 +19,13 @@ public class ClassyTreeImplementation implements ClassyTree {
     private DefaultTreeModel defaultTreeModel;
     private int chosenNodeIndex; //0 is package, 1 is diagram
     private ArrayList<ClassyTreeItem> diagrams = new ArrayList<ClassyTreeItem>();
+    private ClassyTreeItem treeRoot = null;
+
 
     @Override
     public ClassyTreeView generateTree(ProjectExplorer projectExplorer) {
         ClassyTreeItem root = new ClassyTreeItem(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
+        this.treeRoot = root;
         defaultTreeModel = new DefaultTreeModel(root);
         classyTreeView = new ClassyTreeView(defaultTreeModel);
 
@@ -51,6 +54,79 @@ public class ClassyTreeImplementation implements ClassyTree {
             diagrams.add(newClassyTreeItem);
         }
 
+    }
+
+    @Override
+    public void loadProject(ClassyTreeItem parent, ClassyNode child) {
+        if (!(parent.getClassyNode() instanceof ClassyNodeComposite))
+            return;
+
+        ClassyTreeItem newClassyTreeItem = new ClassyTreeItem(child);
+
+        parent.add(newClassyTreeItem);
+
+        child.setParent(parent.getClassyNode());
+        ((ClassyNodeComposite) parent.getClassyNode()).addChild(child);
+
+        unloadProject(newClassyTreeItem, child);
+
+        classyTreeView.expandPath(classyTreeView.getSelectionPath());
+        SwingUtilities.updateComponentTreeUI(classyTreeView);
+    }
+
+    @Override
+    public void loadTemplate(ClassyTreeItem parent, ClassyNode child) {
+        if (!(parent.getClassyNode() instanceof ClassyNodeComposite))
+            return;
+
+        ClassyTreeItem newClassyTreeItem = new ClassyTreeItem(child);
+
+        parent.add(newClassyTreeItem);
+
+        child.setParent(parent.getClassyNode());
+        ((Package) parent.getClassyNode()).addChild(child);
+
+        unloadDiagram(newClassyTreeItem, (Diagram) child);
+
+        classyTreeView.expandPath(classyTreeView.getSelectionPath());
+        SwingUtilities.updateComponentTreeUI(classyTreeView);
+    }
+
+    private void unloadProject(ClassyTreeItem treeItemProject, ClassyNode project) {
+        for (ClassyNode pkg : ((Project) project).getChildren()) {
+            ClassyTreeItem packageTreeItem = new ClassyTreeItem(pkg);
+            treeItemProject.add(packageTreeItem);
+
+            pkg.setParent(project);
+
+            unloadPackage(packageTreeItem, pkg);
+        }
+    }
+
+    private void unloadPackage(ClassyTreeItem treeItemPackage, ClassyNode currentPackage) {
+        for (ClassyNode cn : ((Package) currentPackage).getChildren()) {
+            if (cn instanceof Diagram) {
+                ClassyTreeItem newDiagramTreeItem = new ClassyTreeItem(cn);
+                treeItemPackage.add(newDiagramTreeItem);
+                cn.setParent(currentPackage);
+
+                unloadDiagram(newDiagramTreeItem, (Diagram) cn);
+                diagrams.add(newDiagramTreeItem);
+            } else {
+                ClassyTreeItem newPackageTreeItem = new ClassyTreeItem(cn);
+                treeItemPackage.add(newPackageTreeItem);
+                cn.setParent(currentPackage);
+
+                unloadPackage(newPackageTreeItem, cn);
+            }
+        }
+    }
+
+    private void unloadDiagram(ClassyTreeItem treeItemDiagram, Diagram diagram) {
+        for (ClassyNode el : diagram.getChildren()) {
+            treeItemDiagram.add(new ClassyTreeItem(el));
+            el.setParent(diagram);
+        }
     }
 
     @Override
@@ -119,6 +195,10 @@ public class ClassyTreeImplementation implements ClassyTree {
 
     public void setChosenNodeIndex(int chosenNodeIndex) {
         this.chosenNodeIndex = chosenNodeIndex;
+    }
+
+    public ClassyTreeItem getRootNode() {
+        return this.treeRoot;
     }
 
     public ClassyTreeView getClassyTreeView() {

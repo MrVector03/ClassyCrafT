@@ -24,6 +24,7 @@ import javax.swing.plaf.FileChooserUI;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.nio.file.Paths;
 
 public class MainFrame extends JFrame implements ISubscriber {
     private static MainFrame instance;
@@ -45,6 +46,9 @@ public class MainFrame extends JFrame implements ISubscriber {
     private EditCompositionFrame editCompositionFrame;
     private EditDependencyFrame editDependencyFrame;
     private JFileChooser fileChooser;
+    private NewTemplateFrame newTemplateFrame;
+
+    private JTree projectTreeView;
 
     private TabbedPane tabbedPane;
     private HeadlineSpace headlineSpace;
@@ -100,10 +104,11 @@ public class MainFrame extends JFrame implements ISubscriber {
         editAggregationFrame = new EditAggregationFrame();
         editCompositionFrame = new EditCompositionFrame();
         editDependencyFrame = new EditDependencyFrame();
+        newTemplateFrame = new NewTemplateFrame();
 
         fileChooser = new JFileChooser();
 
-        JTree projectTreeView = classyTree.generateTree(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
+        projectTreeView = classyTree.generateTree(ApplicationFramework.getInstance().getClassyRepositoryImplementation().getRoot());
         // JPanel workView = new JPanel();
 
         JScrollPane treeScrollPane = new JScrollPane(projectTreeView);
@@ -224,10 +229,24 @@ public class MainFrame extends JFrame implements ISubscriber {
     public EditDependencyFrame getEditDependencyFrame() {
         return editDependencyFrame;
     }
-    public File displayFileChooser() {
-        fileChooser.showSaveDialog(this);
 
+    public File displayFileChooser(String type) {
+        fileChooser = new JFileChooser();
+        if (type.equals("save"))
+            fileChooser.showSaveDialog(this);
+        else if (type.equals("open template")) {
+            fileChooser.setCurrentDirectory(new File(String.valueOf(Paths.get("src\\main\\resources\\templates").toAbsolutePath())));
+            fileChooser.showOpenDialog(this);
+        } else
+            fileChooser.showOpenDialog(this);
         return fileChooser.getSelectedFile();
     }
 
+    public JTree getProjectTreeView() {
+        return projectTreeView;
+    }
+
+    public NewTemplateFrame getNewTemplateFrame() {
+        return newTemplateFrame;
+    }
 }
