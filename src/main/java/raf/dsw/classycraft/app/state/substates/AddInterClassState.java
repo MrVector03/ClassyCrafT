@@ -3,6 +3,8 @@ package raf.dsw.classycraft.app.state.substates;
 import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
@@ -28,6 +30,7 @@ public class AddInterClassState implements State, IPublisher {
 
         MainFrame.getInstance().getChooseInterClassFrame().setVisible(true);
 
+        ((Project) ((Package) diagramView.getDiagram().getParent()).findProject()).makeChange();
         notifySubscribers(new StateNotification(diagramView));
     }
 

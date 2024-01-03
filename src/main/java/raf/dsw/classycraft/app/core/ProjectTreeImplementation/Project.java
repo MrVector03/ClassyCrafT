@@ -12,12 +12,14 @@ import java.time.LocalDateTime;
 public class Project extends ClassyNodeComposite {
     public String author;
     public String localPath;
+    public boolean changed;
 
 
     public Project(String name, String author, String localPath) {
         super(name);
         this.author = author;
         this.localPath = localPath;
+        this.changed = true;
     }
 
     @Override
@@ -42,6 +44,18 @@ public class Project extends ClassyNodeComposite {
         for (ClassyNode cn : this.getChildren()) {
             ((Package) cn).checkRemovalFromScreen(this);
         }
+    }
+
+    public void makeChange() {
+        this.changed = true;
+    }
+
+    public void resetChange() {
+        this.changed = false;
+    }
+
+    public boolean isChanged() {
+        return changed;
     }
 
     public String getLocalPath() {

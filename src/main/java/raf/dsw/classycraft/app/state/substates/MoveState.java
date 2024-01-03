@@ -8,6 +8,8 @@ import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.Connection;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.ConnectionPainter;
@@ -58,7 +60,7 @@ public class MoveState implements State, IPublisher {
     @Override
     public void classyMouseReleased(Point2D endingPosition, DiagramView diagramView) {
         handleChange(endingPosition, diagramView, true);
-
+        ((Project) ((Package) diagramView.getDiagram().getParent()).findProject()).makeChange();
         this.revPoints.clear();
         startingPoint = null;
         endingPoint = null;

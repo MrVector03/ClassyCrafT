@@ -43,6 +43,12 @@ public class ClassyTreeImplementation implements ClassyTree {
 
         parent.add(newClassyTreeItem);
 
+        if (parent.getClassyNode() instanceof Package) {
+            ((Project)(((Package) parent.getClassyNode()).findProject())).makeChange();
+        } else if (parent.getClassyNode() instanceof Project) {
+            ((Project) parent.getClassyNode()).makeChange();
+        }
+
         child.setParent(parent.getClassyNode());
         ((ClassyNodeComposite) parent.getClassyNode()).addChild(child);
 
@@ -154,8 +160,10 @@ public class ClassyTreeImplementation implements ClassyTree {
 
         if (node.getClassyNode() instanceof Diagram) {
             ((Package) node.getClassyNode().getParent()).removeDiagramFromScreen((Diagram) node.getClassyNode());
+            ((Project) ((Package) node.getClassyNode().getParent()).findProject()).makeChange();
         } else if (node.getClassyNode() instanceof Package) {
             ((Package) node.getClassyNode()).checkRemovalFromScreen();
+            ((Project) ((Package) node.getClassyNode()).findProject()).makeChange();
         } else if (node.getClassyNode() instanceof Project) {
             ((Project) node.getClassyNode()).remove();
         } else if(node.getClassyNode() instanceof DiagramElement) {
