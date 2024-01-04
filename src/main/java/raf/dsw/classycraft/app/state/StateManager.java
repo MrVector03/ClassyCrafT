@@ -10,7 +10,6 @@ public class StateManager {
 
     private final AddInterClassState addInterClassState = new AddInterClassState();
     private final AddConnectionState addConnectionState = new AddConnectionState();
-    private final AddElementState addElementState = new AddElementState();
     private final DeleteState deleteState = new DeleteState();
     private final SelectionState selectionState = new SelectionState();
     private final CopyInterClassState copyInterClassState = new CopyInterClassState();
@@ -25,10 +24,6 @@ public class StateManager {
 
     public void setAddConnectionState() {
         this.currentState = this.addConnectionState;
-    }
-
-    public void setAddElementState() {
-        this.currentState = this.addElementState;
     }
 
     public void setDeleteState() {
@@ -57,10 +52,6 @@ public class StateManager {
 
     public AddConnectionState getAddConnectionState() {
         return addConnectionState;
-    }
-
-    public AddElementState getAddElementState() {
-        return addElementState;
     }
 
     public DeleteState getDeleteState() {

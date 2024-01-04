@@ -66,10 +66,6 @@ public class DeleteState implements State, IPublisher {
 
     }
 
-    public void immediateDelete() {
-
-    }
-
     @Override
     public void addSubscriber(ISubscriber subscriber) {
         this.subscribers.add(subscriber);

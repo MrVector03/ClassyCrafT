@@ -113,8 +113,6 @@ public class SelectionState implements State, IPublisher {
         startingPoint = null;
         endingPoint = null;
 
-        //diagramView.removeAllSelectionPainters();
-
         diagramView.getDiagramElementPainters().removeIf(dep -> dep instanceof TemporarySelectionPainter);
         notifySubscribers(new StateNotification(diagramView));
     }

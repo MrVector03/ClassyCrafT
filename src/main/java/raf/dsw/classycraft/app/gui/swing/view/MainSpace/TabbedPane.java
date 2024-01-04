@@ -38,15 +38,6 @@ public class TabbedPane extends JTabbedPane {
         revalidate();
     }
 
-    // public void loadDiagrams() {
-    //     for (ClassyNode cn : this.classyPackage.getChildren()) {
-    //         if (cn instanceof Diagram) {
-    //             DiagramView newDiagram = new DiagramView((Diagram) cn, this);
-    //             this.loadedDiagrams.add(newDiagram);
-    //         }
-    //     }
-    // }
-
     public void loadDiagrams() {
         this.loadedTabs.clear();
         for (ClassyNode cn : this.classyPackage.getChildren()) {
@@ -72,12 +63,6 @@ public class TabbedPane extends JTabbedPane {
         }
     }
 
-    // public void addNewDiagram(Diagram diagram) {
-    //     DiagramView newDiagram = new DiagramView(diagram, this);
-    //     this.loadedDiagrams.add(newDiagram);
-    //     addTab(newDiagram.getName(), newDiagram);
-    // }
-
     public void addNewDiagram(Diagram diagram) {
         DiagramView newDiagram = new DiagramView(diagram, this);
         if (!(diagram.getChildren().isEmpty())) {
@@ -94,10 +79,6 @@ public class TabbedPane extends JTabbedPane {
     }
 
     public void clear() {
-        // for (DiagramView tabElement : loadedDiagrams) {
-        //     remove(tabElement);
-        // }
-
         for (TabView tabElement : this.loadedTabs) {
             remove(tabElement);
         }
@@ -121,17 +102,6 @@ public class TabbedPane extends JTabbedPane {
         return false;
     }
 
-    // public void renameDiagram(ClassyNode diagram, String newName) {
-    //     for (int i = 0; i < loadedDiagrams.size(); i++) {
-    //         if (loadedDiagrams.get(i).getDiagram() == diagram) {
-    //             // System.out.println("new name: " + newName);
-    //             setTitleAt(i, newName);
-    //             revalidate();
-    //             return;
-    //         }
-    //     }
-    // }
-
     public void renameDiagram(ClassyNode diagram, String newName) {
         for (int i = 0; i < loadedTabs.size(); i++) {
             if (loadedTabs.get(i).getDiagramView().getDiagram() == diagram) {
@@ -143,16 +113,6 @@ public class TabbedPane extends JTabbedPane {
         }
     }
 
-//    public void removeDiagram(ClassyNode diagram) {
-//        for (DiagramView dv : loadedDiagrams) {
-//            if (dv.getDiagram() == diagram) {
-//                remove(dv);
-//                revalidate();
-//                return;
-//            }
-//        }
-//    }
-
     public void removeDiagram(ClassyNode diagram) {
         for (TabView tv : this.loadedTabs) {
             if (tv.getDiagramView().getDiagram() == diagram) {
@@ -163,11 +123,6 @@ public class TabbedPane extends JTabbedPane {
             }
         }
     }
-
-//    public void addTabs() {
-//        for (DiagramView tabElement : this.loadedDiagrams)
-//            addTab(tabElement.getName(), tabElement);
-//    }
 
     public void addTabs() {
         for (TabView tabElement : this.loadedTabs)
@@ -192,6 +147,12 @@ public class TabbedPane extends JTabbedPane {
                 return true;
         }
         return false;
+    }
+
+    public void moveDividers() {
+        for (TabView tv : loadedTabs) {
+            tv.resizeDivider();
+        }
     }
 
     public Project getClassyProject() {

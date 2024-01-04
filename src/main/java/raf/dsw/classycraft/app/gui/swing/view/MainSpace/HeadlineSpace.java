@@ -28,6 +28,7 @@ public class HeadlineSpace extends JPanel {
         add(projectLabel);
         add(authorLabel);
         add(exportImageButton);
+        setMaximumSize(new Dimension(5000, 250));
     }
 
     public void setup(String projectName, String author) {

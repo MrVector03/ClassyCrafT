@@ -22,6 +22,10 @@ import raf.dsw.classycraft.app.gui.swing.view.popframes.alerts.AlertFrame;
 import javax.swing.*;
 import javax.swing.plaf.FileChooserUI;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.nio.file.Paths;
@@ -81,7 +85,7 @@ public class MainFrame extends JFrame implements ISubscriber {
         Dimension screenSize = kit.getScreenSize();
         int screenHeight = screenSize.height;
         int screenWidth = screenSize.width;
-        setSize(screenWidth / 2, screenHeight / 2 + 50);
+        setSize(screenWidth / 2, screenHeight / 2 + 75);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("ClassyCrafT");
@@ -117,6 +121,15 @@ public class MainFrame extends JFrame implements ISubscriber {
         getContentPane().add(mainSplitFrame, BorderLayout.CENTER);
         mainSplitFrame.setDividerLocation(250);
         mainSplitFrame.setOneTouchExpandable(true);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                packageView.getTabbedPane().moveDividers();
+            }
+        });
+
+        addWindowStateListener(e -> packageView.getTabbedPane().moveDividers());
     }
 
     public static MainFrame getInstance()
@@ -249,4 +262,5 @@ public class MainFrame extends JFrame implements ISubscriber {
     public NewTemplateFrame getNewTemplateFrame() {
         return newTemplateFrame;
     }
+
 }
