@@ -6,6 +6,7 @@ import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.TabView;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
