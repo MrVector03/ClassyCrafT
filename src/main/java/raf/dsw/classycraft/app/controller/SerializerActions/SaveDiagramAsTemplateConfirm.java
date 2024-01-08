@@ -26,7 +26,7 @@ public class SaveDiagramAsTemplateConfirm extends AbstractClassyAction {
         MainFrame.getInstance().getNewTemplateFrame().setVisible(false);
         MainFrame.getInstance().getNewTemplateFrame().getTextField().setText("");
 
-        File templateFile = (Paths.get("src\\main\\resources\\templates", newTemplate)).toAbsolutePath().toFile();
+        File templateFile = (Paths.get("src/main/resources/templates", newTemplate)).toAbsolutePath().toFile();
 
         try {
             Files.createFile(templateFile.toPath());
