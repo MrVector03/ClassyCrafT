@@ -144,11 +144,6 @@ public class PackageView extends JPanel implements ISubscriber {
         stateManager.setAddConnectionState();
     }
 
-    public void startAddElementState() {
-        tabbedPane.removeAllSelectors();
-        stateManager.setAddElementState();
-    }
-
     public void startDeleteState() {
         if (tabbedPane.testSelectors()) {
             stateManager.setDeleteState();
