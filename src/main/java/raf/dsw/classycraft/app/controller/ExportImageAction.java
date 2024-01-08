@@ -3,6 +3,7 @@ package raf.dsw.classycraft.app.controller;
 import raf.dsw.classycraft.app.core.ApplicationFramework;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageGenerator;
 import raf.dsw.classycraft.app.core.MessageGenerator.MessageType;
+import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
 
@@ -28,21 +29,33 @@ public class ExportImageAction extends AbstractClassyAction {
     public void actionPerformed(ActionEvent e) {
         File fileToSave = MainFrame.getInstance().displayFileChooser("save");
 
+        ArrayList<DiagramElementPainter> allPainters = MainFrame.getInstance().getCurDiagramView().getDiagramElementPainters();
+        double maxX = 0, maxY = 0;
 
-        int width = 3*(int)Toolkit.getDefaultToolkit().getScreenSize().width, height = 3*(int)Toolkit.getDefaultToolkit().getScreenSize().height;
+        for(DiagramElementPainter dep : allPainters) {
+            if(dep.getDiagramElement() instanceof InterClass) {
+                if (((InterClass) dep.getDiagramElement()).getPosition().getY() + ((InterClass) dep.getDiagramElement()).getSize().getHeight() > maxY)
+                    maxY = ((InterClass) dep.getDiagramElement()).getPosition().getY() + ((InterClass) dep.getDiagramElement()).getSize().getHeight();
+                if (((InterClass) dep.getDiagramElement()).getPosition().getX() + ((InterClass) dep.getDiagramElement()).getSize().getWidth() > maxX)
+                    maxX = ((InterClass) dep.getDiagramElement()).getPosition().getX() + ((InterClass) dep.getDiagramElement()).getSize().getWidth();
+            }
+        }
+
+        int width = (int)maxX + 20, height = (int)maxY + 20;
 
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D graphics2D = bi.createGraphics();
 
-        ArrayList<DiagramElementPainter> allPainters = MainFrame.getInstance().getCurDiagramView().getDiagramElementPainters();
 
         graphics2D.setColor(Color.WHITE);
         graphics2D.fill(new Rectangle(0,0,width,height));
 
         graphics2D.setColor(Color.BLACK);
-        for(DiagramElementPainter dep : allPainters)
+
+        for(DiagramElementPainter dep : allPainters) {
             dep.paint(graphics2D);
+        }
 
         try {
             ImageIO.write(bi, "png", fileToSave);

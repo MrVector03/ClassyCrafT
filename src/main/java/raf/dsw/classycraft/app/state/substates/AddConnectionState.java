@@ -5,6 +5,8 @@ import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.TemporaryConnection;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.InterClassPainter;
@@ -70,6 +72,8 @@ public class AddConnectionState implements State, IPublisher {
             }
         }
 
+        if (to == null) return;
+
         MainFrame.getInstance().setCurDiagramView(diagramView);
         MainFrame.getInstance().setCurFrom(from);
         MainFrame.getInstance().setCurTo(to);
@@ -79,6 +83,7 @@ public class AddConnectionState implements State, IPublisher {
         from = null;
         to = null;
 
+        ((Project) ((Package) diagramView.getDiagram().getParent()).findProject()).makeChange();
         notifySubscribers(new StateNotification(diagramView));
     }
 

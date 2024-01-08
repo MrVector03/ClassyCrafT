@@ -8,6 +8,8 @@ import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.Access;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.Connection;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.ConnectionPainter;
@@ -32,7 +34,6 @@ public class MoveState implements State, IPublisher {
     //Za command
     private Point2D startStartPoint = null;
     private Point2D endEndPoint = null;
-    ///
 
     private boolean revertBack = false;
     private ArrayList<Point2D> revPoints = new ArrayList<>();
@@ -58,7 +59,7 @@ public class MoveState implements State, IPublisher {
     @Override
     public void classyMouseReleased(Point2D endingPosition, DiagramView diagramView) {
         handleChange(endingPosition, diagramView, true);
-
+        ((Project) ((Package) diagramView.getDiagram().getParent()).findProject()).makeChange();
         this.revPoints.clear();
         startingPoint = null;
         endingPoint = null;
@@ -189,6 +190,7 @@ public class MoveState implements State, IPublisher {
         }
         return changedPainters;
     }
+
     public boolean checkCollision(ArrayList<DiagramElementPainter> changedPainters,
                                   ArrayList<DiagramElementPainter> oldPainters) {
         for (DiagramElementPainter changedElement : changedPainters) {
@@ -253,16 +255,16 @@ public class MoveState implements State, IPublisher {
                         testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY())); // TOP LEFT
                         testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY() + size.getHeight() / 2)); // LEFT
                         testPoints.add(new Point2D.Double(ogPos.getX(), ogPos.getY() + size.getHeight())); // BOTTOM LEFT
-//
-//
+
+
                         // 3 -> 5: x += 1
                         testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth(), ogPos.getY())); // TOP RIGHT
                         testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth(), ogPos.getY() + size.getHeight() / 2)); // RIGHT
                         testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth(), ogPos.getY() + size.getHeight())); // BOTTOM RIGHT
-//
+
                         // 6: y -= 1
                         testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth() / 2, ogPos.getY())); // TOP
-//
+
                         // 7: y += 1
                         testPoints.add(new Point2D.Double(ogPos.getX() + size.getWidth() / 2, ogPos.getY() + size.getHeight())); // BOTTOM
 
@@ -276,7 +278,6 @@ public class MoveState implements State, IPublisher {
                 }
             }
         }
-        // System.out.println("not colliding");
         this.revertBack = false;
         return true;
     }

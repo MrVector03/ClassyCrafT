@@ -6,6 +6,8 @@ import raf.dsw.classycraft.app.core.Observer.IPublisher;
 import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.Observer.notifications.StateNotification;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.gui.swing.view.MainFrame;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.products.ConnectionPainter;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
@@ -36,9 +38,12 @@ public class DeleteState implements State, IPublisher {
                 toDelete.add(diagramElementPainter);
         }
 
+        if (toDelete.isEmpty()) return;
+
         DeleteCommand deleteCommand = new DeleteCommand(toDelete, diagramView);
         ApplicationFramework.getInstance().getCommandManager().addCommand(deleteCommand);
 
+        ((Project) ((Package) diagramView.getDiagram().getParent()).findProject()).makeChange();
         notifySubscribers(new StateNotification(diagramView));
     }
 
@@ -58,10 +63,6 @@ public class DeleteState implements State, IPublisher {
 
     @Override
     public void classyMouseWheelMoved(Point2D position, DiagramView diagramView, MouseWheelEvent e) {
-
-    }
-
-    public void immediateDelete() {
 
     }
 

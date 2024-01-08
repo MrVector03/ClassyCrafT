@@ -20,7 +20,6 @@ public class ActionManager {
 
     private AddInterClassAction addInterClassAction;
     private AddConnectionAction addConnectionAction;
-    private AddElementAction addElementAction;
     private DeleteAction deleteAction;
     private SelectionAction selectionAction;
     private MoveAction moveAction;
@@ -68,7 +67,6 @@ public class ActionManager {
 
         addInterClassAction = new AddInterClassAction();
         addConnectionAction = new AddConnectionAction();
-        addElementAction = new AddElementAction();
         deleteAction = new DeleteAction();
         selectionAction = new SelectionAction();
         copyInterClassAction = new CopyInterClassAction();
@@ -149,10 +147,6 @@ public class ActionManager {
 
     public AddConnectionAction getAddConnectionAction() {
         return addConnectionAction;
-    }
-
-    public AddElementAction getAddElementAction() {
-        return addElementAction;
     }
 
     public DeleteAction getDeleteAction() {

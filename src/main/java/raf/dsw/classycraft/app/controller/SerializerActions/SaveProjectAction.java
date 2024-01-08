@@ -28,7 +28,7 @@ public class SaveProjectAction extends AbstractClassyAction {
     public void actionPerformed(ActionEvent e) {
         ClassyTreeItem selected = MainFrame.getInstance().getClassyTree().getSelectedNode();
 
-        if (selected == null) return;
+        if (selected == null || !((Project) selected.getClassyNode()).isChanged()) return;
 
         if(!(selected.getClassyNode() instanceof Project)) {
             ApplicationFramework.getInstance().getMessageGenerator().generateMessage("CANNOT_SAVE_SELECTED_ITEM", MessageType.ERROR);
@@ -52,5 +52,7 @@ public class SaveProjectAction extends AbstractClassyAction {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+        project.resetChange();
+        System.out.println("saved");
     }
 }

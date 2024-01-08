@@ -13,6 +13,8 @@ import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.pr
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Class;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Enum;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.DiagramImplementation.InterClass.Interface;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Package;
+import raf.dsw.classycraft.app.core.ProjectTreeImplementation.Project;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyAbstractPainterFactory;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractPainterFactory.ClassyPainterManufacturer;
 import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramPainters.AbstractProduct.DiagramElementPainter;
@@ -50,6 +52,7 @@ public class CopyInterClassState implements State, IPublisher {
             ApplicationFramework.getInstance().getCommandManager().addCommand(copyCommand);
         }
 
+        ((Project) ((Package) diagramView.getDiagram().getParent()).findProject()).makeChange();
         notifySubscribers(new StateNotification(diagramView));
     }
 
