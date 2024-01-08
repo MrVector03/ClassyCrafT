@@ -7,10 +7,7 @@ import raf.dsw.classycraft.app.core.Observer.ISubscriber;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.ClassyTree;
 import raf.dsw.classycraft.app.core.ProjectTreeAbstraction.DiagramAbstraction.products.InterClass;
 import raf.dsw.classycraft.app.core.ProjectTreeImplementation.ClassyTreeImplementation;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.DiagramView;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.HeadlineSpace;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.PackageView;
-import raf.dsw.classycraft.app.gui.swing.view.MainSpace.TabbedPane;
+import raf.dsw.classycraft.app.gui.swing.view.MainSpace.*;
 import raf.dsw.classycraft.app.gui.swing.view.popframes.*;
 import raf.dsw.classycraft.app.gui.swing.view.popframes.EditConnectionFrames.EditAggregationFrame;
 import raf.dsw.classycraft.app.gui.swing.view.popframes.EditConnectionFrames.EditCompositionFrame;
@@ -188,7 +185,8 @@ public class MainFrame extends JFrame implements ISubscriber {
     }
 
     public DiagramView getCurDiagramView() {
-        return curDiagramView;
+        //return curDiagramView;
+        return ((TabView)getPackageView().getTabbedPane().getSelectedComponent()).getDiagramView();
     }
 
     public void setCurDiagramView(DiagramView curDiagramView) {
